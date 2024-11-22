@@ -36,7 +36,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const body = this.createResponseBody(statusCode, message, request.url);
 
     this.logger.warn(
-      `${statusCode} - ${message} - ${request.method} ${request.url}`
+      `${statusCode} - ${message} - ${request.method} ${request.url}`,
     );
 
     response.status(statusCode).json(body);

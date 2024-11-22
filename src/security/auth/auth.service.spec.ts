@@ -2,7 +2,6 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AuthService } from "./auth.service";
 import { UsersService } from "../../users/users.service";
 import { JwtService } from "@nestjs/jwt";
-import { LoggerService } from "../../common/logger/logger.service";
 import { ConfigService } from "@nestjs/config";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Users } from "../../users/entity/user.entity";
@@ -17,7 +16,6 @@ describe("AuthService", () => {
         AuthService,
         UsersService,
         JwtService,
-        LoggerService,
         ConfigService,
         {
           provide: getRepositoryToken(Users),

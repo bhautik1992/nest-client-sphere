@@ -1,40 +1,30 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import * as bcrypt from "bcrypt";
+import { hash } from "bcrypt";
 import { Repository } from "typeorm";
-import { ListDto, LoginDto } from "../common/dto/common.dto";
-import {
-  AuthExceptions,
-  CustomError,
-  TypeExceptions,
-} from "../common/helpers/exceptions";
+import { ListDto } from "../common/dto/common.dto";
+import { CustomError, TypeExceptions } from "../common/helpers/exceptions";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Users } from "./entity/user.entity";
-import { RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { USER_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly configService: ConfigService,
     @InjectRepository(Users)
-    private readonly userRepository: Repository<Users>
+    private readonly userRepository: Repository<Users>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    // Check duplicate user
     if (await this.getUserByEmail(createUserDto.email)) {
       throw TypeExceptions.UserAlreadyExists();
     }
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(
-      this.configService.get("database.initialUser.password"),
-      salt
-    );
-    createUserDto.password = hash;
+    createUserDto.password = await hash(createUserDto.password, 10);
     const user = this.userRepository.create(createUserDto);
-    return this.userRepository.save(user);
+    const createdUser = await this.userRepository.save(user);
+    delete createdUser.password;
+    return createdUser;
   }
 
   async findAll(params: ListDto) {
@@ -45,14 +35,17 @@ export class UsersService {
       if (params.search) {
         queryBuilder.where(
           "(user.first_name ILIKE :search OR user.last_name ILIKE :search OR user.email ILIKE :search)",
-          { search: `%${params.search}%` }
+          { search: `%${params.search}%` },
         );
       }
 
       // Apply pagination
+      if (params.page && params.limit) {
+        queryBuilder.skip((params.page - 1) * params.limit);
+        queryBuilder.take(params.limit);
+      }
+
       queryBuilder
-        .skip((params.page - 1) * params.limit)
-        .take(params.limit)
         .select([
           "user.id",
           "user.first_name",
@@ -73,8 +66,8 @@ export class UsersService {
       const userExits = await this.userRepository.findOneBy({ id: userId });
       if (!userExits) {
         throw CustomError(
-          RESPONSE_MESSAGES.USER_NOT_FOUND,
-          HttpStatus.NOT_FOUND
+          USER_RESPONSE_MESSAGES.USER_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
         );
       }
       return this.userRepository
@@ -91,8 +84,8 @@ export class UsersService {
       const userExits = await this.userRepository.findOneBy({ id: userId });
       if (!userExits) {
         throw CustomError(
-          RESPONSE_MESSAGES.USER_NOT_FOUND,
-          HttpStatus.NOT_FOUND
+          USER_RESPONSE_MESSAGES.USER_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
         );
       }
       return this.userRepository.update(userId, updateUserDto);
@@ -102,50 +95,18 @@ export class UsersService {
   }
 
   async remove(userId: number) {
-    return await this.userRepository.delete({ id: userId });
-  }
-
-  async createInitialUser(): Promise<void> {
-    const user = await this.getUserByEmail(
-      this.configService.get("database.initialUser.email")
-    );
-
-    if (user) {
-      console.log("Initial user already loaded.");
-    } else {
-      const params: CreateUserDto = {
-        first_name: this.configService.get("database.initialUser.first_name"),
-        last_name: this.configService.get("database.initialUser.last_name"),
-        role: this.configService.get("database.initialUser.role"),
-        email: this.configService.get("database.initialUser.email"),
-        password: "",
-      };
-
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(
-        this.configService.get("database.initialUser.password"),
-        salt
-      );
-      params.password = hash;
-      const user = this.userRepository.create(params);
-      await this.userRepository.save(user);
-      console.log("Initial user loaded successfully.");
+    try {
+      const isUserExists = await this.userRepository.findOneBy({ id: userId });
+      if (!isUserExists) {
+        throw CustomError(
+          USER_RESPONSE_MESSAGES.USER_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return await this.userRepository.delete({ id: userId });
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
     }
-  }
-
-  async login(params: LoginDto) {
-    const user = await this.userRepository.findOneBy({
-      email: params.email,
-    });
-    if (!user) {
-      throw AuthExceptions.AccountNotExist();
-    }
-
-    if (!bcrypt.compareSync(params.password, user.password)) {
-      throw AuthExceptions.InvalidIdPassword();
-    }
-    delete user.password;
-    return user;
   }
 
   async getUserByEmail(email: string) {

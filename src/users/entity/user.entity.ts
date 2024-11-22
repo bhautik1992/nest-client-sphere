@@ -1,3 +1,4 @@
+import { UserRole } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "../../common/constants/table-name.constant";
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
@@ -12,7 +13,7 @@ export class Users {
   @Column({ nullable: false })
   last_name: string;
 
-  @Column({ nullable: false })
+  @Column({ type: "enum", enum: UserRole, nullable: false })
   role: string;
 
   @Column({ nullable: false, unique: true })
@@ -20,4 +21,14 @@ export class Users {
 
   @Column({ nullable: false })
   password: string;
+
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  createdAt: Date;
+
+  @Column({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
+  updatedAt: Date;
 }

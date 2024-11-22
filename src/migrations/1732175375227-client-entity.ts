@@ -1,6 +1,6 @@
-import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
+import { ClientStatus } from "../common/constants/enum.constant";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
-import { UserRole } from "../common/constants/enum.constant";
+import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
 
 const columns = [
   {
@@ -11,12 +11,7 @@ const columns = [
     generationStrategy: "increment",
   },
   {
-    name: "first_name",
-    type: "varchar",
-    isNullable: false,
-  },
-  {
-    name: "last_name",
+    name: "name",
     type: "varchar",
     isNullable: false,
   },
@@ -26,14 +21,29 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "password",
+    name: "phone",
     type: "varchar",
     isNullable: false,
   },
   {
-    name: "role",
+    name: "address",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "gender",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "country",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "status",
     type: "enum",
-    enum: [UserRole.ADMIN, UserRole.USER],
+    enum: [ClientStatus.ACTIVE, ClientStatus.INACTIVE],
     isNullable: false,
   },
   {
@@ -61,17 +71,17 @@ const columnsObjects = columns.map((column) => {
   return new TableColumn(rest);
 });
 
-export class UserEntity1717681709976 implements MigrationInterface {
+export class ClientEntity1732175375227 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: TABLE_NAMES.USER,
+        name: TABLE_NAMES.CLIENT,
         columns: columnsObjects,
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(TABLE_NAMES.USER);
+    await queryRunner.dropTable(TABLE_NAMES.CLIENT);
   }
 }

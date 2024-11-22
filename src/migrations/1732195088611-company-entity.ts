@@ -1,6 +1,5 @@
 import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
-import { UserRole } from "../common/constants/enum.constant";
 
 const columns = [
   {
@@ -11,29 +10,24 @@ const columns = [
     generationStrategy: "increment",
   },
   {
-    name: "first_name",
+    name: "name",
     type: "varchar",
     isNullable: false,
   },
   {
-    name: "last_name",
-    type: "varchar",
-    isNullable: false,
+    name: "address",
+    type: "text",
+    isNullable: true,
   },
   {
     name: "email",
     type: "varchar",
     isNullable: false,
+    unique: true,
   },
   {
-    name: "password",
+    name: "country",
     type: "varchar",
-    isNullable: false,
-  },
-  {
-    name: "role",
-    type: "enum",
-    enum: [UserRole.ADMIN, UserRole.USER],
     isNullable: false,
   },
   {
@@ -54,24 +48,23 @@ const columnsObjects = columns.map((column) => {
   if (generationStrategy) {
     return new TableColumn({
       ...rest,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       generationStrategy: generationStrategy as any, // Cast to any to bypass the type check
     });
   }
   return new TableColumn(rest);
 });
 
-export class UserEntity1717681709976 implements MigrationInterface {
+export class CompanyEntity1732195088611 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: TABLE_NAMES.USER,
+        name: TABLE_NAMES.COMPANY,
         columns: columnsObjects,
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(TABLE_NAMES.USER);
+    await queryRunner.dropTable(TABLE_NAMES.COMPANY);
   }
 }

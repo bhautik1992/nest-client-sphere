@@ -3,7 +3,6 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { UsersService } from "../../users/users.service";
 import { JwtService } from "@nestjs/jwt";
-import { LoggerService } from "../../common/logger/logger.service";
 import { ConfigService } from "@nestjs/config";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { UserModel } from "../../common/test/entity.model";
@@ -21,7 +20,6 @@ describe("AuthController", () => {
         AuthService,
         UsersService,
         JwtService,
-        LoggerService,
         ConfigService,
         {
           provide: getRepositoryToken(Users),

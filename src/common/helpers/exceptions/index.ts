@@ -6,7 +6,7 @@ export * from "./connection.exception";
 
 export function CustomError(
   message?: string,
-  statusCode?: number
+  statusCode?: number,
 ): HttpException {
   return new HttpException(
     {
@@ -14,6 +14,6 @@ export function CustomError(
       error: "CustomError",
       statusCode: statusCode || HttpStatus.BAD_GATEWAY,
     },
-    HttpStatus.BAD_GATEWAY
+    HttpStatus.BAD_GATEWAY,
   );
 }

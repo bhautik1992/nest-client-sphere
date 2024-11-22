@@ -1,12 +1,11 @@
-import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
-import { NestExpressApplication } from "@nestjs/platform-express";
 import { ConfigService } from "@nestjs/config";
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
-import { HttpExceptionFilter } from "./common/exceptions/http-exception.filter";
-import helmet from "helmet";
 import { AppEnvironment } from "./common/constants/enum.constant";
+import { HttpExceptionFilter } from "./common/exceptions/http-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -34,9 +33,6 @@ async function bootstrap() {
   //Enable API Params ValidationPipe for all endpoint.
   app.useGlobalPipes(new ValidationPipe());
 
-  // Use Helmet middleware for securing HTTP headers
-  app.use(helmet());
-
   // Enable/Disable CORS
   if (appConfig.enableCors) {
     app.enableCors();
@@ -45,7 +41,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-    })
+    }),
   );
   // Apply the HttpExceptionFilter globally
   app.useGlobalFilters(new HttpExceptionFilter());

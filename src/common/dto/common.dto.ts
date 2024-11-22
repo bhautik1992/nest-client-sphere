@@ -5,6 +5,7 @@ import {
   ValidateIf,
   IsDateString,
   IsString,
+  IsEmpty,
 } from "class-validator";
 
 export class LoginDto {
@@ -17,6 +18,23 @@ export class LoginDto {
   @IsNotEmpty()
   @IsString()
   password: string;
+}
+
+export class ChangePasswordDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  id: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  current_password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  new_password: string;
 }
 
 export class DateRangeDto {
@@ -52,7 +70,7 @@ export class ListDto {
   limit: number;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsEmpty()
   @IsString()
   search: string;
 }
