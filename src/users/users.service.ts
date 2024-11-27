@@ -20,7 +20,7 @@ export class UsersService {
     if (await this.getUserByEmail(createUserDto.email)) {
       throw TypeExceptions.UserAlreadyExists();
     }
-    createUserDto.password = await hash(createUserDto.password, 10);
+    createUserDto.password = await hash(`${createUserDto.first_name}@123`, 10);
     const user = this.userRepository.create(createUserDto);
     const createdUser = await this.userRepository.save(user);
     delete createdUser.password;
@@ -39,23 +39,37 @@ export class UsersService {
         );
       }
 
+      const totalQuery = queryBuilder.clone();
+
+      // Apply sorting
+      if (params.sortOrder && params.sortBy) {
+        queryBuilder.orderBy(
+          `user.${params.sortBy}`,
+          params.sortOrder === "asc" ? "ASC" : "DESC",
+        );
+      } else {
+        queryBuilder.orderBy("user.createdAt", "DESC");
+      }
+
       // Apply pagination
-      if (params.page && params.limit) {
-        queryBuilder.skip((params.page - 1) * params.limit);
+      if (params.offset !== undefined && params.limit) {
+        queryBuilder.skip(params.offset);
         queryBuilder.take(params.limit);
       }
 
-      queryBuilder
-        .select([
-          "user.id",
-          "user.first_name",
-          "user.last_name",
-          "user.email",
-          "user.is_active",
-        ])
-        .orderBy("user.id", "ASC");
+      queryBuilder.select([
+        "user.id",
+        "user.first_name",
+        "user.last_name",
+        "user.email",
+        "user.role",
+      ]);
       const users = await queryBuilder.getMany();
-      return users;
+      const recordsTotal = await totalQuery.getCount();
+      return {
+        result: users,
+        recordsTotal,
+      };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

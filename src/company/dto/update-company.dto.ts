@@ -1,9 +1,9 @@
 import { CreateCompanyDto } from "./create-company.dto";
 
 export class UpdateCompanyDto
-  implements Pick<CreateCompanyDto, "name" | "address" | "country">
+  implements Pick<CreateCompanyDto, "name" | "address" | "countryId">
 {
   name: string;
   address: string;
-  country: string;
+  countryId: number;
 }

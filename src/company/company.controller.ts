@@ -20,7 +20,7 @@ import { CreateCompanyDto } from "./dto/create-company.dto";
 import { ListDto } from "src/common/dto/common.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 
-@Controller("Company")
+@Controller("company")
 @ApiTags("Company")
 @ApiBearerAuth()
 @Roles(UserRole.ADMIN, UserRole.USER)
@@ -53,7 +53,7 @@ export class CompanyController {
     return this.companyService.update(id, updateCompanyDto);
   }
 
-  @Delete("remove/:id")
+  @Delete("delete/:id")
   @ResponseMessage(COMPANY_RESPONSE_MESSAGES.COMPANY_DELETED)
   remove(@Param("id") id: number) {
     return this.companyService.remove(id);

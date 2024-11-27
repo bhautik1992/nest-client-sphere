@@ -39,10 +39,22 @@ export class ClientService {
         );
       }
 
+      const totalQuery = queryBuilder.clone();
+
       // Apply pagination
-      if (params.page && params.limit) {
-        queryBuilder.skip((params.page - 1) * params.limit);
+      if (params.offset !== undefined && params.limit) {
+        queryBuilder.skip(params.offset);
         queryBuilder.take(params.limit);
+      }
+
+      // Apply sorting
+      if (params.sortOrder && params.sortBy) {
+        queryBuilder.orderBy(
+          `client.${params.sortBy}`,
+          params.sortOrder === "asc" ? "ASC" : "DESC",
+        );
+      } else {
+        queryBuilder.orderBy("client.createdAt", "DESC");
       }
 
       queryBuilder
@@ -55,14 +67,18 @@ export class ClientService {
           "client.gender",
           "client.country",
           "client.status",
+          "client.createdAt",
         ])
-        .leftJoinAndSelect("client.projects", "project") // Join with the Project entity
-        .orderBy("client.id", "ASC");
+        .leftJoinAndSelect("client.projects", "project")
+        .leftJoinAndSelect("client.country", "country"); // Join with the Project entity
 
       // Fetch the results (clients and associated projects)
       const clients = await queryBuilder.getMany();
 
-      return clients;
+      // Fetch the total count
+      const recordsTotal = await totalQuery.getCount();
+
+      return { result: clients, recordsTotal };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -81,7 +97,7 @@ export class ClientService {
         .createQueryBuilder("client")
         .where({ id })
         .leftJoinAndSelect("client.projects", "project") // Join with the Project entity
-        .orderBy("client.id", "ASC");
+        .leftJoinAndSelect("client.country", "country");
 
       // Fetch the results (clients and associated projects)
       const client = await queryBuilder.getOne();
@@ -118,6 +134,29 @@ export class ClientService {
       return await this.clientRepository.delete({ id });
     } catch (error) {
       CustomError(error.message, error.statusCode);
+    }
+  }
+
+  async changeStatus(id: number, status: string) {
+    try {
+      const queryBuilder = this.clientRepository.createQueryBuilder("client");
+      const isClientExists = await queryBuilder
+        .where({ id })
+        .leftJoinAndSelect("client.projects", "project")
+        .leftJoinAndSelect("client.country", "country")
+        .getOne();
+      if (!isClientExists) {
+        throw CustomError(
+          CLIENT_RESPONSE_MESSAGES.CLIENT_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      isClientExists.status = status;
+      const updatedClient = await this.clientRepository.save(isClientExists);
+
+      return updatedClient;
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
     }
   }
 

@@ -53,6 +53,17 @@ export class ClientController {
     return await this.clientService.update(id, updateUserDto);
   }
 
+  @Post("active-inactive")
+  @ResponseMessage(CLIENT_RESPONSE_MESSAGES.CLIENT_STATUS_CHANGED)
+  async changeStatus(
+    @Body() changeStatusDto: { clientId: number; status: string },
+  ) {
+    return await this.clientService.changeStatus(
+      changeStatusDto.clientId,
+      changeStatusDto.status,
+    );
+  }
+
   @Delete("delete/:id")
   @ResponseMessage(CLIENT_RESPONSE_MESSAGES.CLIENT_DELETED)
   async remove(@Param("id") id: number) {

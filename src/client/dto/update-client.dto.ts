@@ -5,13 +5,13 @@ export class UpdateClientDto
   implements
     Pick<
       CreateClientDto,
-      "name" | "phone" | "address" | "gender" | "country" | "status"
+      "name" | "phone" | "address" | "gender" | "countryId" | "status"
     >
 {
   name: string;
   phone: string;
   address: string;
   gender: string;
-  country: string;
+  countryId: number;
   status: ClientStatus;
 }

@@ -15,22 +15,6 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "address",
-    type: "text",
-    isNullable: true,
-  },
-  {
-    name: "email",
-    type: "varchar",
-    isNullable: false,
-    unique: true,
-  },
-  {
-    name: "countryId",
-    type: "int",
-    isNullable: false,
-  },
-  {
     name: "createdAt",
     type: "timestamp",
     default: "CURRENT_TIMESTAMP",
@@ -54,17 +38,17 @@ const columnsObjects = columns.map((column) => {
   return new TableColumn(rest);
 });
 
-export class CompanyEntity1732195088611 implements MigrationInterface {
+export class CountryEntity1732175375225 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: TABLE_NAMES.COMPANY,
+        name: TABLE_NAMES.COUNTRY,
         columns: columnsObjects,
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(TABLE_NAMES.COMPANY);
+    await queryRunner.dropTable(TABLE_NAMES.COUNTRY);
   }
 }

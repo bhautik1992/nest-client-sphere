@@ -1,7 +1,15 @@
 import { ClientStatus } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "../../common/constants/table-name.constant";
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
 import { Projects } from "src/project/entity/project.entity";
+import { Country } from "src/country/entity/country.entity";
 
 @Entity({ name: TABLE_NAMES.CLIENT })
 export class Clients {
@@ -23,8 +31,12 @@ export class Clients {
   @Column({ nullable: false })
   gender: string;
 
-  @Column({ nullable: false })
-  country: string;
+  @ManyToOne(() => Country, { nullable: false, onDelete: "CASCADE" })
+  @JoinColumn({ name: "countryId" })
+  country: Country;
+
+  @Column({ type: "int", nullable: false })
+  countryId: number;
 
   @Column({ type: "enum", enum: ClientStatus })
   status: string;

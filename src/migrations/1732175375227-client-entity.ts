@@ -36,8 +36,8 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "country",
-    type: "varchar",
+    name: "countryId",
+    type: "int",
     isNullable: false,
   },
   {

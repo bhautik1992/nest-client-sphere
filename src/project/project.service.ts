@@ -4,15 +4,21 @@ import { Projects } from "./entity/project.entity";
 import { Repository } from "typeorm";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { CustomError } from "src/common/helpers/exceptions";
-import { PROJECT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import {
+  COMPANY_RESPONSE_MESSAGES,
+  PROJECT_RESPONSE_MESSAGES,
+} from "src/common/constants/response.constant";
 import { ListDto } from "src/common/dto/common.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
+import { Companies } from "src/company/entity/company.entity";
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(Projects)
     private readonly projectRepository: Repository<Projects>,
+    @InjectRepository(Companies)
+    private readonly companyRepository: Repository<Companies>,
   ) {}
 
   async create(createProjectDto: CreateProjectDto) {
@@ -37,24 +43,53 @@ export class ProjectService {
 
       // Apply search filter if the search term is provided
       if (params.search) {
-        queryBuilder.where("project.name LIKE :search", {
+        queryBuilder.where("project.name ILIKE :search", {
           search: `%${params.search}%`,
         });
       }
 
+      const totalQuery = queryBuilder.clone();
+
+      // Apply sorting if sort and sortBy are provided
+      if (params.sortOrder && params.sortBy) {
+        queryBuilder.orderBy(
+          `project.${params.sortBy}`,
+          params.sortOrder === "asc" ? "ASC" : "DESC",
+        );
+      } else {
+        queryBuilder.orderBy("project.createdAt", "DESC");
+      }
+
       // Apply pagination if page and limit are provided
-      if (params.page && params.limit) {
-        queryBuilder.skip((params.page - 1) * params.limit).take(params.limit);
+      if (params.offset !== undefined && params.limit) {
+        queryBuilder.skip(params.offset).take(params.limit);
       }
 
       queryBuilder
-        .select(["project.id", "project.name", "project.description"])
+        .select([
+          "project.id",
+          "project.name",
+          "project.description",
+          "project.status",
+          "project.amount",
+          "project.startDate",
+          "project.endDate",
+          "project.status",
+          "project.createdAt",
+          "project.updatedAt",
+        ])
         .leftJoinAndSelect("project.client", "client")
+        .leftJoinAndSelect("client.country", "clientCountry")
         .leftJoinAndSelect("project.company", "company")
-        .orderBy("project.id", "ASC");
+        .leftJoinAndSelect("company.country", "companyCountry");
 
       const projects = await queryBuilder.getMany();
-      return projects;
+      // Get the total count based on the original query
+      const recordsTotal = await totalQuery.getCount();
+      return {
+        result: projects,
+        recordsTotal,
+      };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -73,7 +108,9 @@ export class ProjectService {
         .createQueryBuilder("project")
         .where({ id })
         .leftJoinAndSelect("project.client", "client")
+        .leftJoinAndSelect("client.country", "clientCountry")
         .leftJoinAndSelect("project.company", "company")
+        .leftJoinAndSelect("company.country", "companyCountry")
         .orderBy("project.id", "ASC");
       return await queryBuilder.getOne();
     } catch (error) {
@@ -83,14 +120,30 @@ export class ProjectService {
 
   async update(id: number, updateProjectDto: UpdateProjectDto) {
     try {
-      const isProjectExists = await this.projectRepository.findOneBy({ id });
+      const queryBuilder = this.projectRepository.createQueryBuilder("project");
+      const isProjectExists = await queryBuilder
+        .where({ id })
+        .leftJoinAndSelect("project.client", "client")
+        .leftJoinAndSelect("project.company", "company")
+        .getOne();
       if (!isProjectExists) {
         throw CustomError(
           PROJECT_RESPONSE_MESSAGES.PROJECT_NOT_FOUND,
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.projectRepository.update(id, updateProjectDto);
+      const updatedData: any = { ...isProjectExists, ...updateProjectDto };
+
+      if (updateProjectDto.companyId) {
+        const company = await this.companyRepository.findOneBy({
+          id: updateProjectDto.companyId,
+        });
+        updatedData.company = company;
+      }
+
+      const updatedProject = await this.projectRepository.save(updatedData);
+
+      return updatedProject;
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -113,5 +166,28 @@ export class ProjectService {
 
   async getProjectByName(name: string) {
     return await this.projectRepository.findOneBy({ name });
+  }
+
+  async changeProjectStatus(id: number, status: string) {
+    try {
+      const queryBuilder = this.projectRepository.createQueryBuilder("project");
+      const isProjectExists = await queryBuilder
+        .where({ id })
+        .leftJoinAndSelect("project.client", "client")
+        .leftJoinAndSelect("project.company", "company")
+        .getOne();
+      if (!isProjectExists) {
+        throw CustomError(
+          PROJECT_RESPONSE_MESSAGES.PROJECT_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      isProjectExists.status = status;
+      const updatedProject = await this.projectRepository.save(isProjectExists);
+
+      return updatedProject;
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
+    }
   }
 }

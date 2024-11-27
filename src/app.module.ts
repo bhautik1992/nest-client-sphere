@@ -14,6 +14,8 @@ import { UsersModule } from "./users/users.module";
 import { ClientModule } from "./client/client.module";
 import { ProjectModule } from "./project/project.module";
 import { CompanyModule } from "./company/company.module";
+import { DashboardModule } from "./dashboard/dashboard.module";
+import { CountryModule } from "./country/country.module";
 
 @Module({
   imports: [
@@ -24,11 +26,13 @@ import { CompanyModule } from "./company/company.module";
     }),
     DatabaseModule,
     AuthModule,
+    DashboardModule,
     ThrottleModule,
     UsersModule,
     ClientModule,
     ProjectModule,
     CompanyModule,
+    CountryModule,
   ],
   providers: [
     {

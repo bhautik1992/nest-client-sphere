@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  IsDateString,
   IsNotEmpty,
   IsNumber,
-  ValidateIf,
-  IsDateString,
+  IsOptional,
   IsString,
-  IsEmpty,
+  ValidateIf,
 } from "class-validator";
 
 export class LoginDto {
@@ -62,7 +62,7 @@ export class ListDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  page: number;
+  offset: number;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -70,7 +70,17 @@ export class ListDto {
   limit: number;
 
   @ApiProperty()
-  @IsEmpty()
+  @IsOptional()
   @IsString()
   search: string;
+
+  @ApiProperty({ enum: ["asc", "desc"] })
+  @IsOptional()
+  @IsString()
+  sortOrder: "asc" | "desc";
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  sortBy: string;
 }

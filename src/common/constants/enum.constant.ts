@@ -19,3 +19,5 @@ export enum ProjectStatus {
   IN_PROGRESS = "in_progress",
   COMPLETED = "completed",
 }
+
+export const CountryList = ["India", "USA", "UK", "Canada", "Australia"];

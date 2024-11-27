@@ -22,6 +22,7 @@ export const CLIENT_RESPONSE_MESSAGES = {
   CLIENT_FETCHED: "Client details fetched successfully",
   CLIENT_NOT_FOUND: "Client not found",
   CLIENT_ALREADY_EXISTS: "Client already exists",
+  CLIENT_STATUS_CHANGED: "Client status changed successfully",
 };
 
 export const PROJECT_RESPONSE_MESSAGES = {
@@ -32,6 +33,7 @@ export const PROJECT_RESPONSE_MESSAGES = {
   PROJECT_FETCHED: "Project details fetched successfully",
   PROJECT_NOT_FOUND: "Project not found",
   PROJECT_ALREADY_EXISTS: "Project already exists",
+  PROJECT_STATUS_CHANGED: "Project status changed successfully",
 };
 
 export const COMPANY_RESPONSE_MESSAGES = {
@@ -42,4 +44,16 @@ export const COMPANY_RESPONSE_MESSAGES = {
   COMPANY_FETCHED: "Company details fetched successfully",
   COMPANY_NOT_FOUND: "Company not found",
   COMPANY_ALREADY_EXISTS: "Company already exists",
+};
+
+export const DASHBOARD_RESPONSE_MESSAGES = {
+  DASHBOARD_COUNT_FETCHED: "Dashboard count fetched successfully",
+  DASHBOARD_USER_PROFILE_FETCHED: "Dashboard user profile fetched successfully",
+  DASHBOARD_CLIENT_LIST_FETCHED: "Dashboard client list fetched successfully",
+  DASHBOARD_COMPANY_LIST_FETCHED: "Dashboard company list fetched successfully",
+};
+
+export const COUNTRY_RESPONSE_MESSAGES = {
+  COUNTRY_LISTED: "Countries listed",
+  COUNTRY_INSERTED: "Country added successfully",
 };

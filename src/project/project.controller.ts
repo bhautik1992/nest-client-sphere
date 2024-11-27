@@ -47,15 +47,26 @@ export class ProjectController {
     return await this.projectService.update(id, updateProjectDto);
   }
 
-  @Delete("remove")
+  @Delete("delete/:id")
   @ResponseMessage(PROJECT_RESPONSE_MESSAGES.PROJECT_DELETED)
   async removeProject(@Param("id") id: number) {
     return await this.projectService.remove(id);
   }
 
-  @Get("getProjectById/:id")
+  @Get("get/:id")
   @ResponseMessage(PROJECT_RESPONSE_MESSAGES.PROJECT_FETCHED)
   async getProjectByName(@Param("id") id: number) {
     return await this.projectService.findOne(id);
+  }
+
+  @Post("status")
+  @ResponseMessage(PROJECT_RESPONSE_MESSAGES.PROJECT_STATUS_CHANGED)
+  async changeStatus(
+    @Body() changeStatusDto: { projectId: number; status: string },
+  ) {
+    return await this.projectService.changeProjectStatus(
+      changeStatusDto.projectId,
+      changeStatusDto.status,
+    );
   }
 }

@@ -38,21 +38,38 @@ export class CompanyService {
 
       // Apply search filter if the search term is provided
       if (params.search) {
-        queryBuilder.where("company.name LIKE :search", {
+        queryBuilder.where("company.name ILIKE :search", {
           search: `%${params.search}%`,
         });
       }
 
+      const totalQuery = queryBuilder.clone();
+
       // Apply pagination if page and limit are provided
-      if (params.page && params.limit) {
-        queryBuilder.skip((params.page - 1) * params.limit).take(params.limit);
+      if (params.offset !== undefined && params.limit) {
+        queryBuilder.skip(params.offset).take(params.limit);
+      }
+
+      // Apply sorting if sort and sortBy are provided
+      if (params.sortOrder && params.sortBy) {
+        queryBuilder.orderBy(
+          `company.${params.sortBy}`,
+          params.sortOrder === "asc" ? "ASC" : "DESC",
+        );
+      } else {
+        queryBuilder.orderBy("company.createdAt", "DESC");
       }
 
       queryBuilder
-        .orderBy("company.createdAt", "ASC")
-        .leftJoinAndSelect("company.projects", "project");
+        .leftJoinAndSelect("company.projects", "project")
+        .leftJoinAndSelect("company.country", "country");
       const companies = await queryBuilder.getMany();
-      return companies;
+      // Get the total count based on the original query
+      const recordsTotal = await totalQuery.getCount();
+      return {
+        result: companies,
+        recordsTotal,
+      };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -70,6 +87,7 @@ export class CompanyService {
       const queryBuilder = this.companyRepository.createQueryBuilder("company");
       return await queryBuilder
         .leftJoinAndSelect("company.projects", "project")
+        .leftJoinAndSelect("company.country", "country")
         .where({ id })
         .getOne();
     } catch (error) {
