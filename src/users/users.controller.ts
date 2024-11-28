@@ -24,19 +24,22 @@ import { UsersService } from "./users.service";
 
 @Controller("user")
 @ApiTags("User")
-@ApiBearerAuth()
-@Roles(UserRole.ADMIN)
-@UseGuards(RoleGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post("create")
+  @ApiBearerAuth()
+  @Roles(UserRole.ADMIN)
+  @UseGuards(RoleGuard)
   @ResponseMessage(USER_RESPONSE_MESSAGES.USER_INSERTED)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Post("list")
+  @ApiBearerAuth()
+  @Roles(UserRole.ADMIN)
+  @UseGuards(RoleGuard)
   @ResponseMessage(USER_RESPONSE_MESSAGES.USER_LISTED)
   @HttpCode(HttpStatus.OK)
   async findAll(@Body() params: ListDto) {
@@ -44,12 +47,18 @@ export class UsersController {
   }
 
   @Get("get/:id")
+  @ApiBearerAuth()
+  @Roles(UserRole.ADMIN)
+  @UseGuards(RoleGuard)
   @ResponseMessage(USER_RESPONSE_MESSAGES.USER_FETCHED)
   findOne(@Param("id") id: number) {
     return this.usersService.findOne(id);
   }
 
   @Post("update/:id")
+  @ApiBearerAuth()
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  @UseGuards(RoleGuard)
   @ResponseMessage(USER_RESPONSE_MESSAGES.USER_UPDATED)
   @UsePipes(new ValidationPipe({ transform: true }))
   update(@Param("id") id: number, @Body() updateUserDto: UpdateUserDto) {
@@ -57,6 +66,9 @@ export class UsersController {
   }
 
   @Delete("delete/:id")
+  @ApiBearerAuth()
+  @Roles(UserRole.ADMIN)
+  @UseGuards(RoleGuard)
   @ResponseMessage(USER_RESPONSE_MESSAGES.USER_DELETED)
   remove(@Param("id") id: number) {
     return this.usersService.remove(id);

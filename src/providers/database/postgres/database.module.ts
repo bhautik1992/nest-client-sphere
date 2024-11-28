@@ -23,7 +23,7 @@ import { Country } from "src/country/entity/country.entity";
           database: configService.get<string>("database.name"),
           entities: [Users, Clients, Companies, Projects, Country],
           synchronize: false,
-          logging: true,
+          logging: false,
         };
         return options;
       },

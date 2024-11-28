@@ -1,0 +1,45 @@
+version: "3.3"
+services:
+  postgres:
+    container_name: postgres-client-sphere-container
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_DB: client_sphere
+    # ports:
+    #   - 5432:5432
+    networks:
+      - new-network
+    restart: always
+    expose:
+      - 5432
+    # volumes:
+    #   - postgres:/data/db
+
+  backend:
+    container_name: client-sphere-backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      APP_PORT: 3000
+      DATABASE_HOST: postgres-client-sphere-container
+      DATABASE_PORT: 5432
+      DATABASE_NAME: client_sphere
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: root
+    networks:
+      - new-network
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
+
+networks:
+  new-network:
+    driver: bridge
