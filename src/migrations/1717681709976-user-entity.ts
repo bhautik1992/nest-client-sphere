@@ -26,6 +26,11 @@ const columns = [
     isNullable: false,
   },
   {
+    name: "phone",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
     name: "password",
     type: "varchar",
     isNullable: false,

@@ -20,6 +20,9 @@ export class Users {
   email: string;
 
   @Column({ nullable: false })
+  phone: string;
+
+  @Column({ nullable: false })
   password: string;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })

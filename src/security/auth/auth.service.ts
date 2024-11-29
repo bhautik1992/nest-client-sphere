@@ -80,6 +80,7 @@ export class AuthService {
         last_name: this.configService.get("database.initialUser.last_name"),
         role: this.configService.get("database.initialUser.role"),
         email: this.configService.get("database.initialUser.email"),
+        phone: this.configService.get("database.initialUser.phone"),
         password: "",
       };
       params.password = await bcrypt.hash(

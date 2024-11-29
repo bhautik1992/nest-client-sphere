@@ -13,6 +13,7 @@ export default registerAs("database", () => ({
     role: UserRole.ADMIN,
     email: "admin@infiazure.com",
     password: "Infiazure@123",
+    phone: "1234567890",
   },
   postgres: {
     enableSSL: process.env.ENABLE_SQL_SSL ? process.env.ENABLE_SQL_SSL : false,

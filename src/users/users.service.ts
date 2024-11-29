@@ -65,6 +65,7 @@ export class UsersService {
         "user.first_name",
         "user.last_name",
         "user.email",
+        "user.phone",
         "user.role",
       ]);
       const users = await queryBuilder.getMany();

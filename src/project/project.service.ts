@@ -1,16 +1,13 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Projects } from "./entity/project.entity";
+import { PROJECT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { ListDto } from "src/common/dto/common.dto";
+import { CustomError } from "src/common/helpers/exceptions";
+import { Companies } from "src/company/entity/company.entity";
 import { Repository } from "typeorm";
 import { CreateProjectDto } from "./dto/create-project.dto";
-import { CustomError } from "src/common/helpers/exceptions";
-import {
-  COMPANY_RESPONSE_MESSAGES,
-  PROJECT_RESPONSE_MESSAGES,
-} from "src/common/constants/response.constant";
-import { ListDto } from "src/common/dto/common.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
-import { Companies } from "src/company/entity/company.entity";
+import { Projects } from "./entity/project.entity";
 
 @Injectable()
 export class ProjectService {
