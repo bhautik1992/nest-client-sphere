@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { hash } from "bcrypt";
 import { Repository } from "typeorm";
 import { ListDto } from "../common/dto/common.dto";
 import { CustomError, TypeExceptions } from "../common/helpers/exceptions";
@@ -8,6 +7,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Users } from "./entity/user.entity";
 import { USER_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+const bcrypt = require("bcryptjs");
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,10 @@ export class UsersService {
     if (await this.getUserByEmail(createUserDto.email)) {
       throw TypeExceptions.UserAlreadyExists();
     }
-    createUserDto.password = await hash(`${createUserDto.first_name}@123`, 10);
+    createUserDto.password = await bcrypt.hash(
+      `${createUserDto.first_name}@123`,
+      10,
+    );
     const user = this.userRepository.create(createUserDto);
     const createdUser = await this.userRepository.save(user);
     delete createdUser.password;

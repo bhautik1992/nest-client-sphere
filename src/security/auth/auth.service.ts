@@ -4,10 +4,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Users } from "src/users/entity/user.entity";
 import { Repository } from "typeorm";
 import { ChangePasswordDto, LoginDto } from "../../common/dto/common.dto";
-import { compareSync, hash } from "bcrypt";
 import { AuthExceptions, CustomError } from "src/common/helpers/exceptions";
 import { ConfigService } from "@nestjs/config";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
+const bcrypt = require("bcryptjs");
 
 @Injectable()
 export class AuthService {
@@ -25,7 +25,7 @@ export class AuthService {
     if (!user) {
       throw AuthExceptions.AccountNotExist();
     }
-    if (!(await compareSync(params.password, user.password))) {
+    if (!(await bcrypt.compareSync(params.password, user.password))) {
       throw AuthExceptions.InvalidIdPassword();
     }
     delete user.password;
@@ -52,14 +52,14 @@ export class AuthService {
       if (!user) {
         throw AuthExceptions.AccountNotExist();
       }
-      const isPasswordMatch = await compareSync(
+      const isPasswordMatch = await bcrypt.compareSync(
         body.current_password,
         user.password,
       );
       if (!isPasswordMatch) {
         throw AuthExceptions.InvalidIdPassword();
       }
-      user.password = await hash(body.new_password, 10);
+      user.password = await bcrypt.hash(body.new_password, 10);
       await this.userRepository.save(user);
       return {};
     } catch (error) {
@@ -82,7 +82,7 @@ export class AuthService {
         email: this.configService.get("database.initialUser.email"),
         password: "",
       };
-      params.password = await hash(
+      params.password = await bcrypt.hash(
         this.configService.get("database.initialUser.password"),
         10,
       );
