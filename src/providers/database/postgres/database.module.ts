@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { Users } from "src/users/entity/user.entity";
-import { Clients } from "src/client/entity/client.entity";
-import { Projects } from "src/project/entity/project.entity";
-import { Companies } from "src/company/entity/company.entity";
+import { Users } from "src/modules/users/entity/user.entity";
+import { Clients } from "src/modules/client/entity/client.entity";
+import { Companies } from "src/modules/company/entity/company.entity";
+import { Projects } from "src/modules/project/entity/project.entity";
 
 @Module({
   imports: [

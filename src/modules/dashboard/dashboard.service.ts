@@ -1,13 +1,13 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Clients } from "src/client/entity/client.entity";
 import { USER_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { CustomError } from "src/common/helpers/exceptions";
 import { JwtPayload } from "src/common/interfaces/jwt.interface";
-import { Companies } from "src/company/entity/company.entity";
-import { Projects } from "src/project/entity/project.entity";
-import { Users } from "src/users/entity/user.entity";
 import { Repository } from "typeorm";
+import { Users } from "../users/entity/user.entity";
+import { Clients } from "../client/entity/client.entity";
+import { Projects } from "../project/entity/project.entity";
+import { Companies } from "../company/entity/company.entity";
 
 @Injectable()
 export class DashboardService {

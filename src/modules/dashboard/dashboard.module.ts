@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { DashboardController } from "./dashboard.controller";
 import { DashboardService } from "./dashboard.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Users } from "src/users/entity/user.entity";
-import { Clients } from "src/client/entity/client.entity";
-import { Projects } from "src/project/entity/project.entity";
-import { Companies } from "src/company/entity/company.entity";
+import { Companies } from "../company/entity/company.entity";
+import { Projects } from "../project/entity/project.entity";
+import { Clients } from "../client/entity/client.entity";
+import { Users } from "../users/entity/user.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Users, Clients, Projects, Companies])],

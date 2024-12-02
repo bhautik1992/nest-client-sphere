@@ -10,12 +10,12 @@ import { TransformInterceptor } from "./common/interceptors/transform.intercepto
 import AppConfiguration from "./config/app.config";
 import DatabaseConfiguration from "./config/database.config";
 import AuthConfiguration from "./config/auth.config";
-import { UsersModule } from "./users/users.module";
-import { ClientModule } from "./client/client.module";
-import { ProjectModule } from "./project/project.module";
-import { CompanyModule } from "./company/company.module";
-import { DashboardModule } from "./dashboard/dashboard.module";
-import { CountryStateCityModule } from "./country/country-state-city.module";
+import { UsersModule } from "./modules/users/users.module";
+import { DashboardModule } from "./modules/dashboard/dashboard.module";
+import { ClientModule } from "./modules/client/client.module";
+import { ProjectModule } from "./modules/project/project.module";
+import { CompanyModule } from "./modules/company/company.module";
+import { CountryStateCityModule } from "./modules/country-state-city/country-state-city.module";
 
 @Module({
   imports: [

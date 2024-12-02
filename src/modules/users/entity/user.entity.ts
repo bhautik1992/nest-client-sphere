@@ -1,5 +1,5 @@
 import { UserRole } from "src/common/constants/enum.constant";
-import { TABLE_NAMES } from "../../common/constants/table-name.constant";
+import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.USER })

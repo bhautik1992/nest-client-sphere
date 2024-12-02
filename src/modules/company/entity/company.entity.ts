@@ -1,13 +1,6 @@
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
-import { Projects } from "src/project/entity/project.entity";
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Projects } from "src/modules/project/entity/project.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.COMPANY })
 export class Companies {

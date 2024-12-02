@@ -1,6 +1,7 @@
-import { Clients } from "src/client/entity/client.entity";
 import { ProjectStatus } from "src/common/constants/enum.constant";
-import { Companies } from "src/company/entity/company.entity";
+import { TABLE_NAMES } from "src/common/constants/table-name.constant";
+import { Clients } from "src/modules/client/entity/client.entity";
+import { Companies } from "src/modules/company/entity/company.entity";
 import {
   Column,
   Entity,
@@ -8,7 +9,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { TABLE_NAMES } from "../../common/constants/table-name.constant";
 
 @Entity({ name: TABLE_NAMES.PROJECT })
 export class Projects {

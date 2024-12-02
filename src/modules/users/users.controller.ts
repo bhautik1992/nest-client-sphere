@@ -17,10 +17,10 @@ import { USER_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { Roles } from "src/common/decorators/role.decorator";
 import { ListDto } from "src/common/dto/common.dto";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
-import { ResponseMessage } from "../common/decorators/response.decorator";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
+import { ResponseMessage } from "src/common/decorators/response.decorator";
 
 @Controller("user")
 @ApiTags("User")

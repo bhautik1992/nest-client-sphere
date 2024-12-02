@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Users } from "src/users/entity/user.entity";
 import { Repository } from "typeorm";
 import { ChangePasswordDto, LoginDto } from "../../common/dto/common.dto";
 import { AuthExceptions, CustomError } from "src/common/helpers/exceptions";
 import { ConfigService } from "@nestjs/config";
-import { CreateUserDto } from "src/users/dto/create-user.dto";
+import { Users } from "src/modules/users/entity/user.entity";
+import { CreateUserDto } from "src/modules/users/dto/create-user.dto";
 const bcrypt = require("bcryptjs");
 
 @Injectable()

@@ -1,14 +1,7 @@
 import { ClientStatus } from "src/common/constants/enum.constant";
-import { TABLE_NAMES } from "../../common/constants/table-name.constant";
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  ManyToOne,
-  JoinColumn,
-} from "typeorm";
-import { Projects } from "src/project/entity/project.entity";
+import { TABLE_NAMES } from "src/common/constants/table-name.constant";
+import { Projects } from "src/modules/project/entity/project.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.CLIENT })
 export class Clients {
