@@ -23,7 +23,7 @@ export class Companies {
   stateCode: string;
 
   @Column({ nullable: false })
-  cityCode: string;
+  cityName: string;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

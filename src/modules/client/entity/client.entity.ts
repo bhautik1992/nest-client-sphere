@@ -9,13 +9,19 @@ export class Clients {
   id: number;
 
   @Column({ nullable: false })
-  name: string;
+  firstName: string;
+
+  @Column({ nullable: false })
+  lastName: string;
 
   @Column({ nullable: false, unique: true })
   email: string;
 
   @Column({ nullable: false })
   phone: string;
+
+  @Column({ nullable: false })
+  companyName: string;
 
   @Column({ nullable: false })
   address: string;
@@ -30,7 +36,7 @@ export class Clients {
   stateCode: string;
 
   @Column({ nullable: false })
-  cityCode: string;
+  cityName: string;
 
   @Column({ type: "enum", enum: ClientStatus })
   status: string;

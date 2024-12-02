@@ -22,7 +22,7 @@ export class UsersService {
       throw TypeExceptions.UserAlreadyExists();
     }
     createUserDto.password = await bcrypt.hash(
-      `${createUserDto.first_name}@123`,
+      `${createUserDto.firstName}@123`,
       10,
     );
     const user = this.userRepository.create(createUserDto);
@@ -38,7 +38,7 @@ export class UsersService {
       // Apply search filter if the search term is provided
       if (params.search) {
         queryBuilder.where(
-          "(user.first_name ILIKE :search OR user.last_name ILIKE :search OR user.email ILIKE :search)",
+          "(user.firstName ILIKE :search OR user.lastName ILIKE :search OR user.email ILIKE :search)",
           { search: `%${params.search}%` },
         );
       }
@@ -63,8 +63,8 @@ export class UsersService {
 
       queryBuilder.select([
         "user.id",
-        "user.first_name",
-        "user.last_name",
+        "user.firstName",
+        "user.lastName",
         "user.email",
         "user.phone",
         "user.role",

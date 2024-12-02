@@ -1,17 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { ClientStatus } from "src/common/constants/enum.constant";
 export class CreateClientDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  name: string;
+  firstName: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  lastName: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -26,6 +25,11 @@ export class CreateClientDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
+  companyName: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
   address: string;
 
   @ApiProperty()
@@ -35,8 +39,18 @@ export class CreateClientDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  countryId: number;
+  @IsString()
+  countryCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  stateCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  cityName: string;
 
   @ApiProperty()
   @IsNotEmpty()

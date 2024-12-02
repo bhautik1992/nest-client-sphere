@@ -1,12 +1,16 @@
 import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { CountryStateCityModule } from "../country-state-city/country-state-city.module";
+import { Projects } from "../project/entity/project.entity";
 import { ClientController } from "./client.controller";
 import { ClientService } from "./client.service";
-import { TypeOrmModule } from "@nestjs/typeorm";
 import { Clients } from "./entity/client.entity";
-import { Projects } from "../project/entity/project.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Clients, Projects])],
+  imports: [
+    TypeOrmModule.forFeature([Clients, Projects]),
+    CountryStateCityModule,
+  ],
   controllers: [ClientController],
   providers: [ClientService],
 })

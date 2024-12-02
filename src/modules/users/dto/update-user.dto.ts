@@ -1,9 +1,9 @@
 import { CreateUserDto } from "./create-user.dto";
 
 export class UpdateUserDto
-  implements Pick<CreateUserDto, "first_name" | "last_name" | "phone">
+  implements Pick<CreateUserDto, "firstName" | "lastName" | "phone">
 {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   phone: string;
 }

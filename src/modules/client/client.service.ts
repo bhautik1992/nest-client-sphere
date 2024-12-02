@@ -7,12 +7,14 @@ import { CustomError } from "src/common/helpers/exceptions";
 import { CLIENT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { ListDto } from "src/common/dto/common.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
+import { CountryStateCityService } from "../country-state-city/country-state-city.service";
 
 @Injectable()
 export class ClientService {
   constructor(
     @InjectRepository(Clients)
     private readonly clientRepository: Repository<Clients>,
+    private readonly countryStateCityService: CountryStateCityService,
   ) {}
 
   async create(createUserDto: CreateClientDto) {
@@ -57,28 +59,33 @@ export class ClientService {
         queryBuilder.orderBy("client.createdAt", "DESC");
       }
 
-      queryBuilder
-        .select([
-          "client.id",
-          "client.name",
-          "client.phone",
-          "client.email",
-          "client.address",
-          "client.gender",
-          "client.country",
-          "client.status",
-          "client.createdAt",
-        ])
-        .leftJoinAndSelect("client.projects", "project")
-        .leftJoinAndSelect("client.country", "country"); // Join with the Project entity
+      queryBuilder.leftJoinAndSelect("client.projects", "project"); // Join with the Project entity
 
       // Fetch the results (clients and associated projects)
       const clients = await queryBuilder.getMany();
 
+      const clientList = await Promise.all(
+        clients.map(async (client) => {
+          const countryName =
+            await this.countryStateCityService.getCountryByCode(
+              client.countryCode,
+            );
+          const stateName = await this.countryStateCityService.getStateByCode(
+            client.stateCode,
+            client.countryCode,
+          );
+          return {
+            ...client,
+            countryName,
+            stateName,
+          };
+        }),
+      );
+
       // Fetch the total count
       const recordsTotal = await totalQuery.getCount();
 
-      return { result: clients, recordsTotal };
+      return { result: clientList, recordsTotal };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -96,12 +103,18 @@ export class ClientService {
       const queryBuilder = this.clientRepository
         .createQueryBuilder("client")
         .where({ id })
-        .leftJoinAndSelect("client.projects", "project") // Join with the Project entity
-        .leftJoinAndSelect("client.country", "country");
+        .leftJoinAndSelect("client.projects", "project");
 
       // Fetch the results (clients and associated projects)
       const client = await queryBuilder.getOne();
-      return client;
+      const countryName = await this.countryStateCityService.getCountryByCode(
+        client.countryCode,
+      );
+      const stateName = await this.countryStateCityService.getStateByCode(
+        client.stateCode,
+        client.countryCode,
+      );
+      return { ...client, countryName, stateName };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -143,7 +156,6 @@ export class ClientService {
       const isClientExists = await queryBuilder
         .where({ id })
         .leftJoinAndSelect("client.projects", "project")
-        .leftJoinAndSelect("client.country", "country")
         .getOne();
       if (!isClientExists) {
         throw CustomError(

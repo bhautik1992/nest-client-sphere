@@ -8,10 +8,10 @@ export class Users {
   id: number;
 
   @Column({ nullable: false })
-  first_name: string;
+  firstName: string;
 
   @Column({ nullable: false })
-  last_name: string;
+  lastName: string;
 
   @Column({ type: "enum", enum: UserRole, nullable: false })
   role: string;

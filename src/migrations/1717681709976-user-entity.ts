@@ -11,12 +11,12 @@ const columns = [
     generationStrategy: "increment",
   },
   {
-    name: "first_name",
+    name: "firstName",
     type: "varchar",
     isNullable: false,
   },
   {
-    name: "last_name",
+    name: "lastName",
     type: "varchar",
     isNullable: false,
   },

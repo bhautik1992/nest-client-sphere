@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
 import { City, Country, State } from "country-state-city";
 import { CustomError } from "src/common/helpers/exceptions";
-import { Repository } from "typeorm";
 
 @Injectable()
 export class CountryStateCityService {
@@ -38,16 +36,16 @@ export class CountryStateCityService {
   async getCountryByCode(countryCode: string) {
     try {
       const country = Country.getCountryByCode(countryCode);
-      return country;
+      return country.name;
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
   }
 
-  async getStateByCode(stateCode: string) {
+  async getStateByCode(stateCode: string, countryCode: string) {
     try {
-      const state = State.getStateByCode(stateCode);
-      return state;
+      const state = State.getStateByCodeAndCountry(stateCode, countryCode);
+      return state.name;
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

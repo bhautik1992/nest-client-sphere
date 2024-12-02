@@ -29,12 +29,12 @@ export class ChangePasswordDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  current_password: string;
+  currentPassword: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  new_password: string;
+  newPassword: string;
 }
 
 export class DateRangeDto {

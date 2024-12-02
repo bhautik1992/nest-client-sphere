@@ -36,7 +36,7 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "cityCode",
+    name: "cityName",
     type: "varchar",
     isNullable: false,
   },

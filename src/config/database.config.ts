@@ -8,8 +8,8 @@ export default registerAs("database", () => ({
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASS,
   initialUser: {
-    first_name: "Infiazure",
-    last_name: "Technology",
+    firstName: "Infiazure",
+    lastName: "Technology",
     role: UserRole.ADMIN,
     email: "admin@infiazure.com",
     password: "Infiazure@123",

@@ -31,7 +31,7 @@ export class AuthService {
     delete user.password;
     const payload = {
       id: user.id,
-      name: user.first_name,
+      name: user.firstName,
       role: user.role,
     };
     return {
@@ -40,8 +40,8 @@ export class AuthService {
         expiresIn: process.env.JWT_TONE_EXPIRY_TIME,
       }),
       id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
     };
   }
@@ -53,13 +53,13 @@ export class AuthService {
         throw AuthExceptions.AccountNotExist();
       }
       const isPasswordMatch = await bcrypt.compareSync(
-        body.current_password,
+        body.currentPassword,
         user.password,
       );
       if (!isPasswordMatch) {
         throw AuthExceptions.InvalidIdPassword();
       }
-      user.password = await bcrypt.hash(body.new_password, 10);
+      user.password = await bcrypt.hash(body.newPassword, 10);
       await this.userRepository.save(user);
       return {};
     } catch (error) {
@@ -76,8 +76,8 @@ export class AuthService {
       console.log("Initial user already loaded.");
     } else {
       const params: CreateUserDto = {
-        first_name: this.configService.get("database.initialUser.first_name"),
-        last_name: this.configService.get("database.initialUser.last_name"),
+        firstName: this.configService.get("database.initialUser.firstName"),
+        lastName: this.configService.get("database.initialUser.lastName"),
         role: this.configService.get("database.initialUser.role"),
         email: this.configService.get("database.initialUser.email"),
         phone: this.configService.get("database.initialUser.phone"),

@@ -11,7 +11,12 @@ const columns = [
     generationStrategy: "increment",
   },
   {
-    name: "name",
+    name: "firstName",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "lastName",
     type: "varchar",
     isNullable: false,
   },
@@ -22,6 +27,11 @@ const columns = [
   },
   {
     name: "phone",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "companyName",
     type: "varchar",
     isNullable: false,
   },
@@ -46,7 +56,7 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "cityCode",
+    name: "cityName",
     type: "varchar",
     isNullable: false,
   },
