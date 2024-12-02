@@ -57,3 +57,11 @@ export const COUNTRY_RESPONSE_MESSAGES = {
   COUNTRY_LISTED: "Countries listed",
   COUNTRY_INSERTED: "Country added successfully",
 };
+
+export const STATE_RESPONSE_MESSAGES = {
+  STATE_LISTED: "States listed",
+};
+
+export const CITY_RESPONSE_MESSAGES = {
+  CITY_LISTED: "Cities listed",
+};

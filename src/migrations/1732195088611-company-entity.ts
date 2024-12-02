@@ -26,8 +26,18 @@ const columns = [
     unique: true,
   },
   {
-    name: "countryId",
-    type: "int",
+    name: "countryCode",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "stateCode",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "cityCode",
+    type: "varchar",
     isNullable: false,
   },
   {

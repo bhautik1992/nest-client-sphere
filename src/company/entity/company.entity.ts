@@ -1,5 +1,4 @@
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
-import { Country } from "src/country/entity/country.entity";
 import { Projects } from "src/project/entity/project.entity";
 import {
   Column,
@@ -24,12 +23,14 @@ export class Companies {
   @Column({ type: "varchar", nullable: false, unique: true })
   email: string;
 
-  @ManyToOne(() => Country, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn({ name: "countryId" })
-  country: Country;
+  @Column({ nullable: false })
+  countryCode: string;
 
-  @Column({ type: "int", nullable: false })
-  countryId: number;
+  @Column({ nullable: false })
+  stateCode: string;
+
+  @Column({ nullable: false })
+  cityCode: string;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

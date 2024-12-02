@@ -8,4 +8,6 @@ export const TABLE_NAMES = {
   PROJECT: `${PROJECT_PREFIX}project`,
   COMPANY: `${PROJECT_PREFIX}company`,
   COUNTRY: `${PROJECT_PREFIX}country`,
+  STATE: `${PROJECT_PREFIX}state`,
+  CITY: `${PROJECT_PREFIX}city`,
 };

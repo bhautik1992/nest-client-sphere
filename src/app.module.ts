@@ -15,7 +15,7 @@ import { ClientModule } from "./client/client.module";
 import { ProjectModule } from "./project/project.module";
 import { CompanyModule } from "./company/company.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
-import { CountryModule } from "./country/country.module";
+import { CountryStateCityModule } from "./country/country-state-city.module";
 
 @Module({
   imports: [
@@ -25,14 +25,14 @@ import { CountryModule } from "./country/country.module";
       isGlobal: true,
     }),
     DatabaseModule,
-    UsersModule,
     AuthModule,
+    UsersModule,
     DashboardModule,
     ThrottleModule,
     ClientModule,
     ProjectModule,
     CompanyModule,
-    CountryModule,
+    CountryStateCityModule,
   ],
   providers: [
     {

@@ -5,7 +5,6 @@ import { Users } from "src/users/entity/user.entity";
 import { Clients } from "src/client/entity/client.entity";
 import { Projects } from "src/project/entity/project.entity";
 import { Companies } from "src/company/entity/company.entity";
-import { Country } from "src/country/entity/country.entity";
 
 @Module({
   imports: [
@@ -21,7 +20,7 @@ import { Country } from "src/country/entity/country.entity";
           username: configService.get<string>("database.user"),
           password: configService.get<string>("database.password"),
           database: configService.get<string>("database.name"),
-          entities: [Users, Clients, Companies, Projects, Country],
+          entities: [Users, Clients, Companies, Projects],
           synchronize: false,
           logging: false,
         };
