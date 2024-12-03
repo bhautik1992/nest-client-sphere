@@ -18,7 +18,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    if (await this.getUserByEmail(createUserDto.email)) {
+    if (await this.getUserByEmail(createUserDto.companyEmail)) {
       throw TypeExceptions.UserAlreadyExists();
     }
     createUserDto.password = await bcrypt.hash(
@@ -61,14 +61,6 @@ export class UsersService {
         queryBuilder.take(params.limit);
       }
 
-      queryBuilder.select([
-        "user.id",
-        "user.firstName",
-        "user.lastName",
-        "user.email",
-        "user.phone",
-        "user.role",
-      ]);
       const users = await queryBuilder.getMany();
       const recordsTotal = await totalQuery.getCount();
       return {
@@ -129,6 +121,8 @@ export class UsersService {
   }
 
   async getUserByEmail(email: string) {
-    return await this.userRepository.findOneBy({ email });
+    return await this.userRepository.findOne({
+      where: { companyEmail: email },
+    });
   }
 }
