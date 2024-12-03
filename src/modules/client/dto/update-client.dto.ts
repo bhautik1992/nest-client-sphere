@@ -8,23 +8,27 @@ export class UpdateClientDto
       | "firstName"
       | "lastName"
       | "phone"
-      | "companyName"
       | "address"
       | "gender"
+      | "designation"
+      | "accountManager"
       | "countryCode"
       | "stateCode"
       | "cityName"
       | "status"
+      | "zipCode"
     >
 {
   firstName: string;
   lastName: string;
   phone: string;
-  companyName: string;
   address: string;
   gender: string;
+  designation: string;
+  accountManager: string;
   countryCode: string;
   stateCode: string;
   cityName: string;
   status: ClientStatus;
+  zipCode: string;
 }

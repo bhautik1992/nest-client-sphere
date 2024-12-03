@@ -28,12 +28,32 @@ const columns = [
   {
     name: "phone",
     type: "varchar",
+    isNullable: true,
+  },
+  {
+    name: "designation",
+    type: "varchar",
     isNullable: false,
   },
   {
     name: "companyName",
     type: "varchar",
     isNullable: false,
+  },
+  {
+    name: "clientCompanyName",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "accountManager",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "website",
+    type: "varchar",
+    isNullable: true,
   },
   {
     name: "address",
@@ -59,6 +79,11 @@ const columns = [
     name: "cityName",
     type: "varchar",
     isNullable: false,
+  },
+  {
+    name: "zipCode",
+    type: "varchar",
+    isNullable: true,
   },
   {
     name: "status",

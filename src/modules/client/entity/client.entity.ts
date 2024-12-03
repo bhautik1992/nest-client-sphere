@@ -17,11 +17,23 @@ export class Clients {
   @Column({ nullable: false, unique: true })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   phone: string;
 
   @Column({ nullable: false })
+  designation: string;
+
+  @Column({ nullable: false })
   companyName: string;
+
+  @Column({ nullable: false })
+  clientCompanyName: string;
+
+  @Column({ nullable: false })
+  accountManager: string;
+
+  @Column({ nullable: true })
+  website: string;
 
   @Column({ nullable: false })
   address: string;
@@ -37,6 +49,9 @@ export class Clients {
 
   @Column({ nullable: false })
   cityName: string;
+
+  @Column({ nullable: true })
+  zipCode: string;
 
   @Column({ type: "enum", enum: Object.values(ClientStatus) })
   status: ClientStatus;
