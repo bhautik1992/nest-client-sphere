@@ -60,9 +60,6 @@ export class CompanyService {
         queryBuilder.orderBy("company.createdAt", "DESC");
       }
 
-      queryBuilder
-        .leftJoinAndSelect("company.projects", "project")
-        .leftJoinAndSelect("company.country", "country");
       const companies = await queryBuilder.getMany();
       // Get the total count based on the original query
       const recordsTotal = await totalQuery.getCount();
@@ -85,11 +82,7 @@ export class CompanyService {
         );
       }
       const queryBuilder = this.companyRepository.createQueryBuilder("company");
-      return await queryBuilder
-        .leftJoinAndSelect("company.projects", "project")
-        .leftJoinAndSelect("company.country", "country")
-        .where({ id })
-        .getOne();
+      return await queryBuilder.where({ id }).getOne();
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

@@ -1,3 +1,8 @@
+import {
+  BillingType,
+  CurrencyType,
+  ProjectStatus,
+} from "../common/constants/enum.constant";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
 import {
   MigrationInterface,
@@ -28,13 +33,8 @@ const columns = [
   {
     name: "status",
     type: "enum",
-    enum: ["not_started", "start", "in_progress", "completed"],
+    enum: Object.values(ProjectStatus),
     default: "'not_started'",
-    isNullable: false,
-  },
-  {
-    name: "amount",
-    type: "numeric",
     isNullable: false,
   },
   {
@@ -48,6 +48,44 @@ const columns = [
     isNullable: true,
   },
   {
+    name: "billingType",
+    type: "enum",
+    enum: Object.values(BillingType),
+    default: "'hourly'",
+    isNullable: false,
+  },
+  {
+    name: "hourlyMonthlyRate",
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    default: 0,
+  },
+  {
+    name: "projectHours",
+    type: "int",
+    default: 0,
+  },
+  {
+    name: "currency",
+    type: "enum",
+    enum: Object.values(CurrencyType),
+    default: "'USD'",
+    isNullable: false,
+  },
+  {
+    name: "amount",
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    isNullable: false,
+  },
+  {
+    name: "clientId",
+    type: "int",
+    isNullable: false,
+  },
+  {
     name: "createdAt",
     type: "timestamp",
     default: "CURRENT_TIMESTAMP",
@@ -57,16 +95,6 @@ const columns = [
     type: "timestamp",
     default: "CURRENT_TIMESTAMP",
     onUpdate: "CURRENT_TIMESTAMP",
-  },
-  {
-    name: "clientId",
-    type: "int",
-    isNullable: false,
-  },
-  {
-    name: "companyId",
-    type: "int",
-    isNullable: false,
   },
 ];
 
@@ -98,28 +126,14 @@ export class ProjectEntity1732195177614 implements MigrationInterface {
         onDelete: "CASCADE",
       }),
     );
-    await queryRunner.createForeignKey(
-      TABLE_NAMES.PROJECT,
-      new TableForeignKey({
-        columnNames: ["companyId"],
-        referencedColumnNames: ["id"],
-        referencedTableName: TABLE_NAMES.COMPANY,
-        onDelete: "CASCADE",
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable(TABLE_NAMES.PROJECT);
-    const companyTable = await queryRunner.getTable(TABLE_NAMES.COMPANY);
     const foreignKey = table.foreignKeys.find(
       (fk) => fk.columnNames.indexOf("clientId") !== -1,
     );
-    const companyForeignKey = companyTable.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf("companyId") !== -1,
-    );
     await queryRunner.dropForeignKey(TABLE_NAMES.PROJECT, foreignKey);
-    await queryRunner.dropForeignKey(TABLE_NAMES.PROJECT, companyForeignKey);
     await queryRunner.dropTable(TABLE_NAMES.PROJECT);
   }
 }

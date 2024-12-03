@@ -8,6 +8,7 @@ import { CLIENT_RESPONSE_MESSAGES } from "src/common/constants/response.constant
 import { ListDto } from "src/common/dto/common.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { ClientStatus } from "src/common/constants/enum.constant";
 
 @Injectable()
 export class ClientService {
@@ -150,7 +151,7 @@ export class ClientService {
     }
   }
 
-  async changeStatus(id: number, status: string) {
+  async changeStatus(id: number, status: ClientStatus) {
     try {
       const queryBuilder = this.clientRepository.createQueryBuilder("client");
       const isClientExists = await queryBuilder

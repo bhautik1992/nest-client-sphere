@@ -63,7 +63,7 @@ const columns = [
   {
     name: "status",
     type: "enum",
-    enum: [ClientStatus.ACTIVE, ClientStatus.INACTIVE],
+    enum: Object.values(ClientStatus),
     isNullable: false,
   },
   {

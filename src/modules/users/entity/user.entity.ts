@@ -13,8 +13,8 @@ export class Users {
   @Column({ nullable: false })
   lastName: string;
 
-  @Column({ type: "enum", enum: UserRole, nullable: false })
-  role: string;
+  @Column({ type: "enum", enum: Object.values(UserRole), nullable: false })
+  role: UserRole;
 
   @Column({ nullable: false, unique: true })
   email: string;

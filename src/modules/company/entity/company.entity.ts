@@ -1,6 +1,5 @@
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
-import { Projects } from "src/modules/project/entity/project.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.COMPANY })
 export class Companies {
@@ -34,7 +33,4 @@ export class Companies {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: Date;
-
-  @OneToMany(() => Projects, (project) => project.company)
-  projects: Projects[];
 }

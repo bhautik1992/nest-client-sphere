@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserRole } from "src/common/constants/enum.constant";
+import { ClientStatus, UserRole } from "src/common/constants/enum.constant";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { ClientService } from "./client.service";
@@ -56,7 +56,7 @@ export class ClientController {
   @Post("active-inactive")
   @ResponseMessage(CLIENT_RESPONSE_MESSAGES.CLIENT_STATUS_CHANGED)
   async changeStatus(
-    @Body() changeStatusDto: { clientId: number; status: string },
+    @Body() changeStatusDto: { clientId: number; status: ClientStatus },
   ) {
     return await this.clientService.changeStatus(
       changeStatusDto.clientId,

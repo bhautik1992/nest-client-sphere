@@ -38,8 +38,8 @@ export class Clients {
   @Column({ nullable: false })
   cityName: string;
 
-  @Column({ type: "enum", enum: ClientStatus })
-  status: string;
+  @Column({ type: "enum", enum: Object.values(ClientStatus) })
+  status: ClientStatus;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

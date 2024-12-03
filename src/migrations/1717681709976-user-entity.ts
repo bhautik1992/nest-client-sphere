@@ -38,7 +38,7 @@ const columns = [
   {
     name: "role",
     type: "enum",
-    enum: [UserRole.ADMIN, UserRole.USER],
+    enum: Object.values(UserRole),
     isNullable: false,
   },
   {

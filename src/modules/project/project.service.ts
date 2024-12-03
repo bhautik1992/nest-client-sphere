@@ -8,15 +8,13 @@ import { Repository } from "typeorm";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { Projects } from "./entity/project.entity";
-import { Companies } from "../company/entity/company.entity";
+import { ProjectStatus } from "src/common/constants/enum.constant";
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(Projects)
     private readonly projectRepository: Repository<Projects>,
-    @InjectRepository(Companies)
-    private readonly companyRepository: Repository<Companies>,
   ) {}
 
   async create(createProjectDto: CreateProjectDto) {
@@ -63,24 +61,7 @@ export class ProjectService {
         queryBuilder.skip(params.offset).take(params.limit);
       }
 
-      queryBuilder
-        .select([
-          "project.id",
-          "project.name",
-          "project.description",
-          "project.status",
-          "project.amount",
-          "project.startDate",
-          "project.endDate",
-          "project.status",
-          "project.createdAt",
-          "project.updatedAt",
-        ])
-        .leftJoinAndSelect("project.client", "client")
-        .leftJoinAndSelect("client.country", "clientCountry")
-        .leftJoinAndSelect("project.company", "company")
-        .leftJoinAndSelect("company.country", "companyCountry");
-
+      queryBuilder.leftJoinAndSelect("project.client", "client");
       const projects = await queryBuilder.getMany();
       // Get the total count based on the original query
       const recordsTotal = await totalQuery.getCount();
@@ -106,9 +87,6 @@ export class ProjectService {
         .createQueryBuilder("project")
         .where({ id })
         .leftJoinAndSelect("project.client", "client")
-        .leftJoinAndSelect("client.country", "clientCountry")
-        .leftJoinAndSelect("project.company", "company")
-        .leftJoinAndSelect("company.country", "companyCountry")
         .orderBy("project.id", "ASC");
       return await queryBuilder.getOne();
     } catch (error) {
@@ -122,7 +100,6 @@ export class ProjectService {
       const isProjectExists = await queryBuilder
         .where({ id })
         .leftJoinAndSelect("project.client", "client")
-        .leftJoinAndSelect("project.company", "company")
         .getOne();
       if (!isProjectExists) {
         throw CustomError(
@@ -131,14 +108,6 @@ export class ProjectService {
         );
       }
       const updatedData: any = { ...isProjectExists, ...updateProjectDto };
-
-      if (updateProjectDto.companyId) {
-        const company = await this.companyRepository.findOneBy({
-          id: updateProjectDto.companyId,
-        });
-        updatedData.company = company;
-      }
-
       const updatedProject = await this.projectRepository.save(updatedData);
 
       return updatedProject;
@@ -166,13 +135,12 @@ export class ProjectService {
     return await this.projectRepository.findOneBy({ name });
   }
 
-  async changeProjectStatus(id: number, status: string) {
+  async changeProjectStatus(id: number, status: ProjectStatus) {
     try {
       const queryBuilder = this.projectRepository.createQueryBuilder("project");
       const isProjectExists = await queryBuilder
         .where({ id })
         .leftJoinAndSelect("project.client", "client")
-        .leftJoinAndSelect("project.company", "company")
         .getOne();
       if (!isProjectExists) {
         throw CustomError(

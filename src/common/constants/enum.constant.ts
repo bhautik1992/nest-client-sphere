@@ -19,3 +19,19 @@ export enum ProjectStatus {
   IN_PROGRESS = "in_progress",
   COMPLETED = "completed",
 }
+
+export enum BillingType {
+  FIXED = "fixed",
+  HOURLY = "hourly",
+  MONTHLY = "monthly",
+}
+
+export enum CurrencyType {
+  USD = "USD",
+  GBP = "GBP",
+  INR = "INR",
+  EUR = "EUR",
+  AUD = "AUD",
+  CAD = "CAD",
+  AED = "AED",
+}

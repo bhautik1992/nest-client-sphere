@@ -16,7 +16,7 @@ import { UpdateProjectDto } from "./dto/update-project.dto";
 import { ProjectService } from "./project.service";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { Roles } from "src/common/decorators/role.decorator";
-import { UserRole } from "src/common/constants/enum.constant";
+import { ProjectStatus, UserRole } from "src/common/constants/enum.constant";
 
 @Controller("project")
 @ApiTags("Project")
@@ -62,7 +62,7 @@ export class ProjectController {
   @Post("status")
   @ResponseMessage(PROJECT_RESPONSE_MESSAGES.PROJECT_STATUS_CHANGED)
   async changeStatus(
-    @Body() changeStatusDto: { projectId: number; status: string },
+    @Body() changeStatusDto: { projectId: number; status: ProjectStatus },
   ) {
     return await this.projectService.changeProjectStatus(
       changeStatusDto.projectId,

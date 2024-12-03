@@ -1,7 +1,10 @@
-import { ProjectStatus } from "src/common/constants/enum.constant";
+import {
+  BillingType,
+  CurrencyType,
+  ProjectStatus,
+} from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
-import { Companies } from "src/modules/company/entity/company.entity";
 import {
   Column,
   Entity,
@@ -21,11 +24,8 @@ export class Projects {
   @Column({ nullable: false })
   description: string;
 
-  @Column({ type: "enum", enum: ProjectStatus, nullable: false })
-  status: string;
-
-  @Column({ nullable: false })
-  amount: number;
+  @Column({ type: "enum", enum: Object.values(ProjectStatus), nullable: false })
+  status: ProjectStatus;
 
   @Column({ nullable: false })
   startDate: Date;
@@ -33,25 +33,31 @@ export class Projects {
   @Column({ nullable: true })
   endDate: Date;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: Date;
+  @Column({ type: "enum", enum: Object.values(BillingType), nullable: false })
+  billingType: BillingType;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  updatedAt: Date;
+  @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
+  hourlyMonthlyRate: number;
+
+  @Column({ type: "int", default: 0 })
+  projectHours: number;
+
+  @Column({ type: "enum", enum: Object.values(CurrencyType), nullable: false })
+  currency: CurrencyType;
+
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
+  amount: number;
+
+  @Column({ type: "int", nullable: false })
+  clientId: number;
 
   @ManyToOne(() => Clients, (client) => client.projects, { nullable: false })
   @JoinColumn({ name: "clientId" })
   client: Clients;
 
-  @ManyToOne(() => Companies, (company) => company.projects, {
-    nullable: false,
-  })
-  @JoinColumn({ name: "companyId" })
-  company: Companies;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  createdAt: Date;
 
-  @Column({ type: "int", nullable: false })
-  clientId: number;
-
-  @Column({ type: "int", nullable: false })
-  companyId: number;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  updatedAt: Date;
 }
