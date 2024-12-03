@@ -37,7 +37,7 @@ export class ClientService {
       // Apply search filter if the search term is provided
       if (params.search) {
         queryBuilder.where(
-          "(client.name ILIKE :search OR client.phone ILIKE :search OR client.email ILIKE :search)",
+          "(client.firstName ILIKE :search OR client.lastName ILIKE :search OR client.phone ILIKE :search OR client.email ILIKE :search)",
           { search: `%${params.search}%` },
         );
       }
