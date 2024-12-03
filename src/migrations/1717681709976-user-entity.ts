@@ -21,7 +21,18 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "email",
+    name: "role",
+    type: "enum",
+    enum: Object.values(UserRole),
+    isNullable: false,
+  },
+  {
+    name: "personalEmail",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "companyEmail",
     type: "varchar",
     isNullable: false,
   },
@@ -31,15 +42,40 @@ const columns = [
     isNullable: false,
   },
   {
+    name: "department",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "designation",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
     name: "password",
     type: "varchar",
     isNullable: false,
   },
   {
-    name: "role",
-    type: "enum",
-    enum: Object.values(UserRole),
+    name: "dateOfBirth",
+    type: "date",
+    isNullable: true,
+  },
+  {
+    name: "joiningDate",
+    type: "date",
     isNullable: false,
+  },
+  {
+    name: "reportingPerson",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "userCode",
+    type: "varchar",
+    isNullable: false,
+    unique: true,
   },
   {
     name: "createdAt",

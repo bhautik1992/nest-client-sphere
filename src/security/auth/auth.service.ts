@@ -19,7 +19,7 @@ export class AuthService {
 
   async login(params: LoginDto) {
     const user = await this.userRepository.findOneBy({
-      email: params.email,
+      companyEmail: params.email,
     });
 
     if (!user) {
@@ -42,7 +42,8 @@ export class AuthService {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
-      email: user.email,
+      personalEmail: user.personalEmail,
+      companyEmail: user.companyEmail,
     };
   }
 
@@ -68,8 +69,19 @@ export class AuthService {
   }
 
   async createInitialUser(): Promise<void> {
-    const user = await this.userRepository.findOneBy({
-      email: this.configService.get("database.initialUser.email"),
+    const user = await this.userRepository.findOne({
+      where: [
+        {
+          personalEmail: this.configService.get(
+            "database.initialUser.personalEmail",
+          ),
+        },
+        {
+          companyEmail: this.configService.get(
+            "database.initialUser.companyEmail",
+          ),
+        },
+      ],
     });
 
     if (user) {
@@ -79,8 +91,20 @@ export class AuthService {
         firstName: this.configService.get("database.initialUser.firstName"),
         lastName: this.configService.get("database.initialUser.lastName"),
         role: this.configService.get("database.initialUser.role"),
-        email: this.configService.get("database.initialUser.email"),
+        personalEmail: this.configService.get(
+          "database.initialUser.personalEmail",
+        ),
+        companyEmail: this.configService.get(
+          "database.initialUser.companyEmail",
+        ),
         phone: this.configService.get("database.initialUser.phone"),
+        department: this.configService.get("database.initialUser.department"),
+        designation: this.configService.get("database.initialUser.designation"),
+        dateOfBirth: this.configService.get("database.initialUser.dateOfBirth"),
+        joiningDate: this.configService.get("database.initialUser.joiningDate"),
+        reportingPerson: this.configService.get(
+          "database.initialUser.reportingPerson",
+        ),
         password: "",
       };
       params.password = await bcrypt.hash(
