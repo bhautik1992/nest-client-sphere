@@ -1,4 +1,4 @@
-import { ClientStatus } from "../common/constants/enum.constant";
+import { ClientStatus, Designation } from "../common/constants/enum.constant";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
 import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
 
@@ -32,12 +32,13 @@ const columns = [
   },
   {
     name: "designation",
-    type: "varchar",
+    type: "enum",
+    enum: Object.values(Designation),
     isNullable: false,
   },
   {
-    name: "companyName",
-    type: "varchar",
+    name: "companyId",
+    type: "int",
     isNullable: false,
   },
   {
@@ -58,7 +59,7 @@ const columns = [
   {
     name: "address",
     type: "varchar",
-    isNullable: false,
+    isNullable: true,
   },
   {
     name: "gender",
@@ -73,15 +74,20 @@ const columns = [
   {
     name: "stateCode",
     type: "varchar",
-    isNullable: false,
+    isNullable: true,
   },
   {
     name: "cityName",
     type: "varchar",
-    isNullable: false,
+    isNullable: true,
   },
   {
     name: "zipCode",
+    type: "varchar",
+    isNullable: true,
+  },
+  {
+    name: "skypeId",
     type: "varchar",
     isNullable: true,
   },

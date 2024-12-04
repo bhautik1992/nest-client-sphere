@@ -3,10 +3,11 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from "class-validator";
-import { ClientStatus } from "src/common/constants/enum.constant";
+import { ClientStatus, Designation } from "src/common/constants/enum.constant";
 export class CreateClientDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -30,13 +31,13 @@ export class CreateClientDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  designation: string;
+  @IsEnum(Designation)
+  designation: Designation;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  companyName: string;
+  @IsNumber()
+  companyId: number;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -49,7 +50,7 @@ export class CreateClientDto {
   accountManager: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   address: string;
 
@@ -64,12 +65,12 @@ export class CreateClientDto {
   countryCode: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   stateCode: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   cityName: string;
 
@@ -82,4 +83,9 @@ export class CreateClientDto {
   @IsOptional()
   @IsString()
   zipCode: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  skypeId: string;
 }
