@@ -15,8 +15,8 @@ export enum ClientStatus {
 
 export enum ProjectStatus {
   NOT_STARTED = "not_started",
-  START = "start",
-  IN_PROGRESS = "in_progress",
+  STARTED = "started",
+  PENDING = "pending",
   COMPLETED = "completed",
 }
 
@@ -31,7 +31,9 @@ export enum CurrencyType {
   GBP = "GBP",
   INR = "INR",
   EUR = "EUR",
-  AUD = "AUD",
-  CAD = "CAD",
-  AED = "AED",
+}
+
+export enum InvoiceStatus {
+  PAID = "paid",
+  PENDING = "pending",
 }

@@ -52,7 +52,15 @@ export class DashboardService {
   async getClientList() {
     try {
       const queryBuilder = this.clientRepository.createQueryBuilder("client");
-      return await queryBuilder.select(["client.id", "client.name"]).getMany();
+      return await queryBuilder
+        .select([
+          "client.id",
+          "client.firstName",
+          "client.lastName",
+          "client.clientCompanyName",
+          "client.companyName",
+        ])
+        .getMany();
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

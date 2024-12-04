@@ -7,7 +7,12 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import { ProjectStatus } from "src/common/constants/enum.constant";
+import {
+  BillingType,
+  CurrencyType,
+  InvoiceStatus,
+  ProjectStatus,
+} from "src/common/constants/enum.constant";
 export class CreateProjectDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -15,7 +20,7 @@ export class CreateProjectDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   description: string;
 
@@ -23,11 +28,6 @@ export class CreateProjectDto {
   @IsNotEmpty()
   @IsEnum(ProjectStatus)
   status: ProjectStatus;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  amount: number;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -46,6 +46,36 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  @IsEnum(InvoiceStatus)
+  invoiceStatus: InvoiceStatus;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  projectManager: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEnum(CurrencyType)
+  currency: CurrencyType;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEnum(BillingType)
+  billingType: BillingType;
+
+  @ApiProperty()
+  @IsNotEmpty()
   @IsNumber()
-  companyId: number;
+  hourlyMonthlyRate: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  projectHours: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  amount: number;
 }

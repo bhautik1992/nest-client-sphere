@@ -1,6 +1,7 @@
 import {
   BillingType,
   CurrencyType,
+  InvoiceStatus,
   ProjectStatus,
 } from "../common/constants/enum.constant";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
@@ -52,6 +53,17 @@ const columns = [
     type: "enum",
     enum: Object.values(BillingType),
     default: "'hourly'",
+    isNullable: false,
+  },
+  {
+    name: "invoiceStatus",
+    type: "enum",
+    enum: Object.values(InvoiceStatus),
+    isNullable: false,
+  },
+  {
+    name: "projectManager",
+    type: "varchar",
     isNullable: false,
   },
   {
