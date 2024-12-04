@@ -1,6 +1,7 @@
 import {
   BillingType,
   CurrencyType,
+  InvoiceStatus,
   ProjectStatus,
 } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
@@ -21,7 +22,7 @@ export class Projects {
   @Column({ nullable: false, unique: true })
   name: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   description: string;
 
   @Column({ type: "enum", enum: Object.values(ProjectStatus), nullable: false })
@@ -36,10 +37,22 @@ export class Projects {
   @Column({ type: "enum", enum: Object.values(BillingType), nullable: false })
   billingType: BillingType;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
+  @Column({ type: "enum", enum: Object.values(InvoiceStatus), nullable: false })
+  invoiceStatus: InvoiceStatus;
+
+  @Column({ nullable: false })
+  projectManager: string;
+
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    default: 0,
+    nullable: false,
+  })
   hourlyMonthlyRate: number;
 
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "int", default: 0, nullable: false })
   projectHours: number;
 
   @Column({ type: "enum", enum: Object.values(CurrencyType), nullable: false })
