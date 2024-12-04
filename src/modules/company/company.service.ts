@@ -7,12 +7,14 @@ import { CustomError } from "src/common/helpers/exceptions";
 import { COMPANY_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { ListDto } from "src/common/dto/common.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
+import { CountryStateCityService } from "../country-state-city/country-state-city.service";
 
 @Injectable()
 export class CompanyService {
   constructor(
     @InjectRepository(Companies)
     private readonly companyRepository: Repository<Companies>,
+    private readonly countryStateCityService: CountryStateCityService,
   ) {}
 
   async create(createCompanyDto: CreateCompanyDto) {
@@ -61,10 +63,29 @@ export class CompanyService {
       }
 
       const companies = await queryBuilder.getMany();
+
+      const companyList = await Promise.all(
+        companies.map(async (company) => {
+          const countryName =
+            await this.countryStateCityService.getCountryByCode(
+              company.countryCode,
+            );
+          const stateName = await this.countryStateCityService.getStateByCode(
+            company.stateCode,
+            company.countryCode,
+          );
+          return {
+            ...company,
+            countryName,
+            stateName,
+          };
+        }),
+      );
+
       // Get the total count based on the original query
       const recordsTotal = await totalQuery.getCount();
       return {
-        result: companies,
+        result: companyList,
         recordsTotal,
       };
     } catch (error) {
@@ -82,7 +103,15 @@ export class CompanyService {
         );
       }
       const queryBuilder = this.companyRepository.createQueryBuilder("company");
-      return await queryBuilder.where({ id }).getOne();
+      const companyData = await queryBuilder.where({ id }).getOne();
+      const countryName = await this.countryStateCityService.getCountryByCode(
+        company.countryCode,
+      );
+      const stateName = await this.countryStateCityService.getStateByCode(
+        company.stateCode,
+        company.countryCode,
+      );
+      return { ...companyData, countryName, stateName };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

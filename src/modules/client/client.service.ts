@@ -37,7 +37,7 @@ export class ClientService {
       // Apply search filter if the search term is provided
       if (params.search) {
         queryBuilder.where(
-          "(client.firstName ILIKE :search OR client.lastName ILIKE :search OR client.phone ILIKE :search OR client.email ILIKE :search)",
+          "(client.firstName ILIKE :search OR client.lastName ILIKE :search OR client.phone ILIKE :search OR client.email ILIKE :search OR client.clientCompanyName ILIKE :search)",
           { search: `%${params.search}%` },
         );
       }
@@ -60,7 +60,9 @@ export class ClientService {
         queryBuilder.orderBy("client.createdAt", "DESC");
       }
 
-      queryBuilder.leftJoinAndSelect("client.projects", "project"); // Join with the Project entity
+      queryBuilder
+        .leftJoinAndSelect("client.projects", "project") // Join with the Project entity
+        .leftJoinAndSelect("client.company", "company");
 
       // Fetch the results (clients and associated projects)
       const clients = await queryBuilder.getMany();
@@ -71,10 +73,13 @@ export class ClientService {
             await this.countryStateCityService.getCountryByCode(
               client.countryCode,
             );
-          const stateName = await this.countryStateCityService.getStateByCode(
-            client.stateCode,
-            client.countryCode,
-          );
+          let stateName = null;
+          if (client.stateCode) {
+            stateName = await this.countryStateCityService.getStateByCode(
+              client.stateCode,
+              client.countryCode,
+            );
+          }
           return {
             ...client,
             countryName,
@@ -104,17 +109,21 @@ export class ClientService {
       const queryBuilder = this.clientRepository
         .createQueryBuilder("client")
         .where({ id })
-        .leftJoinAndSelect("client.projects", "project");
+        .leftJoinAndSelect("client.projects", "project")
+        .leftJoinAndSelect("client.company", "company");
 
       // Fetch the results (clients and associated projects)
       const client = await queryBuilder.getOne();
       const countryName = await this.countryStateCityService.getCountryByCode(
         client.countryCode,
       );
-      const stateName = await this.countryStateCityService.getStateByCode(
-        client.stateCode,
-        client.countryCode,
-      );
+      let stateName = null;
+      if (client.stateCode) {
+        stateName = await this.countryStateCityService.getStateByCode(
+          client.stateCode,
+          client.countryCode,
+        );
+      }
       return { ...client, countryName, stateName };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);

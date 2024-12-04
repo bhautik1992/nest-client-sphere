@@ -1,7 +1,15 @@
-import { ClientStatus } from "src/common/constants/enum.constant";
+import { ClientStatus, Designation } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
+import { Companies } from "src/modules/company/entity/company.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity({ name: TABLE_NAMES.CLIENT })
 export class Clients {
@@ -20,11 +28,15 @@ export class Clients {
   @Column({ nullable: true })
   phone: string;
 
-  @Column({ nullable: false })
-  designation: string;
+  @Column({ type: "enum", enum: Object.values(Designation), nullable: false })
+  designation: Designation;
 
-  @Column({ nullable: false })
-  companyName: string;
+  @Column({ type: "int", nullable: false })
+  companyId: number;
+
+  @ManyToOne(() => Companies, (company) => company.clients, { nullable: false })
+  @JoinColumn({ name: "companyId" })
+  company: Companies;
 
   @Column({ nullable: false })
   clientCompanyName: string;
@@ -35,6 +47,9 @@ export class Clients {
   @Column({ nullable: true })
   website: string;
 
+  @Column({ nullable: true })
+  skypeId: string;
+
   @Column({ nullable: false })
   address: string;
 
@@ -44,10 +59,10 @@ export class Clients {
   @Column({ nullable: false })
   countryCode: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   stateCode: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   cityName: string;
 
   @Column({ nullable: true })

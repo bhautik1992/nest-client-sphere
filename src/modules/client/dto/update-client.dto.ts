@@ -1,4 +1,4 @@
-import { ClientStatus } from "src/common/constants/enum.constant";
+import { ClientStatus, Designation } from "src/common/constants/enum.constant";
 import { CreateClientDto } from "./create-client.dto";
 
 export class UpdateClientDto
@@ -11,12 +11,14 @@ export class UpdateClientDto
       | "address"
       | "gender"
       | "designation"
+      | "clientCompanyName"
       | "accountManager"
       | "countryCode"
       | "stateCode"
       | "cityName"
       | "status"
       | "zipCode"
+      | "skypeId"
     >
 {
   firstName: string;
@@ -24,11 +26,13 @@ export class UpdateClientDto
   phone: string;
   address: string;
   gender: string;
-  designation: string;
+  designation: Designation;
+  clientCompanyName: string;
   accountManager: string;
   countryCode: string;
   stateCode: string;
   cityName: string;
   status: ClientStatus;
   zipCode: string;
+  skypeId: string;
 }

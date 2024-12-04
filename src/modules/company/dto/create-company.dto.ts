@@ -24,6 +24,16 @@ export class CreateCompanyDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  countryId: number;
+  @IsString()
+  countryCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  stateCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  cityName: string;
 }

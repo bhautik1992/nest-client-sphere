@@ -1,5 +1,6 @@
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Clients } from "src/modules/client/entity/client.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.COMPANY })
 export class Companies {
@@ -23,6 +24,9 @@ export class Companies {
 
   @Column({ nullable: false })
   cityName: string;
+
+  @OneToMany(() => Clients, (client) => client.company)
+  clients: Clients[];
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

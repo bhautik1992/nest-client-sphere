@@ -37,3 +37,12 @@ export enum InvoiceStatus {
   PAID = "paid",
   PENDING = "pending",
 }
+
+export enum Designation {
+  ADMIN = "admin",
+  PROJECT_MANAGER = "project_manager",
+  SALES_MANAGER = "sales_manager",
+  DEVELOPER = "developer",
+  TESTER = "tester",
+  INTERN = "intern",
+}
