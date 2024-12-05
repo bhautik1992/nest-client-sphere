@@ -26,7 +26,7 @@ export class AuthExceptions {
   static ForbiddenException(): HttpException {
     return new HttpException(
       {
-        message: "This resource is forbidden from this user",
+        message: "This resource is forbidden from this employee",
         error: "UnAuthorizedResourceError",
         statusCode: HttpStatus.FORBIDDEN,
       },
@@ -34,11 +34,11 @@ export class AuthExceptions {
     );
   }
 
-  static InvalidUserId(): HttpException {
+  static InvalidEmployeeId(): HttpException {
     return new HttpException(
       {
-        message: "Invalid User Id",
-        error: "InvalidUserId",
+        message: "Invalid Employee Id",
+        error: "InvalidEmployeeId",
         statusCode: HttpStatus.FORBIDDEN,
       },
       HttpStatus.FORBIDDEN,
@@ -48,7 +48,7 @@ export class AuthExceptions {
   static InvalidIdPassword(): HttpException {
     return new HttpException(
       {
-        message: "Invalid Username or Password",
+        message: "Invalid Employeename or Password",
         error: "InvalidIdPassword",
         statusCode: HttpStatus.UNAUTHORIZED,
       },

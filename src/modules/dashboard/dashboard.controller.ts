@@ -1,19 +1,19 @@
 import { Controller, Get, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserRole } from "src/common/constants/enum.constant";
+import { EmployeeRole } from "src/common/constants/enum.constant";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { DashboardService } from "./dashboard.service";
 import { ResponseMessage } from "src/common/decorators/response.decorator";
 import { DASHBOARD_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { JwtPayload } from "src/common/interfaces/jwt.interface";
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
+import { CurrentEmployee } from "src/common/decorators/current-employee.decorator";
 
 @Controller("dashboard")
 @ApiTags("Dashboard")
 @ApiBearerAuth()
 @UseGuards(RoleGuard)
-@Roles(UserRole.USER, UserRole.ADMIN)
+@Roles(EmployeeRole.EMPLOYEE, EmployeeRole.ADMIN)
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
@@ -23,10 +23,12 @@ export class DashboardController {
     return this.dashboardService.getDashboardCount();
   }
 
-  @Get("user-profile")
-  @ResponseMessage(DASHBOARD_RESPONSE_MESSAGES.DASHBOARD_USER_PROFILE_FETCHED)
-  getUserProfile(@CurrentUser() user: JwtPayload) {
-    return this.dashboardService.getUserProfile(user);
+  @Get("employee-profile")
+  @ResponseMessage(
+    DASHBOARD_RESPONSE_MESSAGES.DASHBOARD_EMPLOYEE_PROFILE_FETCHED,
+  )
+  getEmployeeProfile(@CurrentEmployee() employee: JwtPayload) {
+    return this.dashboardService.getEmployeeProfile(employee);
   }
 
   @Get("client-list")
@@ -41,9 +43,9 @@ export class DashboardController {
     return this.dashboardService.getCompanyList();
   }
 
-  @Get("user-list")
-  @ResponseMessage(DASHBOARD_RESPONSE_MESSAGES.DASHBOARD_USER_LIST_FETCHED)
-  getUserList() {
-    return this.dashboardService.getUserList();
+  @Get("employee-list")
+  @ResponseMessage(DASHBOARD_RESPONSE_MESSAGES.DASHBOARD_EMPLOYEE_LIST_FETCHED)
+  getEmployeeList() {
+    return this.dashboardService.getEmployeeList();
   }
 }

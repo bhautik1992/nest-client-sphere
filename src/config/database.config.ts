@@ -1,5 +1,5 @@
 import { registerAs } from "@nestjs/config";
-import { UserRole } from "src/common/constants/enum.constant";
+import { EmployeeRole } from "src/common/constants/enum.constant";
 
 export default registerAs("database", () => ({
   host: process.env.DATABASE_HOST,
@@ -7,15 +7,15 @@ export default registerAs("database", () => ({
   name: process.env.DATABASE_NAME,
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASS,
-  initialUser: {
+  initialEmployee: {
     firstName: "Infiazure",
     lastName: "Technology",
-    role: UserRole.ADMIN,
+    role: EmployeeRole.ADMIN,
     personalEmail: "admin@gmail.com",
     companyEmail: "admin@infiazure.com",
     phone: "1234567890",
     department: "Admin",
-    designation: "Admin",
+    designation: "admin",
     dateOfBirth: new Date(),
     joiningDate: new Date(),
     reportingPerson: "Infiazure",

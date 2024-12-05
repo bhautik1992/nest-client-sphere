@@ -6,11 +6,11 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
-import { Users } from "src/modules/users/entity/user.entity";
+import { Employee } from "src/modules/employee/entity/employee.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([Employee]),
     PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -29,6 +29,6 @@ import { Users } from "src/modules/users/entity/user.entity";
 export class AuthModule implements OnModuleInit {
   constructor(private readonly authService: AuthService) {}
   async onModuleInit(): Promise<void> {
-    await this.authService.createInitialUser();
+    await this.authService.createInitialEmployee();
   }
 }

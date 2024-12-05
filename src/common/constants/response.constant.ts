@@ -1,17 +1,17 @@
 export const AUTH_RESPONSE_MESSAGES = {
   SUCCESS: "Response success",
-  USER_LOGIN: "User login successfully",
-  USER_CHANGE_PASSWORD: "User password changed successfully",
+  EMPLOYEE_LOGIN: "Employee login successfully",
+  EMPLOYEE_CHANGE_PASSWORD: "Employee password changed successfully",
 };
 
-export const USER_RESPONSE_MESSAGES = {
-  USER_LISTED: "Users listed",
-  USER_INSERTED: "User created successfully",
-  USER_UPDATED: "User updated successfully",
-  USER_DELETED: "User deleted",
-  USER_FETCHED: "User details fetched successfully",
-  USER_NOT_FOUND: "User not found",
-  USER_ALREADY_EXISTS: "User already exists",
+export const EMPLOYEE_RESPONSE_MESSAGES = {
+  EMPLOYEE_LISTED: "Employee listed",
+  EMPLOYEE_INSERTED: "Employee created successfully",
+  EMPLOYEE_UPDATED: "Employee updated successfully",
+  EMPLOYEE_DELETED: "Employee deleted",
+  EMPLOYEE_FETCHED: "Employee details fetched successfully",
+  EMPLOYEE_NOT_FOUND: "Employee not found",
+  EMPLOYEE_ALREADY_EXISTS: "Employee already exists",
 };
 
 export const CLIENT_RESPONSE_MESSAGES = {
@@ -58,10 +58,12 @@ export const COMPANY_RESPONSE_MESSAGES = {
 
 export const DASHBOARD_RESPONSE_MESSAGES = {
   DASHBOARD_COUNT_FETCHED: "Dashboard count fetched successfully",
-  DASHBOARD_USER_PROFILE_FETCHED: "Dashboard user profile fetched successfully",
+  DASHBOARD_EMPLOYEE_PROFILE_FETCHED:
+    "Dashboard employee profile fetched successfully",
   DASHBOARD_CLIENT_LIST_FETCHED: "Dashboard client list fetched successfully",
   DASHBOARD_COMPANY_LIST_FETCHED: "Dashboard company list fetched successfully",
-  DASHBOARD_USER_LIST_FETCHED: "Dashboard user list fetched successfully",
+  DASHBOARD_EMPLOYEE_LIST_FETCHED:
+    "Dashboard employee list fetched successfully",
 };
 
 export const COUNTRY_RESPONSE_MESSAGES = {

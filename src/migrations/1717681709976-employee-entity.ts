@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
-import { UserRole } from "../common/constants/enum.constant";
+import { Designation, EmployeeRole } from "../common/constants/enum.constant";
 
 const columns = [
   {
@@ -23,7 +23,7 @@ const columns = [
   {
     name: "role",
     type: "enum",
-    enum: Object.values(UserRole),
+    enum: Object.values(EmployeeRole),
     isNullable: false,
   },
   {
@@ -48,7 +48,8 @@ const columns = [
   },
   {
     name: "designation",
-    type: "varchar",
+    type: "enum",
+    enum: Object.values(Designation),
     isNullable: false,
   },
   {
@@ -67,12 +68,12 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "reportingPerson",
-    type: "varchar",
+    name: "reportingPersonId",
+    type: "int",
     isNullable: false,
   },
   {
-    name: "userCode",
+    name: "employeeCode",
     type: "varchar",
     isNullable: false,
     unique: true,
@@ -102,17 +103,17 @@ const columnsObjects = columns.map((column) => {
   return new TableColumn(rest);
 });
 
-export class UserEntity1717681709976 implements MigrationInterface {
+export class EmployeeEntity1717681709976 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: TABLE_NAMES.USER,
+        name: TABLE_NAMES.EMPLOYEE,
         columns: columnsObjects,
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(TABLE_NAMES.USER);
+    await queryRunner.dropTable(TABLE_NAMES.EMPLOYEE);
   }
 }

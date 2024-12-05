@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ClientStatus, UserRole } from "src/common/constants/enum.constant";
+import { ClientStatus, EmployeeRole } from "src/common/constants/enum.constant";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { ClientService } from "./client.service";
@@ -21,15 +21,15 @@ import { UpdateClientDto } from "./dto/update-client.dto";
 @Controller("client")
 @ApiTags("Client")
 @ApiBearerAuth()
-@Roles(UserRole.ADMIN)
+@Roles(EmployeeRole.ADMIN)
 @UseGuards(RoleGuard)
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Post("create")
   @ResponseMessage(CLIENT_RESPONSE_MESSAGES.CLIENT_INSERTED)
-  async create(@Body() createUserDto: CreateClientDto) {
-    return await this.clientService.create(createUserDto);
+  async create(@Body() createClientDto: CreateClientDto) {
+    return await this.clientService.create(createClientDto);
   }
 
   @Post("list")
@@ -48,9 +48,9 @@ export class ClientController {
   @ResponseMessage(CLIENT_RESPONSE_MESSAGES.CLIENT_UPDATED)
   async update(
     @Param("id") id: number,
-    @Body() updateUserDto: UpdateClientDto,
+    @Body() updateClientDto: UpdateClientDto,
   ) {
-    return await this.clientService.update(id, updateUserDto);
+    return await this.clientService.update(id, updateClientDto);
   }
 
   @Post("active-inactive")

@@ -16,13 +16,16 @@ import { UpdateProjectDto } from "./dto/update-project.dto";
 import { ProjectService } from "./project.service";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { Roles } from "src/common/decorators/role.decorator";
-import { ProjectStatus, UserRole } from "src/common/constants/enum.constant";
+import {
+  ProjectStatus,
+  EmployeeRole,
+} from "src/common/constants/enum.constant";
 
 @Controller("project")
 @ApiTags("Project")
 @ApiBearerAuth()
 @UseGuards(RoleGuard)
-@Roles(UserRole.ADMIN, UserRole.USER)
+@Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 

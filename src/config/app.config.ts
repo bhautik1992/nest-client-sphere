@@ -10,7 +10,7 @@ export default registerAs("express", () => ({
   
   2). **Proper Tag Naming**: Use appropriate and meaningful tag names. Each module should have a separate tag.
 
-    Example: For user management module APIs in the admin panel, the tag name should be User Management.
+    Example: For employee management module APIs in the admin panel, the tag name should be Employee Management.
 
   3). **API Tagging**: Each module should have a distinct tag.
 

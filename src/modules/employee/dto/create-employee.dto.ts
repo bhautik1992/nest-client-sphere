@@ -4,11 +4,12 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from "class-validator";
-import { UserRole } from "src/common/constants/enum.constant";
-export class CreateUserDto {
+import { Designation, EmployeeRole } from "src/common/constants/enum.constant";
+export class CreateEmployeeDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -21,8 +22,8 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsEnum(UserRole)
-  role: UserRole;
+  @IsEnum(EmployeeRole)
+  role: EmployeeRole;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -46,8 +47,8 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  designation: string;
+  @IsEnum(Designation)
+  designation: Designation;
 
   @ApiProperty()
   @IsOptional()
@@ -61,8 +62,8 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  reportingPerson: string;
+  @IsNumber()
+  reportingPersonId: number;
 
   @ApiProperty()
   @IsOptional()

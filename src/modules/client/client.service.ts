@@ -18,14 +18,14 @@ export class ClientService {
     private readonly countryStateCityService: CountryStateCityService,
   ) {}
 
-  async create(createUserDto: CreateClientDto) {
-    if (await this.getClientByEmail(createUserDto.email)) {
+  async create(createClientDto: CreateClientDto) {
+    if (await this.getClientByEmail(createClientDto.email)) {
       throw CustomError(
         CLIENT_RESPONSE_MESSAGES.CLIENT_ALREADY_EXISTS,
         HttpStatus.NOT_FOUND,
       );
     }
-    const client = this.clientRepository.create(createUserDto);
+    const client = this.clientRepository.create(createClientDto);
     const createdClient = await this.clientRepository.save(client);
     return createdClient;
   }

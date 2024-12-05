@@ -1,41 +1,41 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { UsersService } from "../../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { UserModel } from "../../common/test/entity.model";
-import { Users } from "../../users/entity/user.entity";
+import { EmployeeModel } from "../../common/test/entity.model";
+import { EmployeeService } from "src/modules/employee/employee.service";
+import { Employee } from "src/modules/employee/entity/employee.entity";
 
 describe("AuthController", () => {
   let controller: AuthController,
     service: AuthService,
-    userService: UsersService;
+    employeeService: EmployeeService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
         AuthService,
-        UsersService,
+        EmployeeService,
         JwtService,
         ConfigService,
         {
-          provide: getRepositoryToken(Users),
-          useClass: UserModel,
+          provide: getRepositoryToken(Employee),
+          useClass: EmployeeModel,
         },
       ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
     service = module.get<AuthService>(AuthService);
-    userService = module.get<UsersService>(UsersService);
+    employeeService = module.get<EmployeeService>(EmployeeService);
   });
 
   it("should be defined", () => {
     expect(controller).toBeDefined();
     expect(service).toBeDefined();
-    expect(userService).toBeDefined();
+    expect(employeeService).toBeDefined();
   });
 });

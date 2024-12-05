@@ -5,115 +5,122 @@ import { Repository } from "typeorm";
 import { ChangePasswordDto, LoginDto } from "../../common/dto/common.dto";
 import { AuthExceptions, CustomError } from "src/common/helpers/exceptions";
 import { ConfigService } from "@nestjs/config";
-import { Users } from "src/modules/users/entity/user.entity";
-import { CreateUserDto } from "src/modules/users/dto/create-user.dto";
+import { Employee } from "src/modules/employee/entity/employee.entity";
+import { CreateEmployeeDto } from "src/modules/employee/dto/create-employee.dto";
 const bcrypt = require("bcryptjs");
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Users) private readonly userRepository: Repository<Users>,
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
 
   async login(params: LoginDto) {
-    const user = await this.userRepository.findOneBy({
+    const employee = await this.employeeRepository.findOneBy({
       companyEmail: params.email,
     });
 
-    if (!user) {
+    if (!employee) {
       throw AuthExceptions.AccountNotExist();
     }
-    if (!(await bcrypt.compareSync(params.password, user.password))) {
+    if (!(await bcrypt.compareSync(params.password, employee.password))) {
       throw AuthExceptions.InvalidIdPassword();
     }
-    delete user.password;
+    delete employee.password;
     const payload = {
-      id: user.id,
-      name: user.firstName,
-      role: user.role,
+      id: employee.id,
+      name: employee.firstName,
+      role: employee.role,
     };
     return {
       access_token: await this.jwtService.signAsync(payload, {
         secret: process.env.JWT_TOKEN_SECRET,
         expiresIn: process.env.JWT_TONE_EXPIRY_TIME,
       }),
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      personalEmail: user.personalEmail,
-      companyEmail: user.companyEmail,
+      id: employee.id,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      personalEmail: employee.personalEmail,
+      companyEmail: employee.companyEmail,
     };
   }
 
   async changePassword(body: ChangePasswordDto) {
     try {
-      const user = await this.userRepository.findOneBy({ id: body.id });
-      if (!user) {
+      const employee = await this.employeeRepository.findOneBy({ id: body.id });
+      if (!employee) {
         throw AuthExceptions.AccountNotExist();
       }
       const isPasswordMatch = await bcrypt.compareSync(
         body.currentPassword,
-        user.password,
+        employee.password,
       );
       if (!isPasswordMatch) {
         throw AuthExceptions.InvalidIdPassword();
       }
-      user.password = await bcrypt.hash(body.newPassword, 10);
-      await this.userRepository.save(user);
+      employee.password = await bcrypt.hash(body.newPassword, 10);
+      await this.employeeRepository.save(employee);
       return {};
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
   }
 
-  async createInitialUser(): Promise<void> {
-    const user = await this.userRepository.findOne({
+  async createInitialEmployee(): Promise<void> {
+    const employee = await this.employeeRepository.findOne({
       where: [
         {
           personalEmail: this.configService.get(
-            "database.initialUser.personalEmail",
+            "database.initialEmployee.personalEmail",
           ),
         },
         {
           companyEmail: this.configService.get(
-            "database.initialUser.companyEmail",
+            "database.initialEmployee.companyEmail",
           ),
         },
       ],
     });
 
-    if (user) {
-      console.log("Initial user already loaded.");
+    if (employee) {
+      console.log("Initial employee already loaded.");
     } else {
-      const params: CreateUserDto = {
-        firstName: this.configService.get("database.initialUser.firstName"),
-        lastName: this.configService.get("database.initialUser.lastName"),
-        role: this.configService.get("database.initialUser.role"),
+      const params: CreateEmployeeDto = {
+        firstName: this.configService.get("database.initialEmployee.firstName"),
+        lastName: this.configService.get("database.initialEmployee.lastName"),
+        role: this.configService.get("database.initialEmployee.role"),
         personalEmail: this.configService.get(
-          "database.initialUser.personalEmail",
+          "database.initialEmployee.personalEmail",
         ),
         companyEmail: this.configService.get(
-          "database.initialUser.companyEmail",
+          "database.initialEmployee.companyEmail",
         ),
-        phone: this.configService.get("database.initialUser.phone"),
-        department: this.configService.get("database.initialUser.department"),
-        designation: this.configService.get("database.initialUser.designation"),
-        dateOfBirth: this.configService.get("database.initialUser.dateOfBirth"),
-        joiningDate: this.configService.get("database.initialUser.joiningDate"),
-        reportingPerson: this.configService.get(
-          "database.initialUser.reportingPerson",
+        phone: this.configService.get("database.initialEmployee.phone"),
+        department: this.configService.get(
+          "database.initialEmployee.department",
         ),
+        designation: this.configService.get(
+          "database.initialEmployee.designation",
+        ),
+        dateOfBirth: this.configService.get(
+          "database.initialEmployee.dateOfBirth",
+        ),
+        joiningDate: this.configService.get(
+          "database.initialEmployee.joiningDate",
+        ),
+        reportingPersonId: 0,
         password: "",
       };
       params.password = await bcrypt.hash(
-        this.configService.get("database.initialUser.password"),
+        this.configService.get("database.initialEmployee.password"),
         10,
       );
-      const user = this.userRepository.create(params);
-      await this.userRepository.save(user);
-      console.log("Initial user loaded successfully.");
+      const employee = this.employeeRepository.create(params);
+      await this.employeeRepository.save(employee);
+      console.log("Initial employee loaded successfully.");
     }
   }
 }

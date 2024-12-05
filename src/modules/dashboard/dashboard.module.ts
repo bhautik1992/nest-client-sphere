@@ -5,10 +5,10 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Companies } from "../company/entity/company.entity";
 import { Projects } from "../project/entity/project.entity";
 import { Clients } from "../client/entity/client.entity";
-import { Users } from "../users/entity/user.entity";
+import { Employee } from "../employee/entity/employee.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users, Clients, Projects, Companies])],
+  imports: [TypeOrmModule.forFeature([Employee, Clients, Projects, Companies])],
   controllers: [DashboardController],
   providers: [DashboardService],
 })

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserRole } from "src/common/constants/enum.constant";
+import { EmployeeRole } from "src/common/constants/enum.constant";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { CompanyService } from "./company.service";
@@ -23,7 +23,7 @@ import { UpdateCompanyDto } from "./dto/update-company.dto";
 @Controller("company")
 @ApiTags("Company")
 @ApiBearerAuth()
-@Roles(UserRole.ADMIN, UserRole.USER)
+@Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
 @UseGuards(RoleGuard)
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
