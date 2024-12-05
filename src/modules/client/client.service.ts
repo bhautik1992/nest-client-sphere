@@ -130,7 +130,7 @@ export class ClientService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateClientDto) {
+  async update(id: number, updateClientDto: UpdateClientDto) {
     try {
       const isClientExists = await this.clientRepository.findOneBy({ id });
       if (!isClientExists) {
@@ -139,7 +139,9 @@ export class ClientService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return this.clientRepository.update(id, updateUserDto);
+      const updatedEntity = { id, ...updateClientDto };
+      const updatedClient = await this.clientRepository.save(updatedEntity);
+      return updatedClient;
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

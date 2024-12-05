@@ -1,40 +1,34 @@
-import { ClientStatus, Designation } from "src/common/constants/enum.constant";
-import { CreateClientDto } from "./create-client.dto";
+import { Designation } from "src/common/constants/enum.constant";
+import { CreateVendorDto } from "./create-vendor.dto";
 
-export class UpdateClientDto
+export class UpdateVendorDto
   implements
     Pick<
-      CreateClientDto,
+      CreateVendorDto,
       | "firstName"
       | "lastName"
       | "phone"
       | "address"
-      | "gender"
       | "designation"
-      | "clientCompanyName"
+      | "vendorCompanyName"
       | "accountManager"
       | "countryCode"
       | "stateCode"
       | "cityName"
-      | "status"
-      | "zipCode"
-      | "skypeId"
       | "website"
+      | "skypeId"
     >
 {
   firstName: string;
   lastName: string;
   phone: string;
   address: string;
-  gender: string;
+  website: string;
   designation: Designation;
-  clientCompanyName: string;
+  vendorCompanyName: string;
   accountManager: string;
   countryCode: string;
   stateCode: string;
   cityName: string;
-  status: ClientStatus;
-  zipCode: string;
   skypeId: string;
-  website: string;
 }
