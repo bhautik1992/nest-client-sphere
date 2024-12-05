@@ -39,9 +39,12 @@ export class ProjectService {
 
       // Apply search filter if the search term is provided
       if (params.search) {
-        queryBuilder.where("project.name ILIKE :search", {
-          search: `%${params.search}%`,
-        });
+        queryBuilder.where(
+          "project.name ILIKE :search OR project.status ILIKE :search OR project.description ILIKE :search OR project.client.name ILIKE :search OR project.assignToCompany.name ILIKE :search OR project.projectManager ILIKE :search OR project.startDate ILIKE :search OR project.endDate ILIKE :search OR project.teamLead ILIKE :search",
+          {
+            search: `%${params.search}%`,
+          },
+        );
       }
 
       const totalQuery = queryBuilder.clone();
@@ -61,10 +64,17 @@ export class ProjectService {
         queryBuilder.skip(params.offset).take(params.limit);
       }
 
-      queryBuilder.leftJoinAndSelect("project.client", "client");
+      queryBuilder
+        .leftJoinAndSelect("project.client", "client")
+        .leftJoinAndSelect("client.company", "company")
+        .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
+        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany");
+
       const projects = await queryBuilder.getMany();
       // Get the total count based on the original query
+
       const recordsTotal = await totalQuery.getCount();
+
       return {
         result: projects,
         recordsTotal,
@@ -87,6 +97,9 @@ export class ProjectService {
         .createQueryBuilder("project")
         .where({ id })
         .leftJoinAndSelect("project.client", "client")
+        .leftJoinAndSelect("client.company", "company")
+        .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
+        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
         .orderBy("project.id", "ASC");
       return await queryBuilder.getOne();
     } catch (error) {
@@ -100,6 +113,9 @@ export class ProjectService {
       const isProjectExists = await queryBuilder
         .where({ id })
         .leftJoinAndSelect("project.client", "client")
+        .leftJoinAndSelect("client.company", "company")
+        .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
+        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
         .getOne();
       if (!isProjectExists) {
         throw CustomError(
@@ -141,6 +157,9 @@ export class ProjectService {
       const isProjectExists = await queryBuilder
         .where({ id })
         .leftJoinAndSelect("project.client", "client")
+        .leftJoinAndSelect("client.company", "company")
+        .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
+        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
         .getOne();
       if (!isProjectExists) {
         throw CustomError(

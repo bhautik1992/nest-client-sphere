@@ -1,17 +1,17 @@
 import {
-  BillingType,
-  CurrencyType,
-  InvoiceStatus,
-  ProjectStatus,
-} from "../common/constants/enum.constant";
-import { TABLE_NAMES } from "../common/constants/table-name.constant";
-import {
   MigrationInterface,
   QueryRunner,
   Table,
   TableColumn,
   TableForeignKey,
 } from "typeorm";
+import {
+  BillingType,
+  CurrencyType,
+  InvoicePaymentCycle,
+  ProjectStatus,
+} from "../common/constants/enum.constant";
+import { TABLE_NAMES } from "../common/constants/table-name.constant";
 
 const columns = [
   {
@@ -49,21 +49,41 @@ const columns = [
     isNullable: true,
   },
   {
-    name: "billingType",
-    type: "enum",
-    enum: Object.values(BillingType),
-    default: "'hourly'",
+    name: "assignFromCompanyId",
+    type: "int",
     isNullable: false,
   },
   {
-    name: "invoiceStatus",
-    type: "enum",
-    enum: Object.values(InvoiceStatus),
+    name: "clientId",
+    type: "int",
+    isNullable: false,
+  },
+  {
+    name: "assignToCompanyId",
+    type: "int",
     isNullable: false,
   },
   {
     name: "projectManager",
     type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "teamLeader",
+    type: "varchar",
+    isNullable: true,
+  },
+  {
+    name: "isInternalProject",
+    type: "boolean",
+    default: false,
+    isNullable: false,
+  },
+  {
+    name: "billingType",
+    type: "enum",
+    enum: Object.values(BillingType),
+    default: "'hourly'",
     isNullable: false,
   },
   {
@@ -86,16 +106,22 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "amount",
+    name: "projectCost",
     type: "decimal",
     precision: 10,
     scale: 2,
     isNullable: false,
   },
   {
-    name: "clientId",
+    name: "paymentTermDays",
     type: "int",
     isNullable: false,
+  },
+  {
+    name: "invoicePaymentCycle",
+    type: "enum",
+    enum: Object.values(InvoicePaymentCycle),
+    isNullable: true,
   },
   {
     name: "createdAt",

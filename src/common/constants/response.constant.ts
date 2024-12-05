@@ -61,6 +61,7 @@ export const DASHBOARD_RESPONSE_MESSAGES = {
   DASHBOARD_USER_PROFILE_FETCHED: "Dashboard user profile fetched successfully",
   DASHBOARD_CLIENT_LIST_FETCHED: "Dashboard client list fetched successfully",
   DASHBOARD_COMPANY_LIST_FETCHED: "Dashboard company list fetched successfully",
+  DASHBOARD_USER_LIST_FETCHED: "Dashboard user list fetched successfully",
 };
 
 export const COUNTRY_RESPONSE_MESSAGES = {
