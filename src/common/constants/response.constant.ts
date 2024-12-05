@@ -25,6 +25,16 @@ export const CLIENT_RESPONSE_MESSAGES = {
   CLIENT_STATUS_CHANGED: "Client status changed successfully",
 };
 
+export const VENDOR_RESPONSE_MESSAGES = {
+  VENDOR_LISTED: "Vendors listed",
+  VENDOR_INSERTED: "Vendor created successfully",
+  VENDOR_UPDATED: "Vendor updated successfully",
+  VENDOR_DELETED: "Vendor deleted successfully",
+  VENDOR_FETCHED: "Vendor details fetched successfully",
+  VENDOR_NOT_FOUND: "Vendor not found",
+  VENDOR_ALREADY_EXISTS: "Vendor already exists",
+};
+
 export const PROJECT_RESPONSE_MESSAGES = {
   PROJECT_LISTED: "Projects listed",
   PROJECT_INSERTED: "Project added successfully",

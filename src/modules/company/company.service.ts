@@ -126,7 +126,10 @@ export class CompanyService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.companyRepository.update(id, updateCompanyDto);
+
+      const updatedEntity = { id, ...updateCompanyDto };
+      const updatedCompany = await this.companyRepository.save(updatedEntity);
+      return updatedCompany;
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

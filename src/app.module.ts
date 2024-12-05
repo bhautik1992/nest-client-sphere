@@ -16,6 +16,7 @@ import { ClientModule } from "./modules/client/client.module";
 import { ProjectModule } from "./modules/project/project.module";
 import { CompanyModule } from "./modules/company/company.module";
 import { CountryStateCityModule } from "./modules/country-state-city/country-state-city.module";
+import { VendorModule } from "./modules/vendor/vendor.module";
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CountryStateCityModule } from "./modules/country-state-city/country-sta
     ProjectModule,
     CompanyModule,
     CountryStateCityModule,
+    VendorModule,
   ],
   providers: [
     {

@@ -7,8 +7,8 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import { ClientStatus, Designation } from "src/common/constants/enum.constant";
-export class CreateClientDto {
+import { Designation } from "src/common/constants/enum.constant";
+export class CreateVendorDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -42,7 +42,7 @@ export class CreateClientDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  clientCompanyName: string;
+  vendorCompanyName: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -52,17 +52,7 @@ export class CreateClientDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  website: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
   address: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  gender: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -80,17 +70,12 @@ export class CreateClientDto {
   cityName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsEnum(ClientStatus)
-  status: ClientStatus;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  zipCode: string;
-
-  @ApiProperty()
   @IsOptional()
   @IsString()
   skypeId: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  website: string;
 }

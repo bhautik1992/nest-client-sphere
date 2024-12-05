@@ -99,7 +99,10 @@ export class UsersService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return this.userRepository.update(userId, updateUserDto);
+
+      const updatedEntity = { id: userId, ...updateUserDto };
+      const updatedUser = await this.userRepository.save(updatedEntity);
+      return updatedUser;
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
