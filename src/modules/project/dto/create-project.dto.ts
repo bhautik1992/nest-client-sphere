@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  IsBoolean,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -10,7 +11,7 @@ import {
 import {
   BillingType,
   CurrencyType,
-  InvoiceStatus,
+  InvoicePaymentCycle,
   ProjectStatus,
 } from "src/common/constants/enum.constant";
 export class CreateProjectDto {
@@ -42,12 +43,17 @@ export class CreateProjectDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
+  assignFromCompanyId: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
   clientId: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsEnum(InvoiceStatus)
-  invoiceStatus: InvoiceStatus;
+  @IsNumber()
+  assignToCompanyId: number;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -56,8 +62,13 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsEnum(CurrencyType)
-  currency: CurrencyType;
+  @IsString()
+  teamLeader: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsBoolean()
+  isInternalProject: boolean;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -77,5 +88,20 @@ export class CreateProjectDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  amount: number;
+  projectCost: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEnum(CurrencyType)
+  currency: CurrencyType;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  paymentTermDays: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsEnum(InvoicePaymentCycle)
+  invoicePaymentCycle: InvoicePaymentCycle;
 }

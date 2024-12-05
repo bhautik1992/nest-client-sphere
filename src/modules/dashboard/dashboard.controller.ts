@@ -40,4 +40,10 @@ export class DashboardController {
   getCompanyList() {
     return this.dashboardService.getCompanyList();
   }
+
+  @Get("user-list")
+  @ResponseMessage(DASHBOARD_RESPONSE_MESSAGES.DASHBOARD_USER_LIST_FETCHED)
+  getUserList() {
+    return this.dashboardService.getUserList();
+  }
 }

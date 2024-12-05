@@ -34,13 +34,27 @@ export enum CurrencyType {
 }
 
 export enum InvoiceStatus {
+  GENERATED = "generated",
+  PARTIAL_COMPLETED = "partial_completed",
+  COMPLETED = "completed",
+}
+
+export enum InvoicePaymentCycle {
+  WEEKLY = "weekly",
+  BIWEEKLY = "biweekly",
+  MONTHLY = "monthly",
+}
+
+export enum PaymentStatus {
   PAID = "paid",
-  PENDING = "pending",
+  UNPAID = "unpaid",
+  PARTIAL_PAID = "partial_paid",
 }
 
 export enum Designation {
   ADMIN = "admin",
   PROJECT_MANAGER = "project_manager",
+  TEAM_LEADER = "team_leader",
   SALES_MANAGER = "sales_manager",
   DEVELOPER = "developer",
   TESTER = "tester",

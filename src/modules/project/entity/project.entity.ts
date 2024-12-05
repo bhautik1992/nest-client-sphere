@@ -1,11 +1,12 @@
 import {
   BillingType,
   CurrencyType,
-  InvoiceStatus,
+  InvoicePaymentCycle,
   ProjectStatus,
 } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
+import { Companies } from "src/modules/company/entity/company.entity";
 import {
   Column,
   Entity,
@@ -34,14 +35,42 @@ export class Projects {
   @Column({ nullable: true })
   endDate: Date;
 
-  @Column({ type: "enum", enum: Object.values(BillingType), nullable: false })
-  billingType: BillingType;
+  @Column({ type: "int", nullable: false })
+  assignFromCompanyId: number;
 
-  @Column({ type: "enum", enum: Object.values(InvoiceStatus), nullable: false })
-  invoiceStatus: InvoiceStatus;
+  @ManyToOne(() => Companies, (company) => company.assignedFromProjects, {
+    nullable: false,
+  })
+  @JoinColumn({ name: "assignFromCompanyId" })
+  assignFromCompany: Companies;
+
+  @Column({ type: "int", nullable: false })
+  clientId: number;
+
+  @ManyToOne(() => Clients, (client) => client.projects, { nullable: false })
+  @JoinColumn({ name: "clientId" })
+  client: Clients;
+
+  @Column({ type: "int", nullable: false })
+  assignToCompanyId: number;
+
+  @ManyToOne(() => Companies, (company) => company.assignedToProjects, {
+    nullable: false,
+  })
+  @JoinColumn({ name: "assignToCompanyId" })
+  assignToCompany: Companies;
 
   @Column({ nullable: false })
   projectManager: string;
+
+  @Column({ nullable: true })
+  teamLeader: string;
+
+  @Column({ nullable: false, type: "boolean", default: false })
+  isInternalProject: boolean;
+
+  @Column({ type: "enum", enum: Object.values(BillingType), nullable: false })
+  billingType: BillingType;
 
   @Column({
     type: "decimal",
@@ -59,14 +88,17 @@ export class Projects {
   currency: CurrencyType;
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
-  amount: number;
+  projectCost: number;
 
   @Column({ type: "int", nullable: false })
-  clientId: number;
+  paymentTermDays: number;
 
-  @ManyToOne(() => Clients, (client) => client.projects, { nullable: false })
-  @JoinColumn({ name: "clientId" })
-  client: Clients;
+  @Column({
+    type: "enum",
+    enum: Object.values(InvoicePaymentCycle),
+    nullable: true,
+  })
+  invoicePaymentCycle: InvoicePaymentCycle;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

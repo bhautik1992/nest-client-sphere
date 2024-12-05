@@ -51,14 +51,16 @@ export class DashboardService {
 
   async getClientList() {
     try {
-      const queryBuilder = this.clientRepository.createQueryBuilder("client");
+      const queryBuilder = this.clientRepository
+        .createQueryBuilder("client")
+        .leftJoinAndSelect("client.company", "company");
       return await queryBuilder
         .select([
           "client.id",
           "client.firstName",
           "client.lastName",
           "client.clientCompanyName",
-          "client.companyName",
+          "company.name as companyName",
         ])
         .getMany();
     } catch (error) {
@@ -70,7 +72,25 @@ export class DashboardService {
     try {
       const queryBuilder = this.companyRepository.createQueryBuilder("company");
       return await queryBuilder
-        .select(["company.id", "company.name"])
+        .select(["company.id", "company.name", "company.email"])
+        .getMany();
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
+    }
+  }
+
+  async getUserList() {
+    try {
+      const queryBuilder = this.userRepository.createQueryBuilder("user");
+      return await queryBuilder
+        .select([
+          "user.id",
+          "user.firstName",
+          "user.lastName",
+          "user.personalEmail",
+          "user.companyEmail",
+          "user.designation",
+        ])
         .getMany();
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
