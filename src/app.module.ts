@@ -10,7 +10,7 @@ import { TransformInterceptor } from "./common/interceptors/transform.intercepto
 import AppConfiguration from "./config/app.config";
 import DatabaseConfiguration from "./config/database.config";
 import AuthConfiguration from "./config/auth.config";
-import { UsersModule } from "./modules/users/users.module";
+import { EmployeeModule } from "./modules/employee/employee.module";
 import { DashboardModule } from "./modules/dashboard/dashboard.module";
 import { ClientModule } from "./modules/client/client.module";
 import { ProjectModule } from "./modules/project/project.module";
@@ -27,7 +27,7 @@ import { VendorModule } from "./modules/vendor/vendor.module";
     }),
     DatabaseModule,
     AuthModule,
-    UsersModule,
+    EmployeeModule,
     DashboardModule,
     ThrottleModule,
     ClientModule,

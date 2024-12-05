@@ -1,6 +1,6 @@
-import { Users } from "src/modules/users/entity/user.entity";
+import { Employee } from "src/modules/employee/entity/employee.entity";
 import { MockModel } from "./mock.model";
 
-export class UserModel extends MockModel<Users> {
-  protected entityStub = new Users();
+export class EmployeeModel extends MockModel<Employee> {
+  protected entityStub = new Employee();
 }

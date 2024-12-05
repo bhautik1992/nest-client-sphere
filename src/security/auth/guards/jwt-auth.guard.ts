@@ -21,7 +21,7 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
     return super.canActivate(context);
   }
 
-  handleRequest(err, user, info) {
+  handleRequest(err, employee, info) {
     if (info?.name === "TokenExpiredError") {
       throw AuthExceptions.TokenExpired();
     }
@@ -30,10 +30,10 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
       throw AuthExceptions.InvalidToken();
     }
 
-    if (err || !user) {
+    if (err || !employee) {
       throw err || AuthExceptions.ForbiddenException();
     }
 
-    return user;
+    return employee;
   }
 }

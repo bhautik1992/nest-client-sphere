@@ -1,10 +1,10 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { USER_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { EMPLOYEE_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { CustomError } from "src/common/helpers/exceptions";
 import { JwtPayload } from "src/common/interfaces/jwt.interface";
 import { Repository } from "typeorm";
-import { Users } from "../users/entity/user.entity";
+import { Employee } from "../employee/entity/employee.entity";
 import { Clients } from "../client/entity/client.entity";
 import { Projects } from "../project/entity/project.entity";
 import { Companies } from "../company/entity/company.entity";
@@ -12,8 +12,8 @@ import { Companies } from "../company/entity/company.entity";
 @Injectable()
 export class DashboardService {
   constructor(
-    @InjectRepository(Users)
-    private readonly userRepository: Repository<Users>,
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
     @InjectRepository(Clients)
     private readonly clientRepository: Repository<Clients>,
     @InjectRepository(Projects)
@@ -23,27 +23,29 @@ export class DashboardService {
   ) {}
 
   async getDashboardCount() {
-    const [usersCount, clientsCount, projectsCount, companiesCount] =
+    const [employeesCount, clientsCount, projectsCount, companiesCount] =
       await Promise.all([
-        this.userRepository.count(),
+        this.employeeRepository.count(),
         this.clientRepository.count(),
         this.projectRepository.count(),
         this.companyRepository.count(),
       ]);
 
-    return { usersCount, clientsCount, projectsCount, companiesCount };
+    return { employeesCount, clientsCount, projectsCount, companiesCount };
   }
 
-  async getUserProfile(user: JwtPayload) {
+  async getEmployeeProfile(employee: JwtPayload) {
     try {
-      const loggedUser = await this.userRepository.findOneBy({ id: user.id });
-      if (!loggedUser) {
+      const loggedEmployee = await this.employeeRepository.findOneBy({
+        id: employee.id,
+      });
+      if (!loggedEmployee) {
         throw CustomError(
-          USER_RESPONSE_MESSAGES.USER_NOT_FOUND,
+          EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_NOT_FOUND,
           HttpStatus.NOT_FOUND,
         );
       }
-      return loggedUser;
+      return loggedEmployee;
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -79,17 +81,18 @@ export class DashboardService {
     }
   }
 
-  async getUserList() {
+  async getEmployeeList() {
     try {
-      const queryBuilder = this.userRepository.createQueryBuilder("user");
+      const queryBuilder =
+        this.employeeRepository.createQueryBuilder("employee");
       return await queryBuilder
         .select([
-          "user.id",
-          "user.firstName",
-          "user.lastName",
-          "user.personalEmail",
-          "user.companyEmail",
-          "user.designation",
+          "employee.id",
+          "employee.firstName",
+          "employee.lastName",
+          "employee.personalEmail",
+          "employee.companyEmail",
+          "employee.designation",
         ])
         .getMany();
     } catch (error) {

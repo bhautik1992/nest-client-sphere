@@ -3,7 +3,7 @@ export const PROJECT_PREFIX = "table_";
 
 // TABLE NAMES
 export const TABLE_NAMES = {
-  USER: `${PROJECT_PREFIX}user`,
+  EMPLOYEE: `${PROJECT_PREFIX}employee`,
   CLIENT: `${PROJECT_PREFIX}client`,
   PROJECT: `${PROJECT_PREFIX}project`,
   COMPANY: `${PROJECT_PREFIX}company`,

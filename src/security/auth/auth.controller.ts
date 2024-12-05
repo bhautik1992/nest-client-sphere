@@ -9,7 +9,7 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserRole } from "src/common/constants/enum.constant";
+import { EmployeeRole } from "src/common/constants/enum.constant";
 import { AUTH_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { Roles } from "src/common/decorators/role.decorator";
 import { ResponseMessage } from "../../common/decorators/response.decorator";
@@ -25,7 +25,7 @@ export class AuthController {
 
   @Public()
   @UsePipes(new ValidationPipe({ transform: true }))
-  @ResponseMessage(AUTH_RESPONSE_MESSAGES.USER_LOGIN)
+  @ResponseMessage(AUTH_RESPONSE_MESSAGES.EMPLOYEE_LOGIN)
   @HttpCode(HttpStatus.OK)
   @Post("/login")
   async login(@Body() params: LoginDto) {
@@ -34,9 +34,9 @@ export class AuthController {
 
   @Post("/changePassword")
   @ApiBearerAuth()
-  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
   @UseGuards(RoleGuard)
-  @ResponseMessage(AUTH_RESPONSE_MESSAGES.USER_CHANGE_PASSWORD)
+  @ResponseMessage(AUTH_RESPONSE_MESSAGES.EMPLOYEE_CHANGE_PASSWORD)
   async changePassword(@Body() body: ChangePasswordDto) {
     return this.authService.changePassword(body);
   }

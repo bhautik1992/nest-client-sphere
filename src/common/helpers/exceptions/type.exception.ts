@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 
 export const TypeExceptions = {
-  UserNotFound(): HttpException {
+  EmployeeNotFound(): HttpException {
     return new HttpException(
       {
-        message: "User not found",
+        message: "Employee not found",
         error: "Not Found",
         statusCode: HttpStatus.NOT_FOUND,
       },
@@ -12,11 +12,11 @@ export const TypeExceptions = {
     );
   },
 
-  UserAlreadyExists(): HttpException {
+  EmployeeAlreadyExists(): HttpException {
     return new HttpException(
       {
-        message: "User already exists",
-        error: "UserAlreadyExists",
+        message: "Employee already exists",
+        error: "EmployeeAlreadyExists",
         statusCode: HttpStatus.CONFLICT,
       },
       HttpStatus.CONFLICT,

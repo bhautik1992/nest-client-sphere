@@ -28,7 +28,7 @@ export abstract class MockModel<T> {
     return this.entityStub || null;
   }
 
-  async getUserByEmail(): Promise<T[]> {
+  async getEmployeeByEmail(): Promise<T[]> {
     return [this.entityStub];
   }
 }

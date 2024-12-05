@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserRole } from "src/common/constants/enum.constant";
+import { EmployeeRole } from "src/common/constants/enum.constant";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { VendorService } from "./vendor.service";
@@ -21,7 +21,7 @@ import { UpdateVendorDto } from "./dto/update-vendor.dto";
 @Controller("vendor")
 @ApiTags("Vendor")
 @ApiBearerAuth()
-@Roles(UserRole.ADMIN)
+@Roles(EmployeeRole.ADMIN)
 @UseGuards(RoleGuard)
 export class VendorController {
   constructor(private readonly vendorService: VendorService) {}

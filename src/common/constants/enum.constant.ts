@@ -3,9 +3,9 @@ export enum AppEnvironment {
   PRODUCTION = "production",
 }
 
-export enum UserRole {
+export enum EmployeeRole {
   ADMIN = "admin",
-  USER = "user",
+  EMPLOYEE = "employee",
 }
 
 export enum ClientStatus {

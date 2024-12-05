@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserRole } from "src/common/constants/enum.constant";
+import { EmployeeRole } from "src/common/constants/enum.constant";
 import {
   CITY_RESPONSE_MESSAGES,
   COUNTRY_RESPONSE_MESSAGES,
@@ -17,7 +17,7 @@ import { ListStateDto } from "./dto/list-state.dto";
 @ApiTags("Country-State-City")
 @ApiBearerAuth()
 @UseGuards(RoleGuard)
-@Roles(UserRole.ADMIN, UserRole.USER)
+@Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
 export class CountryStateCityController {
   constructor(
     private readonly countryStateCityService: CountryStateCityService,

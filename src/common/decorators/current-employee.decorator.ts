@@ -1,8 +1,8 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
-export const CurrentUser = createParamDecorator(
+export const CurrentEmployee = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();
-    return request.user; // The user is attached by Passport after validating the token
+    return request.user; // The employee is attached by Passport after validating the token
   },
 );
