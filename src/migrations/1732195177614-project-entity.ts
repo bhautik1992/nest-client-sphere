@@ -64,13 +64,13 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "projectManager",
-    type: "varchar",
+    name: "projectManagerId",
+    type: "int",
     isNullable: false,
   },
   {
-    name: "teamLeader",
-    type: "varchar",
+    name: "teamLeaderId",
+    type: "int",
     isNullable: true,
   },
   {

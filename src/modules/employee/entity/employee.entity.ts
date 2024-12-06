@@ -1,5 +1,6 @@
 import { Designation, EmployeeRole } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
+import { Projects } from "src/modules/project/entity/project.entity";
 import {
   Entity,
   Column,
@@ -84,4 +85,10 @@ export class Employee extends BaseEntity {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: Date;
+
+  @OneToMany(() => Projects, (project) => project.projectManager)
+  projectManager: Projects[];
+
+  @OneToMany(() => Projects, (project) => project.teamLeader)
+  teamLeader: Projects[];
 }

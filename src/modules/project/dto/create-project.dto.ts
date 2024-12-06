@@ -57,13 +57,13 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  projectManager: string;
+  @IsNumber()
+  projectManagerId: number;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  teamLeader: string;
+  @IsOptional()
+  @IsNumber()
+  teamLeaderId: number;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -77,8 +77,8 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  hourlyMonthlyRate: number;
+  @IsString()
+  hourlyMonthlyRate: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -87,8 +87,8 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  projectCost: number;
+  @IsString()
+  projectCost: string;
 
   @ApiProperty()
   @IsNotEmpty()
