@@ -62,6 +62,11 @@ export class CompanyService {
         queryBuilder.orderBy("company.createdAt", "DESC");
       }
 
+      queryBuilder.leftJoinAndSelect(
+        "company.assignedToProjects",
+        "assignedToProjects",
+      );
+
       const companies = await queryBuilder.getMany();
 
       const companyList = await Promise.all(
@@ -103,6 +108,10 @@ export class CompanyService {
         );
       }
       const queryBuilder = this.companyRepository.createQueryBuilder("company");
+      queryBuilder.leftJoinAndSelect(
+        "company.assignedToProjects",
+        "assignedToProjects",
+      );
       const companyData = await queryBuilder.where({ id }).getOne();
       const countryName = await this.countryStateCityService.getCountryByCode(
         company.countryCode,

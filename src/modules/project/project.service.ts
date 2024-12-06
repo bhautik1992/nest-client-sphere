@@ -9,12 +9,20 @@ import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { Projects } from "./entity/project.entity";
 import { ProjectStatus } from "src/common/constants/enum.constant";
+import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { Companies } from "../company/entity/company.entity";
+
+interface ExtendedCompany extends Companies {
+  countryName?: string;
+  stateName?: string;
+}
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(Projects)
     private readonly projectRepository: Repository<Projects>,
+    private readonly countryStateCityService: CountryStateCityService,
   ) {}
 
   async create(createProjectDto: CreateProjectDto) {
@@ -68,15 +76,61 @@ export class ProjectService {
         .leftJoinAndSelect("project.client", "client")
         .leftJoinAndSelect("client.company", "company")
         .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
-        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany");
+        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
+        .leftJoinAndSelect("project.projectManager", "projectManager")
+        .leftJoinAndSelect("project.teamLeader", "teamLeader");
 
       const projects = await queryBuilder.getMany();
-      // Get the total count based on the original query
+
+      const projectList = await Promise.all(
+        projects.map(async (project) => {
+          const assignFromCompanyCountryName =
+            await this.countryStateCityService.getCountryByCode(
+              project.assignFromCompany.countryCode,
+            );
+          const assignToCompanyCountryName =
+            await this.countryStateCityService.getCountryByCode(
+              project.assignToCompany.countryCode,
+            );
+          let assignFromCompanyStateName = null;
+          let assignToCompanyStateName = null;
+          if (project.assignFromCompany.stateCode) {
+            assignFromCompanyStateName =
+              await this.countryStateCityService.getStateByCode(
+                project.assignFromCompany.stateCode,
+                project.assignFromCompany.countryCode,
+              );
+          }
+          if (project.assignToCompany.stateCode) {
+            assignToCompanyStateName =
+              await this.countryStateCityService.getStateByCode(
+                project.assignToCompany.stateCode,
+                project.assignToCompany.countryCode,
+              );
+          }
+          const extendedAssignFromCompany: ExtendedCompany = {
+            ...project.assignFromCompany,
+            countryName: assignFromCompanyCountryName,
+            stateName: assignFromCompanyStateName,
+          };
+
+          const extendedAssignToCompany: ExtendedCompany = {
+            ...project.assignToCompany,
+            countryName: assignToCompanyCountryName,
+            stateName: assignToCompanyStateName,
+          };
+          return {
+            ...project,
+            assignFromCompany: extendedAssignFromCompany,
+            assignToCompany: extendedAssignToCompany,
+          };
+        }),
+      );
 
       const recordsTotal = await totalQuery.getCount();
 
       return {
-        result: projects,
+        result: projectList,
         recordsTotal,
       };
     } catch (error) {
@@ -93,15 +147,47 @@ export class ProjectService {
           HttpStatus.NOT_FOUND,
         );
       }
-      const queryBuilder = this.projectRepository
-        .createQueryBuilder("project")
-        .where({ id })
-        .leftJoinAndSelect("project.client", "client")
-        .leftJoinAndSelect("client.company", "company")
-        .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
-        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
-        .orderBy("project.id", "ASC");
-      return await queryBuilder.getOne();
+      const projectData = await (await this.getProjectWithJoins(id)).getOne();
+      const assignFromCompanyCountryName =
+        await this.countryStateCityService.getCountryByCode(
+          projectData.assignFromCompany.countryCode,
+        );
+      const assignToCompanyCountryName =
+        await this.countryStateCityService.getCountryByCode(
+          projectData.assignToCompany.countryCode,
+        );
+      let assignFromCompanyStateName = null;
+      let assignToCompanyStateName = null;
+      if (projectData.assignFromCompany.stateCode) {
+        assignFromCompanyStateName =
+          await this.countryStateCityService.getStateByCode(
+            projectData.assignFromCompany.stateCode,
+            projectData.assignFromCompany.countryCode,
+          );
+      }
+      if (projectData.assignToCompany.stateCode) {
+        assignToCompanyStateName =
+          await this.countryStateCityService.getStateByCode(
+            projectData.assignToCompany.stateCode,
+            projectData.assignToCompany.countryCode,
+          );
+      }
+      const extendedAssignFromCompany: ExtendedCompany = {
+        ...projectData.assignFromCompany,
+        countryName: assignFromCompanyCountryName,
+        stateName: assignFromCompanyStateName,
+      };
+
+      const extendedAssignToCompany: ExtendedCompany = {
+        ...projectData.assignToCompany,
+        countryName: assignToCompanyCountryName,
+        stateName: assignToCompanyStateName,
+      };
+      return {
+        ...projectData,
+        assignFromCompany: extendedAssignFromCompany,
+        assignToCompany: extendedAssignToCompany,
+      };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -109,14 +195,9 @@ export class ProjectService {
 
   async update(id: number, updateProjectDto: UpdateProjectDto) {
     try {
-      const queryBuilder = this.projectRepository.createQueryBuilder("project");
-      const isProjectExists = await queryBuilder
-        .where({ id })
-        .leftJoinAndSelect("project.client", "client")
-        .leftJoinAndSelect("client.company", "company")
-        .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
-        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
-        .getOne();
+      const isProjectExists = await (
+        await this.getProjectWithJoins(id)
+      ).getOne();
       if (!isProjectExists) {
         throw CustomError(
           PROJECT_RESPONSE_MESSAGES.PROJECT_NOT_FOUND,
@@ -147,20 +228,11 @@ export class ProjectService {
     }
   }
 
-  async getProjectByName(name: string) {
-    return await this.projectRepository.findOneBy({ name });
-  }
-
   async changeProjectStatus(id: number, status: ProjectStatus) {
     try {
-      const queryBuilder = this.projectRepository.createQueryBuilder("project");
-      const isProjectExists = await queryBuilder
-        .where({ id })
-        .leftJoinAndSelect("project.client", "client")
-        .leftJoinAndSelect("client.company", "company")
-        .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
-        .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
-        .getOne();
+      const isProjectExists = await (
+        await this.getProjectWithJoins(id)
+      ).getOne();
       if (!isProjectExists) {
         throw CustomError(
           PROJECT_RESPONSE_MESSAGES.PROJECT_NOT_FOUND,
@@ -174,5 +246,21 @@ export class ProjectService {
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
+  }
+
+  async getProjectByName(name: string) {
+    return await this.projectRepository.findOneBy({ name });
+  }
+
+  private async getProjectWithJoins(id: number) {
+    return this.projectRepository
+      .createQueryBuilder("project")
+      .where({ id })
+      .leftJoinAndSelect("project.client", "client")
+      .leftJoinAndSelect("client.company", "company")
+      .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
+      .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
+      .leftJoinAndSelect("project.projectManager", "projectManager")
+      .leftJoinAndSelect("project.teamLeader", "teamLeader");
   }
 }

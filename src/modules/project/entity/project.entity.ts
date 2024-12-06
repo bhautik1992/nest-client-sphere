@@ -7,6 +7,7 @@ import {
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
 import { Companies } from "src/modules/company/entity/company.entity";
+import { Employee } from "src/modules/employee/entity/employee.entity";
 import {
   Column,
   Entity,
@@ -60,11 +61,21 @@ export class Projects {
   @JoinColumn({ name: "assignToCompanyId" })
   assignToCompany: Companies;
 
-  @Column({ nullable: false })
-  projectManager: string;
+  @Column({ type: "int", nullable: false })
+  projectManagerId: number;
 
-  @Column({ nullable: true })
-  teamLeader: string;
+  @ManyToOne(() => Employee, (emp) => emp.projectManager, {
+    nullable: false,
+  })
+  @JoinColumn({ name: "projectManagerId" })
+  projectManager: Employee;
+
+  @Column({ type: "int", nullable: true })
+  teamLeaderId: number;
+
+  @ManyToOne(() => Employee, (emp) => emp.teamLeader, { nullable: true })
+  @JoinColumn({ name: "teamLeaderId" })
+  teamLeader: Employee;
 
   @Column({ nullable: false, type: "boolean", default: false })
   isInternalProject: boolean;
@@ -79,7 +90,7 @@ export class Projects {
     default: 0,
     nullable: false,
   })
-  hourlyMonthlyRate: number;
+  hourlyMonthlyRate: string;
 
   @Column({ type: "int", default: 0, nullable: false })
   projectHours: number;
@@ -88,7 +99,7 @@ export class Projects {
   currency: CurrencyType;
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
-  projectCost: number;
+  projectCost: string;
 
   @Column({ type: "int", nullable: false })
   paymentTermDays: number;
