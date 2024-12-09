@@ -1,15 +1,17 @@
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable, Res } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Crs } from "./entity/cr.entity";
-import { Repository } from "typeorm";
-import { CustomError } from "src/common/helpers/exceptions";
-import { CR_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
-import { CreateCrDto } from "./dto/create-cr.dto";
-import { ListDto } from "src/common/dto/common.dto";
-import { CountryStateCityService } from "../country-state-city/country-state-city.service";
-import { Companies } from "../company/entity/company.entity";
-import { UpdateCrDto } from "./dto/update-cr.dto";
 import { CrStatus } from "src/common/constants/enum.constant";
+import { CR_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { CustomError } from "src/common/helpers/exceptions";
+import { Repository } from "typeorm";
+import { Companies } from "../company/entity/company.entity";
+import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { CreateCrDto } from "./dto/create-cr.dto";
+import { ListCrDto } from "./dto/list-cr.dto";
+import { UpdateCrDto } from "./dto/update-cr.dto";
+import { Crs } from "./entity/cr.entity";
+import ExcelJS from "exceljs";
+import { Response } from "express";
 
 interface ExtendedCompany extends Companies {
   countryName?: string;
@@ -42,7 +44,7 @@ export class CrService {
     }
   }
 
-  async findAll(params: ListDto) {
+  async findAll(params: ListCrDto) {
     try {
       const queryBuilder = this.crRepository.createQueryBuilder("cr");
 
@@ -55,6 +57,13 @@ export class CrService {
           },
         );
       }
+
+      if (params.isInternalCr) {
+        queryBuilder.andWhere("cr.isInternalCr = :isInternalCr", {
+          isInternalCr: params.isInternalCr,
+        });
+      }
+
       const totalQuery = queryBuilder.clone();
 
       // Apply sorting if sort and sortBy are provided
@@ -231,6 +240,120 @@ export class CrService {
       const crData = await queryBuilder.getOne();
 
       return crData;
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
+    }
+  }
+
+  async exportCrs(params: ListCrDto, @Res() response: Response) {
+    try {
+      const queryBuilder = this.crRepository.createQueryBuilder("cr");
+
+      // Apply search filter if the search term is provided
+      if (params.search) {
+        queryBuilder.where(
+          "cr.name ILIKE :search OR cr.description ILIKE :search OR cr.status ILIKE :search",
+          {
+            search: `%${params.search}%`,
+          },
+        );
+      }
+
+      if (params.isInternalCr) {
+        queryBuilder.andWhere("cr.isInternalCr = :isInternalCr", {
+          isInternalCr: params.isInternalCr,
+        });
+      }
+
+      queryBuilder
+        .leftJoinAndSelect("cr.client", "client")
+        .leftJoinAndSelect("client.company", "company")
+        .leftJoinAndSelect("cr.project", "project")
+        .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany");
+
+      const crs = await queryBuilder.getMany();
+
+      const crList = await Promise.all(
+        crs.map(async (cr) => {
+          const assignFromCompanyCountryName =
+            await this.countryStateCityService.getCountryByCode(
+              cr.assignFromCompany.countryCode,
+            );
+          let assignFromCompanyStateName = null;
+          if (cr.assignFromCompany.stateCode) {
+            assignFromCompanyStateName =
+              await this.countryStateCityService.getStateByCode(
+                cr.assignFromCompany.stateCode,
+                cr.assignFromCompany.countryCode,
+              );
+          }
+          const extendedAssignFromCompany: ExtendedCompany = {
+            ...cr.assignFromCompany,
+            countryName: assignFromCompanyCountryName,
+            stateName: assignFromCompanyStateName,
+          };
+          return {
+            ...cr,
+            assignFromCompany: extendedAssignFromCompany,
+          };
+        }),
+      );
+
+      // Generate Excel
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Projects");
+
+      // Add Headers
+      const headers = [
+        "Name",
+        "Description",
+        "Start Date",
+        "End Date",
+        "Status",
+        "Project",
+        "Client Name",
+        "Assign To Company",
+        "Billing type",
+        "Hourly rate",
+        "Cr hours",
+        "Total hours",
+        "Currency",
+      ];
+
+      sheet.addRow(headers);
+      crList.forEach((cr) => {
+        sheet.addRow([
+          cr.name,
+          cr.description,
+          cr.startDate,
+          cr.endDate,
+          cr.status,
+          cr.project.name,
+          cr.client.company.name,
+          cr.assignFromCompany.name,
+          cr.billingType,
+          cr.hourlyMonthlyRate,
+          cr.crHours,
+          cr.crCost,
+          cr.currency,
+        ]);
+      });
+
+      // Write Excel to Buffer
+      const buffer = await workbook.xlsx.writeBuffer();
+
+      // Set Response Headers for Download
+      response.setHeader(
+        "Content-Disposition",
+        `attachment; filename="CR_${Date.now()}.xlsx"`,
+      );
+      response.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+
+      // Send File as Response
+      response.send(buffer);
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

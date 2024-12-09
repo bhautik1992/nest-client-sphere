@@ -5,21 +5,23 @@ import {
   Get,
   Param,
   Post,
+  Res,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import {
+  EmployeeRole,
+  ProjectStatus,
+} from "src/common/constants/enum.constant";
 import { PROJECT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { ResponseMessage } from "src/common/decorators/response.decorator";
-import { ListDto } from "src/common/dto/common.dto";
+import { Roles } from "src/common/decorators/role.decorator";
+import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { CreateProjectDto } from "./dto/create-project.dto";
+import { ListProjectDto } from "./dto/list-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { ProjectService } from "./project.service";
-import { RoleGuard } from "src/security/auth/guards/role.guard";
-import { Roles } from "src/common/decorators/role.decorator";
-import {
-  ProjectStatus,
-  EmployeeRole,
-} from "src/common/constants/enum.constant";
+import { Response } from "express";
 
 @Controller("project")
 @ApiTags("Project")
@@ -37,7 +39,7 @@ export class ProjectController {
 
   @Post("list")
   @ResponseMessage(PROJECT_RESPONSE_MESSAGES.PROJECT_FETCHED)
-  async findAll(@Body() listDto: ListDto) {
+  async findAll(@Body() listDto: ListProjectDto) {
     return await this.projectService.findAll(listDto);
   }
 
@@ -71,5 +73,11 @@ export class ProjectController {
       changeStatusDto.projectId,
       changeStatusDto.status,
     );
+  }
+
+  @Post("export")
+  @ResponseMessage(PROJECT_RESPONSE_MESSAGES.PROJECT_EXPORTED)
+  async export(@Body() params: ListProjectDto, @Res() res: Response) {
+    return await this.projectService.exportProjects(params, res);
   }
 }

@@ -44,6 +44,7 @@ export const PROJECT_RESPONSE_MESSAGES = {
   PROJECT_NOT_FOUND: "Project not found",
   PROJECT_ALREADY_EXISTS: "Project already exists",
   PROJECT_STATUS_CHANGED: "Project status changed successfully",
+  PROJECT_EXPORTED: "Project exported successfully",
 };
 
 export const COMPANY_RESPONSE_MESSAGES = {
@@ -89,4 +90,5 @@ export const CR_RESPONSE_MESSAGES = {
   CR_NOT_FOUND: "CR not found",
   CR_ALREADY_EXISTS: "CR already exists",
   CR_STATUS_CHANGED: "CR status changed successfully",
+  CR_EXPORTED: "CR exported successfully",
 };
