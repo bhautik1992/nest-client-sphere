@@ -1,25 +1,23 @@
 import {
   BillingType,
+  CrStatus,
   CurrencyType,
   InvoicePaymentCycle,
-  ProjectStatus,
 } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
 import { Companies } from "src/modules/company/entity/company.entity";
-import { Crs } from "src/modules/cr/entity/cr.entity";
-import { Employee } from "src/modules/employee/entity/employee.entity";
+import { Projects } from "src/modules/project/entity/project.entity";
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 
-@Entity({ name: TABLE_NAMES.PROJECT })
-export class Projects {
+@Entity({ name: TABLE_NAMES.CR })
+export class Crs {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,8 +27,8 @@ export class Projects {
   @Column({ nullable: true })
   description: string;
 
-  @Column({ type: "enum", enum: Object.values(ProjectStatus), nullable: false })
-  status: ProjectStatus;
+  @Column({ type: "enum", enum: Object.values(CrStatus), nullable: false })
+  status: CrStatus;
 
   @Column({ nullable: false })
   startDate: Date;
@@ -55,32 +53,16 @@ export class Projects {
   client: Clients;
 
   @Column({ type: "int", nullable: false })
-  assignToCompanyId: number;
+  projectId: number;
 
-  @ManyToOne(() => Companies, (company) => company.assignedToProjects, {
+  @ManyToOne(() => Projects, (project) => project.crs, {
     nullable: false,
   })
-  @JoinColumn({ name: "assignToCompanyId" })
-  assignToCompany: Companies;
-
-  @Column({ type: "int", nullable: false })
-  projectManagerId: number;
-
-  @ManyToOne(() => Employee, (emp) => emp.projectManager, {
-    nullable: false,
-  })
-  @JoinColumn({ name: "projectManagerId" })
-  projectManager: Employee;
-
-  @Column({ type: "int", nullable: true })
-  teamLeaderId: number;
-
-  @ManyToOne(() => Employee, (emp) => emp.teamLeader, { nullable: true })
-  @JoinColumn({ name: "teamLeaderId" })
-  teamLeader: Employee;
+  @JoinColumn({ name: "projectId" })
+  project: Projects;
 
   @Column({ nullable: false, type: "boolean", default: false })
-  isInternalProject: boolean;
+  isInternalCr: boolean;
 
   @Column({ type: "enum", enum: Object.values(BillingType), nullable: false })
   billingType: BillingType;
@@ -95,13 +77,13 @@ export class Projects {
   hourlyMonthlyRate: string;
 
   @Column({ type: "int", default: 0, nullable: false })
-  projectHours: number;
+  crHours: number;
 
   @Column({ type: "enum", enum: Object.values(CurrencyType), nullable: false })
   currency: CurrencyType;
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
-  projectCost: string;
+  crCost: string;
 
   @Column({ type: "int", nullable: false })
   paymentTermDays: number;
@@ -112,9 +94,6 @@ export class Projects {
     nullable: true,
   })
   invoicePaymentCycle: InvoicePaymentCycle;
-
-  @OneToMany(() => Crs, (cr) => cr.project)
-  crs: Crs[];
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

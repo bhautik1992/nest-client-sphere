@@ -99,4 +99,23 @@ export class DashboardService {
       throw CustomError(error.message, error.statusCode);
     }
   }
+
+  async getProjectList() {
+    try {
+      const queryBuilder = this.projectRepository
+        .createQueryBuilder("project")
+        .leftJoin("project.client", "client");
+
+      return await queryBuilder
+        .select([
+          "project.id",
+          "project.name",
+          "client.id",
+          "client.clientCompanyName",
+        ])
+        .getMany();
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
+    }
+  }
 }
