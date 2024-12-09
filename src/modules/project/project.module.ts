@@ -7,10 +7,11 @@ import { ProjectService } from "./project.service";
 import { Companies } from "../company/entity/company.entity";
 import { Employee } from "../employee/entity/employee.entity";
 import { CountryStateCityModule } from "../country-state-city/country-state-city.module";
+import { Crs } from "../cr/entity/cr.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Projects, Clients, Companies, Employee]),
+    TypeOrmModule.forFeature([Projects, Clients, Companies, Employee, Crs]),
     CountryStateCityModule,
   ],
   controllers: [ProjectController],

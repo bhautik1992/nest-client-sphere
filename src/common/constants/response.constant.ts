@@ -64,6 +64,7 @@ export const DASHBOARD_RESPONSE_MESSAGES = {
   DASHBOARD_COMPANY_LIST_FETCHED: "Dashboard company list fetched successfully",
   DASHBOARD_EMPLOYEE_LIST_FETCHED:
     "Dashboard employee list fetched successfully",
+  DASHBOARD_PROJECT_LIST_FETCHED: "Dashboard project list fetched successfully",
 };
 
 export const COUNTRY_RESPONSE_MESSAGES = {
@@ -77,4 +78,15 @@ export const STATE_RESPONSE_MESSAGES = {
 
 export const CITY_RESPONSE_MESSAGES = {
   CITY_LISTED: "Cities listed",
+};
+
+export const CR_RESPONSE_MESSAGES = {
+  CR_LISTED: "CRs listed",
+  CR_INSERTED: "CR added successfully",
+  CR_UPDATED: "CR details updated successfully",
+  CR_DELETED: "CR deleted successfully",
+  CR_FETCHED: "CR details fetched successfully",
+  CR_NOT_FOUND: "CR not found",
+  CR_ALREADY_EXISTS: "CR already exists",
+  CR_STATUS_CHANGED: "CR status changed successfully",
 };

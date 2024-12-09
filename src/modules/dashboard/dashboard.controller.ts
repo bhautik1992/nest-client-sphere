@@ -48,4 +48,10 @@ export class DashboardController {
   getEmployeeList() {
     return this.dashboardService.getEmployeeList();
   }
+
+  @Get("project-list")
+  @ResponseMessage(DASHBOARD_RESPONSE_MESSAGES.DASHBOARD_PROJECT_LIST_FETCHED)
+  getProjectList() {
+    return this.dashboardService.getProjectList();
+  }
 }

@@ -60,3 +60,11 @@ export enum Designation {
   TESTER = "tester",
   INTERN = "intern",
 }
+
+export enum CrStatus {
+  NOT_STARTED = "not_started",
+  STARTED = "started",
+  PENDING = "pending",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+}
