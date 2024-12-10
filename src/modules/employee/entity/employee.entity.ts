@@ -1,15 +1,15 @@
-import { Designation, EmployeeRole } from "src/common/constants/enum.constant";
+import { EmployeeRole } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  BeforeInsert,
   BaseEntity,
-  ManyToOne,
+  BeforeInsert,
+  Column,
+  Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.EMPLOYEE })
@@ -37,9 +37,6 @@ export class Employee extends BaseEntity {
 
   @Column({ nullable: false })
   department: string;
-
-  @Column({ type: "enum", enum: Object.values(Designation), nullable: false })
-  designation: Designation;
 
   @Column({ nullable: false })
   password: string;

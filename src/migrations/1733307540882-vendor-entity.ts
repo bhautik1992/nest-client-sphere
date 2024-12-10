@@ -1,4 +1,3 @@
-import { Designation } from "../common/constants/enum.constant";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
 import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
 
@@ -29,12 +28,6 @@ const columns = [
     name: "phone",
     type: "varchar",
     isNullable: true,
-  },
-  {
-    name: "designation",
-    type: "enum",
-    enum: Object.values(Designation),
-    isNullable: false,
   },
   {
     name: "companyId",

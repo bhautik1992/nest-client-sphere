@@ -5,7 +5,13 @@ export enum AppEnvironment {
 
 export enum EmployeeRole {
   ADMIN = "admin",
-  EMPLOYEE = "employee",
+  SALES_MANAGER = "sales_manager",
+  SALES_EXECUTIVE = "sales_executive",
+  PROJECT_MANAGER = "project_manager",
+  TEAM_LEADER = "team_leader",
+  SENIOR_SOFTWARE_ENGINEER = "senior_software_engineer",
+  SOFTWARE_ENGINEER = "software_engineer",
+  TRAINEE = "trainee",
 }
 
 export enum ClientStatus {
@@ -49,16 +55,6 @@ export enum PaymentStatus {
   PAID = "paid",
   UNPAID = "unpaid",
   PARTIAL_PAID = "partial_paid",
-}
-
-export enum Designation {
-  ADMIN = "admin",
-  PROJECT_MANAGER = "project_manager",
-  TEAM_LEADER = "team_leader",
-  SALES_MANAGER = "sales_manager",
-  DEVELOPER = "developer",
-  TESTER = "tester",
-  INTERN = "intern",
 }
 
 export enum CrStatus {

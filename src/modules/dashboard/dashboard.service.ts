@@ -92,7 +92,7 @@ export class DashboardService {
           "employee.lastName",
           "employee.personalEmail",
           "employee.companyEmail",
-          "employee.designation",
+          "employee.role",
         ])
         .getMany();
     } catch (error) {

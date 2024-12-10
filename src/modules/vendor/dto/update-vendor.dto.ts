@@ -1,4 +1,3 @@
-import { Designation } from "src/common/constants/enum.constant";
 import { CreateVendorDto } from "./create-vendor.dto";
 
 export class UpdateVendorDto
@@ -9,7 +8,6 @@ export class UpdateVendorDto
       | "lastName"
       | "phone"
       | "address"
-      | "designation"
       | "vendorCompanyName"
       | "accountManager"
       | "countryCode"
@@ -24,7 +22,6 @@ export class UpdateVendorDto
   phone: string;
   address: string;
   website: string;
-  designation: Designation;
   vendorCompanyName: string;
   accountManager: string;
   countryCode: string;

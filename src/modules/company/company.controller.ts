@@ -23,7 +23,7 @@ import { UpdateCompanyDto } from "./dto/update-company.dto";
 @Controller("company")
 @ApiTags("Company")
 @ApiBearerAuth()
-@Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
+@Roles(EmployeeRole.ADMIN)
 @UseGuards(RoleGuard)
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}

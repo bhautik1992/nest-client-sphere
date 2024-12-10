@@ -17,7 +17,7 @@ import { ListStateDto } from "./dto/list-state.dto";
 @ApiTags("Country-State-City")
 @ApiBearerAuth()
 @UseGuards(RoleGuard)
-@Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
+@Roles(EmployeeRole.ADMIN)
 export class CountryStateCityController {
   constructor(
     private readonly countryStateCityService: CountryStateCityService,

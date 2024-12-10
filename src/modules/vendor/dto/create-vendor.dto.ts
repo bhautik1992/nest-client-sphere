@@ -1,13 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from "class-validator";
-import { Designation } from "src/common/constants/enum.constant";
 export class CreateVendorDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -28,11 +26,6 @@ export class CreateVendorDto {
   @IsOptional()
   @IsString()
   phone: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsEnum(Designation)
-  designation: Designation;
 
   @ApiProperty()
   @IsNotEmpty()

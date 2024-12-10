@@ -15,7 +15,6 @@ export default registerAs("database", () => ({
     companyEmail: "admin@infiazure.com",
     phone: "1234567890",
     department: "Admin",
-    designation: "admin",
     dateOfBirth: new Date(),
     joiningDate: new Date(),
     reportingPerson: "Infiazure",
