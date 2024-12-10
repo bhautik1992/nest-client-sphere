@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import { ClientStatus, Designation } from "src/common/constants/enum.constant";
+import { ClientStatus } from "src/common/constants/enum.constant";
 export class CreateClientDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -28,11 +28,6 @@ export class CreateClientDto {
   @IsOptional()
   @IsString()
   phone: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsEnum(Designation)
-  designation: Designation;
 
   @ApiProperty()
   @IsNotEmpty()

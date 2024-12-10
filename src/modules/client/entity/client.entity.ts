@@ -1,4 +1,4 @@
-import { ClientStatus, Designation } from "src/common/constants/enum.constant";
+import { ClientStatus } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Companies } from "src/modules/company/entity/company.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
@@ -27,9 +27,6 @@ export class Clients {
 
   @Column({ nullable: true })
   phone: string;
-
-  @Column({ type: "enum", enum: Object.values(Designation), nullable: false })
-  designation: Designation;
 
   @Column({ type: "int", nullable: false })
   companyId: number;

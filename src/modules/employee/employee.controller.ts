@@ -57,7 +57,7 @@ export class EmployeeController {
 
   @Post("update/:id")
   @ApiBearerAuth()
-  @Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
+  @Roles(EmployeeRole.ADMIN)
   @UseGuards(RoleGuard)
   @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_UPDATED)
   @UsePipes(new ValidationPipe({ transform: true }))

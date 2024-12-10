@@ -27,7 +27,7 @@ import { Response } from "express";
 @ApiTags("Project")
 @ApiBearerAuth()
 @UseGuards(RoleGuard)
-@Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
+@Roles(EmployeeRole.ADMIN)
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 

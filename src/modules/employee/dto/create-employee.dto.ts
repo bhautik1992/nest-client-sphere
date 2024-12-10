@@ -8,7 +8,7 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import { Designation, EmployeeRole } from "src/common/constants/enum.constant";
+import { EmployeeRole } from "src/common/constants/enum.constant";
 export class CreateEmployeeDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -44,11 +44,6 @@ export class CreateEmployeeDto {
   @IsNotEmpty()
   @IsString()
   department: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsEnum(Designation)
-  designation: Designation;
 
   @ApiProperty()
   @IsOptional()

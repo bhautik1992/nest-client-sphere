@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
-import { Designation, EmployeeRole } from "../common/constants/enum.constant";
+import { EmployeeRole } from "../common/constants/enum.constant";
 
 const columns = [
   {
@@ -44,12 +44,6 @@ const columns = [
   {
     name: "department",
     type: "varchar",
-    isNullable: false,
-  },
-  {
-    name: "designation",
-    type: "enum",
-    enum: Object.values(Designation),
     isNullable: false,
   },
   {

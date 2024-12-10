@@ -34,7 +34,7 @@ export class AuthController {
 
   @Post("/changePassword")
   @ApiBearerAuth()
-  @Roles(EmployeeRole.ADMIN, EmployeeRole.EMPLOYEE)
+  @Roles(EmployeeRole.ADMIN)
   @UseGuards(RoleGuard)
   @ResponseMessage(AUTH_RESPONSE_MESSAGES.EMPLOYEE_CHANGE_PASSWORD)
   async changePassword(@Body() body: ChangePasswordDto) {

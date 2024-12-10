@@ -102,9 +102,6 @@ export class AuthService {
         department: this.configService.get(
           "database.initialEmployee.department",
         ),
-        designation: this.configService.get(
-          "database.initialEmployee.designation",
-        ),
         dateOfBirth: this.configService.get(
           "database.initialEmployee.dateOfBirth",
         ),
