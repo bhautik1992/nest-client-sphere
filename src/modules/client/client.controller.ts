@@ -21,7 +21,11 @@ import { UpdateClientDto } from "./dto/update-client.dto";
 @Controller("client")
 @ApiTags("Client")
 @ApiBearerAuth()
-@Roles(EmployeeRole.ADMIN)
+@Roles(
+  EmployeeRole.ADMIN,
+  EmployeeRole.SALES_MANAGER,
+  EmployeeRole.SALES_EXECUTIVE,
+)
 @UseGuards(RoleGuard)
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}

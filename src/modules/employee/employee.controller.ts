@@ -24,22 +24,24 @@ import { ResponseMessage } from "src/common/decorators/response.decorator";
 
 @Controller("employee")
 @ApiTags("Employee")
+@ApiBearerAuth()
+@Roles(
+  EmployeeRole.ADMIN,
+  EmployeeRole.SALES_EXECUTIVE,
+  EmployeeRole.SALES_MANAGER,
+  EmployeeRole.PROJECT_MANAGER,
+)
+@UseGuards(RoleGuard)
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Post("create")
-  @ApiBearerAuth()
-  @Roles(EmployeeRole.ADMIN)
-  @UseGuards(RoleGuard)
   @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_INSERTED)
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
     return this.employeeService.create(createEmployeeDto);
   }
 
   @Post("list")
-  @ApiBearerAuth()
-  @Roles(EmployeeRole.ADMIN)
-  @UseGuards(RoleGuard)
   @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_LISTED)
   @HttpCode(HttpStatus.OK)
   async findAll(@Body() params: ListDto) {
@@ -47,18 +49,12 @@ export class EmployeeController {
   }
 
   @Get("get/:id")
-  @ApiBearerAuth()
-  @Roles(EmployeeRole.ADMIN)
-  @UseGuards(RoleGuard)
   @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_FETCHED)
   findOne(@Param("id") id: number) {
     return this.employeeService.findOne(id);
   }
 
   @Post("update/:id")
-  @ApiBearerAuth()
-  @Roles(EmployeeRole.ADMIN)
-  @UseGuards(RoleGuard)
   @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_UPDATED)
   @UsePipes(new ValidationPipe({ transform: true }))
   update(
@@ -69,9 +65,6 @@ export class EmployeeController {
   }
 
   @Delete("delete/:id")
-  @ApiBearerAuth()
-  @Roles(EmployeeRole.ADMIN)
-  @UseGuards(RoleGuard)
   @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_DELETED)
   remove(@Param("id") id: number) {
     return this.employeeService.remove(id);

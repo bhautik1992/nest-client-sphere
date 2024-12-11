@@ -22,7 +22,12 @@ import { Response } from "express";
 @ApiTags("CR")
 @ApiBearerAuth()
 @UseGuards()
-@Roles(EmployeeRole.ADMIN)
+@Roles(
+  EmployeeRole.ADMIN,
+  EmployeeRole.SALES_EXECUTIVE,
+  EmployeeRole.SALES_MANAGER,
+  EmployeeRole.PROJECT_MANAGER,
+)
 export class CrController {
   constructor(private readonly crService: CrService) {}
 

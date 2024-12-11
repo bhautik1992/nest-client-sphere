@@ -45,6 +45,7 @@ export class AuthService {
       lastName: employee.lastName,
       personalEmail: employee.personalEmail,
       companyEmail: employee.companyEmail,
+      role: employee.role,
     };
   }
 
