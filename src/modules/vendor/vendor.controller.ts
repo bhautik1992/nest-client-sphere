@@ -21,7 +21,11 @@ import { UpdateVendorDto } from "./dto/update-vendor.dto";
 @Controller("vendor")
 @ApiTags("Vendor")
 @ApiBearerAuth()
-@Roles(EmployeeRole.ADMIN)
+@Roles(
+  EmployeeRole.ADMIN,
+  EmployeeRole.SALES_EXECUTIVE,
+  EmployeeRole.SALES_MANAGER,
+)
 @UseGuards(RoleGuard)
 export class VendorController {
   constructor(private readonly vendorService: VendorService) {}

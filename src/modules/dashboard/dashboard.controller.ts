@@ -13,7 +13,16 @@ import { CurrentEmployee } from "src/common/decorators/current-employee.decorato
 @ApiTags("Dashboard")
 @ApiBearerAuth()
 @UseGuards(RoleGuard)
-@Roles(EmployeeRole.ADMIN)
+@Roles(
+  EmployeeRole.ADMIN,
+  EmployeeRole.SALES_MANAGER,
+  EmployeeRole.SALES_EXECUTIVE,
+  EmployeeRole.PROJECT_MANAGER,
+  EmployeeRole.TEAM_LEADER,
+  EmployeeRole.SENIOR_SOFTWARE_ENGINEER,
+  EmployeeRole.SOFTWARE_ENGINEER,
+  EmployeeRole.TRAINEE,
+)
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
