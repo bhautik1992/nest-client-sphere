@@ -50,7 +50,7 @@ export class ProjectService {
       // Apply search filter if the search term is provided
       if (params.search) {
         queryBuilder.where(
-          "project.name ILIKE :search OR project.status ILIKE :search OR project.description ILIKE :search OR project.client.name ILIKE :search OR project.assignToCompany.name ILIKE :search OR project.projectManager ILIKE :search OR project.startDate ILIKE :search OR project.endDate ILIKE :search OR project.teamLead ILIKE :search",
+          "project.name ILIKE :search OR project.status ILIKE :search OR project.description ILIKE :search OR project.startDate ILIKE :search OR project.endDate ILIKE :search",
           {
             search: `%${params.search}%`,
           },

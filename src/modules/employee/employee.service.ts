@@ -39,7 +39,7 @@ export class EmployeeService {
       // Apply search filter if the search term is provided
       if (params.search) {
         queryBuilder.where(
-          "(employee.firstName ILIKE :search OR employee.lastName ILIKE :search OR employee.email ILIKE :search)",
+          "(employee.firstName ILIKE :search OR employee.lastName ILIKE :search OR employee.personalEmail ILIKE :search OR employee.companyEmail ILIKE :search)",
           { search: `%${params.search}%` },
         );
       }
