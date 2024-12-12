@@ -40,9 +40,12 @@ export class CompanyService {
 
       // Apply search filter if the search term is provided
       if (params.search) {
-        queryBuilder.where("company.name ILIKE :search", {
-          search: `%${params.search}%`,
-        });
+        queryBuilder.where(
+          "company.name ILIKE :search OR company.email ILIKE :search",
+          {
+            search: `%${params.search}%`,
+          },
+        );
       }
 
       const totalQuery = queryBuilder.clone();
