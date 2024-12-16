@@ -94,4 +94,14 @@ export class CreateCrDto {
   @IsOptional()
   @IsEnum(InvoicePaymentCycle)
   invoicePaymentCycle: InvoicePaymentCycle;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  invoiceDay: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsDateString()
+  invoiceDate: string;
 }

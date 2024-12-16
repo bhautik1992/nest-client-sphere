@@ -95,6 +95,12 @@ export class Crs {
   })
   invoicePaymentCycle: InvoicePaymentCycle;
 
+  @Column({ nullable: true })
+  invoiceDay: string;
+
+  @Column({ nullable: true })
+  invoiceDate: Date;
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 

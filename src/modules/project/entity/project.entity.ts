@@ -113,6 +113,12 @@ export class Projects {
   })
   invoicePaymentCycle: InvoicePaymentCycle;
 
+  @Column({ nullable: true })
+  invoiceDay: string;
+
+  @Column({ nullable: true })
+  invoiceDate: Date;
+
   @OneToMany(() => Crs, (cr) => cr.project)
   crs: Crs[];
 
