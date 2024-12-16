@@ -110,6 +110,9 @@ export class DashboardService {
         .select([
           "project.id",
           "project.name",
+          "project.status",
+          "project.billingType",
+          "project.currency",
           "client.id",
           "client.clientCompanyName",
         ])

@@ -215,6 +215,16 @@ export class ProjectService {
           HttpStatus.NOT_FOUND,
         );
       }
+
+      if (updateProjectDto.projectManagerId === 0) {
+        delete updateProjectDto.projectManagerId;
+        delete isProjectExists.projectManager;
+      }
+
+      if (!updateProjectDto.projectManagerId) {
+        updateProjectDto.projectManagerId = isProjectExists.projectManagerId;
+      }
+
       const updatedData: any = { ...isProjectExists, ...updateProjectDto };
       const updatedProject = await this.projectRepository.save(updatedData);
 
@@ -250,6 +260,11 @@ export class ProjectService {
           HttpStatus.NOT_FOUND,
         );
       }
+
+      if (isProjectExists.projectManagerId === 0) {
+        delete isProjectExists.projectManager;
+      }
+
       isProjectExists.status = status;
       const updatedProject = await this.projectRepository.save(isProjectExists);
 
