@@ -1,6 +1,7 @@
 import { ClientStatus } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Companies } from "src/modules/company/entity/company.entity";
+import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
   Column,
@@ -80,4 +81,7 @@ export class Clients {
 
   @OneToMany(() => Projects, (project) => project.client)
   projects: Projects[];
+
+  @OneToMany(() => Invoices, (invoice) => invoice.client)
+  invoices: Invoices[];
 }

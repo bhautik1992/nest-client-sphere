@@ -7,6 +7,7 @@ import { Companies } from "src/modules/company/entity/company.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import { Vendor } from "src/modules/vendor/entity/vendor.entity";
 import { Crs } from "src/modules/cr/entity/cr.entity";
+import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 
 @Module({
   imports: [
@@ -22,7 +23,15 @@ import { Crs } from "src/modules/cr/entity/cr.entity";
           username: configService.get<string>("database.user"),
           password: configService.get<string>("database.password"),
           database: configService.get<string>("database.name"),
-          entities: [Employee, Clients, Companies, Projects, Vendor, Crs],
+          entities: [
+            Employee,
+            Clients,
+            Companies,
+            Projects,
+            Vendor,
+            Crs,
+            Invoices,
+          ],
           synchronize: false,
           logging: false,
         };

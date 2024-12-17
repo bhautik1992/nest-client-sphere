@@ -7,12 +7,14 @@ import {
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
 import { Companies } from "src/modules/company/entity/company.entity";
+import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 
@@ -100,6 +102,12 @@ export class Crs {
 
   @Column({ nullable: true })
   invoiceDate: Date;
+
+  @OneToMany(() => Invoices, (invoice) => invoice.crs, { nullable: true })
+  invoices: Invoices[];
+
+  @Column({ nullable: false, default: false, type: "boolean" })
+  isInvoiced: boolean;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

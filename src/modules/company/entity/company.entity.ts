@@ -1,5 +1,6 @@
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
+import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -44,4 +45,7 @@ export class Companies {
 
   @OneToMany(() => Projects, (project) => project.assignToCompany)
   assignedToProjects: Projects[];
+
+  @OneToMany(() => Invoices, (invoice) => invoice.company)
+  Invoices: Invoices[];
 }

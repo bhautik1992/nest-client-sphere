@@ -18,6 +18,7 @@ import { CompanyModule } from "./modules/company/company.module";
 import { CountryStateCityModule } from "./modules/country-state-city/country-state-city.module";
 import { VendorModule } from "./modules/vendor/vendor.module";
 import { CrModule } from "./modules/cr/cr.module";
+import { InvoiceModule } from "./modules/invoice/invoice.module";
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CrModule } from "./modules/cr/cr.module";
     CountryStateCityModule,
     VendorModule,
     CrModule,
+    InvoiceModule,
   ],
   providers: [
     {

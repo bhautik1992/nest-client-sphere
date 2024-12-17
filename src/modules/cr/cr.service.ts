@@ -231,13 +231,13 @@ export class CrService {
       }
       const queryBuilder = this.crRepository
         .createQueryBuilder("cr")
-        .leftJoinAndSelect("client", "client")
+        .leftJoinAndSelect("cr.client", "client")
         .leftJoinAndSelect("client.company", "company")
-        .leftJoinAndSelect("project", "project")
-        .leftJoinAndSelect("assignFromCompany", "assignFromCompany")
+        .leftJoinAndSelect("cr.project", "project")
+        .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany")
         .where("cr.projectId = :projectId", { projectId });
 
-      const crData = await queryBuilder.getOne();
+      const crData = await queryBuilder.getMany();
 
       return crData;
     } catch (error) {
