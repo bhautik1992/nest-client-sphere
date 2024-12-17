@@ -92,3 +92,15 @@ export const CR_RESPONSE_MESSAGES = {
   CR_STATUS_CHANGED: "CR status changed successfully",
   CR_EXPORTED: "CR exported successfully",
 };
+
+export const INVOICE_RESPONSE_MESSAGES = {
+  INVOICE_LISTED: "Invoices listed",
+  INVOICE_INSERTED: "Invoice added successfully",
+  INVOICE_UPDATED: "Invoice details updated successfully",
+  INVOICE_DELETED: "Invoice deleted successfully",
+  INVOICE_FETCHED: "Invoice details fetched successfully",
+  INVOICE_NOT_FOUND: "Invoice not found",
+  INVOICE_ALREADY_EXISTS: "Invoice already exists",
+  INVOICE_STATUS_CHANGED: "Invoice status changed successfully",
+  INVOICE_EXPORTED: "Invoice exported successfully",
+};

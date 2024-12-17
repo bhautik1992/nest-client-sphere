@@ -10,7 +10,6 @@ import {
   CrStatus,
   CurrencyType,
   InvoicePaymentCycle,
-  ProjectStatus,
 } from "../common/constants/enum.constant";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
 

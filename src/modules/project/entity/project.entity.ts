@@ -9,6 +9,7 @@ import { Clients } from "src/modules/client/entity/client.entity";
 import { Companies } from "src/modules/company/entity/company.entity";
 import { Crs } from "src/modules/cr/entity/cr.entity";
 import { Employee } from "src/modules/employee/entity/employee.entity";
+import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import {
   Column,
   Entity,
@@ -121,6 +122,9 @@ export class Projects {
 
   @OneToMany(() => Crs, (cr) => cr.project)
   crs: Crs[];
+
+  @OneToMany(() => Invoices, (invoice) => invoice.project)
+  invoices: Invoices[];
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
