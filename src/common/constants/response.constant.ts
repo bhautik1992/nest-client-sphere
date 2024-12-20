@@ -104,3 +104,13 @@ export const INVOICE_RESPONSE_MESSAGES = {
   INVOICE_STATUS_CHANGED: "Invoice status changed successfully",
   INVOICE_EXPORTED: "Invoice exported successfully",
 };
+
+export const PAYMENT_RESPONSE_MESSAGES = {
+  PAYMENT_LISTED: "Payments listed",
+  PAYMENT_INSERTED: "Payment added successfully",
+  PAYMENT_UPDATED: "Payment details updated successfully",
+  PAYMENT_DELETED: "Payment deleted successfully",
+  PAYMENT_FETCHED: "Payment details fetched successfully",
+  PAYMENT_NOT_FOUND: "Payment not found",
+  PAYMENT_ALREADY_EXISTS: "Payment already exists",
+};

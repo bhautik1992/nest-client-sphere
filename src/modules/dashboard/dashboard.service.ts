@@ -113,6 +113,10 @@ export class DashboardService {
           "project.status",
           "project.billingType",
           "project.currency",
+          "project.invoicePaymentCycle",
+          "project.paymentTermDays",
+          "project.invoiceDay",
+          "project.invoiceDate",
           "client.id",
           "client.clientCompanyName",
         ])

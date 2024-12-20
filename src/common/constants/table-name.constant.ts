@@ -12,4 +12,5 @@ export const TABLE_NAMES = {
   INVOICE: `${PROJECT_PREFIX}invoice`,
   PAYMENT: `${PROJECT_PREFIX}payment`,
   INVOICE_CRS: `${PROJECT_PREFIX}invoice_crs`,
+  PAYMENT_INVOICES: `${PROJECT_PREFIX}payment_invoices`,
 };

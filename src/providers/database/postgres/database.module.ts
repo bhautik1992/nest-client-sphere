@@ -8,6 +8,7 @@ import { Projects } from "src/modules/project/entity/project.entity";
 import { Vendor } from "src/modules/vendor/entity/vendor.entity";
 import { Crs } from "src/modules/cr/entity/cr.entity";
 import { Invoices } from "src/modules/invoice/entity/invoice.entity";
+import { Payments } from "src/modules/payment/entity/payment.entity";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { Invoices } from "src/modules/invoice/entity/invoice.entity";
             Vendor,
             Crs,
             Invoices,
+            Payments,
           ],
           synchronize: false,
           logging: false,

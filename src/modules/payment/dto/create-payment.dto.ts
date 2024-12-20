@@ -2,14 +2,16 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   IsArray,
   IsDateString,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
   IsString,
 } from "class-validator";
+import { PaymentMethod } from "src/common/constants/enum.constant";
 
-class CrInvoiceAmountDto {
+class InvoiceAmountDto {
   @ApiProperty()
   @IsNumber()
   id: number;
@@ -17,10 +19,15 @@ class CrInvoiceAmountDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  crCost: string;
+  invoicedCost: string;
 }
 
-export class CreateInvoiceDto {
+export class CreatePaymentDto {
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  uniquePaymentId: string;
+
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
@@ -39,36 +46,41 @@ export class CreateInvoiceDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsDateString()
-  invoiceDate: string;
+  paymentDate: string;
 
   @ApiProperty()
-  @IsOptional()
-  @IsDateString()
-  dueDate: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsArray()
-  crIds: number[];
+  @IsNotEmpty()
+  @IsEnum(PaymentMethod)
+  paymentMethod: PaymentMethod;
 
   @ApiProperty()
   @IsOptional()
   @IsNumber()
-  amount: number;
+  receivedINR: number;
 
   @ApiProperty()
   @IsOptional()
   @IsNumber()
-  additionalAmount: number;
+  conversionRate: number;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  additionalChargeDesc: string;
+  comment: string;
 
   @ApiProperty()
   @IsOptional()
+  @IsNumber()
+  paymentAmount: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsArray()
+  invoiceIds: number[];
+
+  @ApiProperty()
+  @IsNotEmpty()
   @IsArray()
   @IsObject({ each: true })
-  crInvoiceAmount: CrInvoiceAmountDto[];
+  invoiceAmount: InvoiceAmountDto[];
 }
