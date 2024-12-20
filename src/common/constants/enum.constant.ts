@@ -64,3 +64,11 @@ export enum CrStatus {
   COMPLETED = "completed",
   CANCELLED = "cancelled",
 }
+
+export enum PaymentMethod {
+  PAYONEER = "payoneer",
+  WIRE_TRANSFER = "wire_transfer",
+  BANK_TRANSFER = "bank_transfer",
+  WISE = "wise",
+  PAYPAL = "paypal",
+}

@@ -52,4 +52,10 @@ export class InvoiceController {
   async delete(@Param("id") id: number) {
     return await this.invoiceService.delete(id);
   }
+
+  @Get("getByProjectId/:projectId")
+  @ResponseMessage(INVOICE_RESPONSE_MESSAGES.INVOICE_LISTED)
+  async getInvoicesByProjectId(@Param("projectId") projectId: number) {
+    return await this.invoiceService.getInvoicesByProjectId(projectId);
+  }
 }

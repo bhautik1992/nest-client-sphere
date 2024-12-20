@@ -1,29 +1,20 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Invoices } from "./entity/invoice.entity";
-import { In, Repository } from "typeorm";
-import { CreateInvoiceDto } from "./dto/create-invoice.dto";
-import { CustomError } from "src/common/helpers/exceptions";
-import { ListDto } from "src/common/dto/common.dto";
 import {
   CR_RESPONSE_MESSAGES,
   INVOICE_RESPONSE_MESSAGES,
 } from "src/common/constants/response.constant";
+import { ListDto } from "src/common/dto/common.dto";
+import { CustomError } from "src/common/helpers/exceptions";
+import { In, Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
-import { Companies } from "../company/entity/company.entity";
-import { Clients } from "../client/entity/client.entity";
 import { Crs } from "../cr/entity/cr.entity";
-import { CrService } from "../cr/cr.service";
-
-interface ExtendedCompany extends Companies {
-  countryName?: string;
-  stateName?: string;
-}
-
-interface ExtendedClient extends Clients {
-  countryName?: string;
-  stateName?: string;
-}
+import { CreateInvoiceDto } from "./dto/create-invoice.dto";
+import { Invoices } from "./entity/invoice.entity";
+import {
+  ExtendedClient,
+  ExtendedCompany,
+} from "src/common/interfaces/jwt.interface";
 
 @Injectable()
 export class InvoiceService {
@@ -50,33 +41,24 @@ export class InvoiceService {
         }
       }
 
-      // update Cr Cost
       if (
-        createInvoiceDto.isUpdateCrAmount &&
-        createInvoiceDto.crInvoiceAmount?.length > 0
+        createInvoiceDto.crInvoiceAmount &&
+        createInvoiceDto.crInvoiceAmount.length > 0
       ) {
-        const crIds = createInvoiceDto.crInvoiceAmount.map((cr) => cr.id);
-        const crRecords = await this.crRepository.find({
-          where: {
-            id: In(crIds),
-          },
-        });
-        const crMap = new Map(crRecords.map((cr) => [cr.id, cr]));
-        const updatePromises = createInvoiceDto.crInvoiceAmount.map(
-          async (crInvoice) => {
-            const cr = crMap.get(crInvoice.id);
-            if (!cr) {
-              throw CustomError(
-                CR_RESPONSE_MESSAGES.CR_NOT_FOUND,
-                HttpStatus.NOT_FOUND,
-              );
-            }
-            cr.crCost = crInvoice.crCost;
-            cr.isInvoiced = true;
-            return this.crRepository.save(cr);
-          },
+        for (let cr of createInvoiceDto.crInvoiceAmount) {
+          const crData = await this.crRepository.findOneBy({ id: cr.id });
+          if (crData) {
+            crData.isInvoiced = true;
+            await this.crRepository.save(crData);
+          }
+        }
+
+        // Calculate the total amount
+        const totalAmount = createInvoiceDto.crInvoiceAmount.reduce(
+          (total, cr) => total + Number(cr.crCost),
+          0,
         );
-        await Promise.all(updatePromises);
+        createInvoiceDto.amount = totalAmount;
       }
 
       const invoice = this.invoiceRepository.create({
@@ -255,6 +237,19 @@ export class InvoiceService {
         );
       }
       return await this.invoiceRepository.delete({ id });
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
+    }
+  }
+
+  async getInvoicesByProjectId(projectId: number) {
+    try {
+      const queryBuilder = this.invoiceRepository.createQueryBuilder("invoice");
+      return await queryBuilder
+        .leftJoinAndSelect("invoice.client", "client")
+        .leftJoinAndSelect("invoice.project", "project")
+        .where("invoice.projectId = :projectId", { projectId })
+        .getMany();
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

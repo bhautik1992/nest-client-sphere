@@ -1,3 +1,5 @@
+import { PaymentMethod } from "../common/constants/enum.constant";
+import { TABLE_NAMES } from "../common/constants/table-name.constant";
 import {
   MigrationInterface,
   QueryRunner,
@@ -5,7 +7,6 @@ import {
   TableColumn,
   TableForeignKey,
 } from "typeorm";
-import { TABLE_NAMES } from "../common/constants/table-name.constant";
 
 const columns = [
   {
@@ -16,16 +17,17 @@ const columns = [
     generationStrategy: "increment",
   },
   {
-    name: "invoiceNumber",
+    name: "paymentNumber",
     type: "varchar",
     length: "255",
     isNullable: false,
   },
   {
-    name: "customInvoiceNumber",
+    name: "uniquePaymentId",
     type: "varchar",
     length: "255",
     isNullable: true,
+    unique: true,
   },
   {
     name: "companyId",
@@ -43,39 +45,40 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "invoiceDate",
+    name: "paymentDate",
     type: "date",
     isNullable: false,
   },
   {
-    name: "dueDate",
-    type: "date",
-    isNullable: true,
+    name: "paymentMethod",
+    type: "enum",
+    enum: Object.values(PaymentMethod),
+    isNullable: false,
   },
   {
-    name: "amount",
+    name: "receivedINR",
     type: "decimal",
     precision: 10,
     scale: 2,
+    isNullable: false,
+  },
+  {
+    name: "conversionRate",
+    type: "int",
     isNullable: true,
   },
   {
-    name: "additionalAmount",
+    name: "paymentAmount",
     type: "decimal",
     precision: 10,
     scale: 2,
-    isNullable: true,
+    isNullable: false,
   },
   {
-    name: "additionalChargeDesc",
+    name: "comment",
     type: "varchar",
+    length: "255",
     isNullable: true,
-  },
-  {
-    name: "isPaymentReceived",
-    type: "boolean",
-    default: false,
-    isNullable: false,
   },
   {
     name: "createdAt",
@@ -101,40 +104,43 @@ const columnsObjects = columns.map((column) => {
   return new TableColumn(rest);
 });
 
-export class InvoiceEntity1734340919917 implements MigrationInterface {
+export class PaymentEntity1734498903380 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: TABLE_NAMES.INVOICE,
+        name: TABLE_NAMES.PAYMENT,
         columns: columnsObjects,
       }),
     );
+
     await queryRunner.createTable(
       new Table({
-        name: TABLE_NAMES.INVOICE_CRS,
+        name: TABLE_NAMES.PAYMENT_INVOICES,
         columns: [
           {
-            name: "invoiceId",
+            name: "paymentId",
             type: "int",
           },
           {
-            name: "crId",
+            name: "invoiceId",
             type: "int",
           },
         ],
       }),
     );
+
     await queryRunner.createForeignKey(
-      TABLE_NAMES.INVOICE,
+      TABLE_NAMES.PAYMENT_INVOICES,
       new TableForeignKey({
-        columnNames: ["clientId"],
+        columnNames: ["paymentId"],
         referencedColumnNames: ["id"],
-        referencedTableName: TABLE_NAMES.CLIENT,
+        referencedTableName: TABLE_NAMES.PAYMENT,
         onDelete: "CASCADE",
       }),
     );
+
     await queryRunner.createForeignKey(
-      TABLE_NAMES.INVOICE_CRS,
+      TABLE_NAMES.PAYMENT_INVOICES,
       new TableForeignKey({
         columnNames: ["invoiceId"],
         referencedColumnNames: ["id"],
@@ -142,36 +148,20 @@ export class InvoiceEntity1734340919917 implements MigrationInterface {
         onDelete: "CASCADE",
       }),
     );
-
-    await queryRunner.createForeignKey(
-      TABLE_NAMES.INVOICE_CRS,
-      new TableForeignKey({
-        columnNames: ["crId"],
-        referencedColumnNames: ["id"],
-        referencedTableName: TABLE_NAMES.CR,
-        onDelete: "CASCADE",
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable(TABLE_NAMES.INVOICE);
-    const foreignKey = table.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf("clientId") !== -1,
+    const paymentInvoicesTable = await queryRunner.getTable(
+      TABLE_NAMES.PAYMENT_INVOICES,
     );
-    await queryRunner.dropForeignKey(TABLE_NAMES.INVOICE, foreignKey);
-    await queryRunner.dropTable(TABLE_NAMES.INVOICE);
-
-    const invoiceCrsTable = await queryRunner.getTable(TABLE_NAMES.INVOICE_CRS);
-    const foreignKeyInvoice = invoiceCrsTable.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf("invoiceId") !== -1,
+    const foreignKeyPayment = paymentInvoicesTable.foreignKeys.find(
+      (fk) => fk.columnNames.indexOf("paymentId") !== -1,
     );
-    const foreignKeyCr = invoiceCrsTable.foreignKeys.find(
+    const foreignKeyInvoice = paymentInvoicesTable.foreignKeys.find(
       (fk) => fk.columnNames.indexOf("crId") !== -1,
     );
-
+    await queryRunner.dropForeignKey(TABLE_NAMES.PAYMENT, foreignKeyPayment);
     await queryRunner.dropForeignKey(TABLE_NAMES.INVOICE, foreignKeyInvoice);
-    await queryRunner.dropForeignKey(TABLE_NAMES.INVOICE, foreignKeyCr);
-    await queryRunner.dropTable(TABLE_NAMES.INVOICE);
+    await queryRunner.dropTable(TABLE_NAMES.PAYMENT);
   }
 }

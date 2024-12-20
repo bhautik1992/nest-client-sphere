@@ -7,17 +7,12 @@ import ExcelJS from "exceljs";
 import { Response } from "express";
 import { ProjectStatus } from "src/common/constants/enum.constant";
 import { Repository } from "typeorm";
-import { Companies } from "../company/entity/company.entity";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { ListProjectDto } from "./dto/list-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { Projects } from "./entity/project.entity";
-
-interface ExtendedCompany extends Companies {
-  countryName?: string;
-  stateName?: string;
-}
+import { ExtendedCompany } from "src/common/interfaces/jwt.interface";
 
 @Injectable()
 export class ProjectService {
