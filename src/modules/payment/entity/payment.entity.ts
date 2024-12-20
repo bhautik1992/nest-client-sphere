@@ -32,7 +32,13 @@ export class Payments extends BaseEntity {
     const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
     const day = currentDate.getDate().toString().padStart(2, "0");
     const today = `${year}${month}${day}`;
-    this.paymentNumber = `${prefix}-${today}`;
+    const lastInvoice = await Payments.find({
+      order: { paymentNumber: "DESC" },
+      take: 1,
+    });
+    const lastId = lastInvoice.length > 0 ? lastInvoice[0].id : 0;
+    const increment = lastId + 1;
+    this.paymentNumber = `${prefix}-${today}-${increment.toString().padStart(2, "0")}`;
   }
 
   @Column({ type: "varchar", length: 255, unique: true, nullable: true })
