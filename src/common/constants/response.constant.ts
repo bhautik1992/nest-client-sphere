@@ -114,3 +114,13 @@ export const PAYMENT_RESPONSE_MESSAGES = {
   PAYMENT_NOT_FOUND: "Payment not found",
   PAYMENT_ALREADY_EXISTS: "Payment already exists",
 };
+
+export const MILESTONE_RESPONSE_MESSAGES = {
+  MILESTONE_LISTED: "Milestones listed",
+  MILESTONE_FETCHED: "Milestone details fetched successfully",
+  MILESTONE_INSERTED: "Milestone added successfully",
+  MILESTONE_UPDATED: "Milestone details updated successfully",
+  MILESTONE_DELETED: "Milestone deleted successfully",
+  MILESTONE_NOT_FOUND: "Milestone not found",
+  MILESTONE_ALREADY_EXISTS: "Milestone already exists",
+};
