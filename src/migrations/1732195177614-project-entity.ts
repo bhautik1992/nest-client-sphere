@@ -124,6 +124,16 @@ const columns = [
     isNullable: true,
   },
   {
+    name: "createdBy",
+    type: "int",
+    isNullable: false,
+  },
+  {
+    name: "updatedBy",
+    type: "int",
+    isNullable: false,
+  },
+  {
     name: "createdAt",
     type: "timestamp",
     default: "CURRENT_TIMESTAMP",

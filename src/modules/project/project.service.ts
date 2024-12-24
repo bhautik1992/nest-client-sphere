@@ -6,7 +6,10 @@ import { CustomError } from "src/common/helpers/exceptions";
 import ExcelJS from "exceljs";
 import { Response } from "express";
 import { BillingType, ProjectStatus } from "src/common/constants/enum.constant";
-import { ExtendedCompany } from "src/common/interfaces/jwt.interface";
+import {
+  ExtendedCompany,
+  JwtPayload,
+} from "src/common/interfaces/jwt.interface";
 import { Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
 import { MileStoneService } from "../mile-stone/mile-stone.service";
@@ -24,7 +27,7 @@ export class ProjectService {
     private readonly mileStoneService: MileStoneService,
   ) {}
 
-  async create(createProjectDto: CreateProjectDto) {
+  async create(createProjectDto: CreateProjectDto, currentUser: JwtPayload) {
     try {
       if (await this.getProjectByName(createProjectDto.name)) {
         throw CustomError(
@@ -32,6 +35,8 @@ export class ProjectService {
           HttpStatus.BAD_REQUEST,
         );
       }
+      createProjectDto.createdBy = currentUser.id;
+      createProjectDto.updatedBy = currentUser.id;
       const project = this.projectRepository.create(createProjectDto);
       const createdProject = await this.projectRepository.save(project);
 
@@ -215,7 +220,11 @@ export class ProjectService {
     }
   }
 
-  async update(id: number, updateProjectDto: UpdateProjectDto) {
+  async update(
+    id: number,
+    updateProjectDto: UpdateProjectDto,
+    currentUser: JwtPayload,
+  ) {
     try {
       const isProjectExists = await (
         await this.getProjectWithJoins(id)
@@ -250,7 +259,7 @@ export class ProjectService {
           }
         }
       }
-
+      updateProjectDto.updatedBy = currentUser.id;
       const updatedData: any = { ...isProjectExists, ...updateProjectDto };
       const updatedProject = await this.projectRepository.save(updatedData);
       return updatedProject;
@@ -268,6 +277,7 @@ export class ProjectService {
           HttpStatus.NOT_FOUND,
         );
       }
+      await this.mileStoneService.removeByProjectId(id);
       await this.projectRepository.delete({ id });
     } catch (error) {
       throw CustomError(error.message, error.statusCode);

@@ -22,6 +22,8 @@ import { ListProjectDto } from "./dto/list-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { ProjectService } from "./project.service";
 import { Response } from "express";
+import { CurrentEmployee } from "src/common/decorators/current-employee.decorator";
+import { JwtPayload } from "src/common/interfaces/jwt.interface";
 
 @Controller("project")
 @ApiTags("Project")
@@ -38,8 +40,11 @@ export class ProjectController {
 
   @Post("create")
   @ResponseMessage(PROJECT_RESPONSE_MESSAGES.PROJECT_INSERTED)
-  async createProject(@Body() createProjectDto: CreateProjectDto) {
-    return await this.projectService.create(createProjectDto);
+  async createProject(
+    @Body() createProjectDto: CreateProjectDto,
+    @CurrentEmployee() employee: JwtPayload,
+  ) {
+    return await this.projectService.create(createProjectDto, employee);
   }
 
   @Post("list")
@@ -53,8 +58,9 @@ export class ProjectController {
   async updateProject(
     @Param("id") id: number,
     @Body() updateProjectDto: UpdateProjectDto,
+    @CurrentEmployee() employee: JwtPayload,
   ) {
-    return await this.projectService.update(id, updateProjectDto);
+    return await this.projectService.update(id, updateProjectDto, employee);
   }
 
   @Delete("delete/:id")
