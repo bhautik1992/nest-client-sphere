@@ -106,7 +106,8 @@ export class InvoiceService {
         .leftJoinAndSelect("project.teamLeader", "teamLeader")
         .leftJoinAndSelect("invoice.client", "client")
         .leftJoinAndSelect("invoice.company", "company")
-        .leftJoinAndSelect("invoice.crs", "crs");
+        .leftJoinAndSelect("invoice.crs", "crs")
+        .leftJoinAndSelect("project.milestones", "milestones");
 
       const invoices = await queryBuilder.getMany();
 
@@ -182,6 +183,7 @@ export class InvoiceService {
         .leftJoinAndSelect("invoice.client", "client")
         .leftJoinAndSelect("invoice.company", "company")
         .leftJoinAndSelect("invoice.crs", "crs")
+        .leftJoinAndSelect("project.milestones", "milestones")
         .where("invoice.id = :id", { id })
         .getOne();
 

@@ -5,14 +5,15 @@ import { CustomError } from "src/common/helpers/exceptions";
 
 import ExcelJS from "exceljs";
 import { Response } from "express";
-import { ProjectStatus } from "src/common/constants/enum.constant";
+import { BillingType, ProjectStatus } from "src/common/constants/enum.constant";
+import { ExtendedCompany } from "src/common/interfaces/jwt.interface";
 import { Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { MileStoneService } from "../mile-stone/mile-stone.service";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { ListProjectDto } from "./dto/list-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { Projects } from "./entity/project.entity";
-import { ExtendedCompany } from "src/common/interfaces/jwt.interface";
 
 @Injectable()
 export class ProjectService {
@@ -20,6 +21,7 @@ export class ProjectService {
     @InjectRepository(Projects)
     private readonly projectRepository: Repository<Projects>,
     private readonly countryStateCityService: CountryStateCityService,
+    private readonly mileStoneService: MileStoneService,
   ) {}
 
   async create(createProjectDto: CreateProjectDto) {
@@ -32,7 +34,20 @@ export class ProjectService {
       }
       const project = this.projectRepository.create(createProjectDto);
       const createdProject = await this.projectRepository.save(project);
-      return createdProject;
+
+      let mileStones = [];
+      if (
+        createdProject.billingType === BillingType.FIXED &&
+        createProjectDto.milestones.length > 0
+      ) {
+        const promises = createProjectDto.milestones.map(async (milestone) => {
+          milestone.projectId = createdProject.id;
+          return this.mileStoneService.create(milestone);
+        });
+        mileStones = await Promise.all(promises);
+      }
+
+      return { ...createdProject, ...mileStones };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -84,7 +99,8 @@ export class ProjectService {
         .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
         .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
         .leftJoinAndSelect("project.projectManager", "projectManager")
-        .leftJoinAndSelect("project.teamLeader", "teamLeader");
+        .leftJoinAndSelect("project.teamLeader", "teamLeader")
+        .leftJoinAndSelect("project.milestones", "milestones");
 
       const projects = await queryBuilder.getMany();
 
@@ -204,6 +220,7 @@ export class ProjectService {
       const isProjectExists = await (
         await this.getProjectWithJoins(id)
       ).getOne();
+
       if (!isProjectExists) {
         throw CustomError(
           PROJECT_RESPONSE_MESSAGES.PROJECT_NOT_FOUND,
@@ -220,9 +237,22 @@ export class ProjectService {
         updateProjectDto.projectManagerId = isProjectExists.projectManagerId;
       }
 
+      if (
+        updateProjectDto.billingType === BillingType.FIXED &&
+        updateProjectDto.milestones.length > 0
+      ) {
+        for (const milestone of updateProjectDto.milestones) {
+          milestone.projectId = id;
+          if (milestone.id) {
+            await this.mileStoneService.update(milestone.id, milestone);
+          } else {
+            await this.mileStoneService.create(milestone);
+          }
+        }
+      }
+
       const updatedData: any = { ...isProjectExists, ...updateProjectDto };
       const updatedProject = await this.projectRepository.save(updatedData);
-
       return updatedProject;
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
@@ -282,7 +312,8 @@ export class ProjectService {
       .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
       .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
       .leftJoinAndSelect("project.projectManager", "projectManager")
-      .leftJoinAndSelect("project.teamLeader", "teamLeader");
+      .leftJoinAndSelect("project.teamLeader", "teamLeader")
+      .leftJoinAndSelect("project.milestones", "milestones");
   }
 
   async exportProjects(params: ListProjectDto, response: Response) {

@@ -14,6 +14,7 @@ import {
   InvoicePaymentCycle,
   ProjectStatus,
 } from "src/common/constants/enum.constant";
+import { CreateMileStoneDto } from "src/modules/mile-stone/dto/create-milestone.dto";
 export class CreateProjectDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -114,4 +115,8 @@ export class CreateProjectDto {
   @IsOptional()
   @IsDateString()
   invoiceDate: string;
+
+  @ApiProperty({ type: [CreateMileStoneDto] })
+  @IsOptional()
+  milestones: CreateMileStoneDto[];
 }

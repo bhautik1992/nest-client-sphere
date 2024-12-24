@@ -20,6 +20,7 @@ import { VendorModule } from "./modules/vendor/vendor.module";
 import { CrModule } from "./modules/cr/cr.module";
 import { InvoiceModule } from "./modules/invoice/invoice.module";
 import { PaymentModule } from "./modules/payment/payment.module";
+import { MileStoneModule } from "./modules/mile-stone/mile-stone.module";
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { PaymentModule } from "./modules/payment/payment.module";
     CrModule,
     InvoiceModule,
     PaymentModule,
+    MileStoneModule,
   ],
   providers: [
     {

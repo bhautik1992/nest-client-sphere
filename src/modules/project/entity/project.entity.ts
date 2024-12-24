@@ -10,6 +10,7 @@ import { Companies } from "src/modules/company/entity/company.entity";
 import { Crs } from "src/modules/cr/entity/cr.entity";
 import { Employee } from "src/modules/employee/entity/employee.entity";
 import { Invoices } from "src/modules/invoice/entity/invoice.entity";
+import { MileStones } from "src/modules/mile-stone/entity/mileStone.entity";
 import {
   Column,
   Entity,
@@ -125,6 +126,9 @@ export class Projects {
 
   @OneToMany(() => Invoices, (invoice) => invoice.project)
   invoices: Invoices[];
+
+  @OneToMany(() => MileStones, (milestone) => milestone.projectId)
+  milestones: MileStones[];
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
