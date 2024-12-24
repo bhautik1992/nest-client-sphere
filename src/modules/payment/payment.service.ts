@@ -1,20 +1,20 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Payments } from "./entity/payment.entity";
-import { In, Repository } from "typeorm";
-import { CreatePaymentDto } from "./dto/create-payment.dto";
-import { CustomError } from "src/common/helpers/exceptions";
 import {
   INVOICE_RESPONSE_MESSAGES,
   PAYMENT_RESPONSE_MESSAGES,
 } from "src/common/constants/response.constant";
-import { ListDto } from "src/common/dto/common.dto";
-import { Invoices } from "../invoice/entity/invoice.entity";
+import { CustomError } from "src/common/helpers/exceptions";
 import {
   ExtendedClient,
   ExtendedCompany,
 } from "src/common/interfaces/jwt.interface";
+import { In, Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { Invoices } from "../invoice/entity/invoice.entity";
+import { CreatePaymentDto } from "./dto/create-payment.dto";
+import { ListPaymentDto } from "./dto/list-payment.dto";
+import { Payments } from "./entity/payment.entity";
 
 @Injectable()
 export class PaymentService {
@@ -78,7 +78,7 @@ export class PaymentService {
     }
   }
 
-  async findAll(params: ListDto) {
+  async findAll(params: ListPaymentDto) {
     try {
       const queryBuilder = this.paymentRepository.createQueryBuilder("payment");
 
@@ -115,6 +115,11 @@ export class PaymentService {
         .leftJoinAndSelect("payment.project", "project")
         .leftJoinAndSelect("payment.company", "company")
         .leftJoinAndSelect("payment.invoices", "invoices");
+
+      if (params.deletedPayment) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("payment.deletedAt IS NOT NULL");
+      }
 
       const payments = await queryBuilder.getMany();
 
@@ -188,6 +193,7 @@ export class PaymentService {
         .leftJoinAndSelect("payment.company", "company")
         .leftJoinAndSelect("payment.invoices", "invoices")
         .where("payment.id = :id", { id })
+        .andWhere("payment.deletedAt IS NULL")
         .getOne();
 
       const clientCountryName =
@@ -241,7 +247,7 @@ export class PaymentService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.paymentRepository.delete({ id });
+      return await this.paymentRepository.softDelete({ id });
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

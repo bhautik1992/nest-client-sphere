@@ -9,13 +9,13 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { EmployeeRole } from "src/common/constants/enum.constant";
+import { INVOICE_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { ResponseMessage } from "src/common/decorators/response.decorator";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
-import { InvoiceService } from "./invoice.service";
-import { ResponseMessage } from "src/common/decorators/response.decorator";
-import { INVOICE_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
-import { ListDto } from "src/common/dto/common.dto";
+import { ListInvoiceDto } from "./dto/list-invoice.dto";
+import { InvoiceService } from "./invoice.service";
 
 @Controller("invoice")
 @ApiTags("Invoice")
@@ -37,7 +37,7 @@ export class InvoiceController {
 
   @Post("list")
   @ResponseMessage(INVOICE_RESPONSE_MESSAGES.INVOICE_LISTED)
-  async findAll(@Body() params: ListDto) {
+  async findAll(@Body() params: ListInvoiceDto) {
     return await this.invoiceService.findAll(params);
   }
 

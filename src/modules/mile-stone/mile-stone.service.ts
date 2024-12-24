@@ -51,7 +51,7 @@ export class MileStoneService {
         id,
       });
       if (isMileStoneExist) {
-        await this.mileStoneRepository.delete({ id });
+        await this.mileStoneRepository.softDelete({ id });
       }
       return;
     } catch (error) {
@@ -62,7 +62,7 @@ export class MileStoneService {
   async getMileStonesByProjectId(projectId: number) {
     try {
       const mileStones = await this.mileStoneRepository.find({
-        where: { projectId },
+        where: { projectId, deletedAt: null },
       });
       return mileStones;
     } catch (error) {

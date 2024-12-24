@@ -9,13 +9,13 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ClientStatus, EmployeeRole } from "src/common/constants/enum.constant";
+import { CLIENT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { ResponseMessage } from "src/common/decorators/response.decorator";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { ClientService } from "./client.service";
 import { CreateClientDto } from "./dto/create-client.dto";
-import { CLIENT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
-import { ResponseMessage } from "src/common/decorators/response.decorator";
-import { ListDto } from "src/common/dto/common.dto";
+import { ListClientDto } from "./dto/list-client.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
 
 @Controller("client")
@@ -38,7 +38,7 @@ export class ClientController {
 
   @Post("list")
   @ResponseMessage(CLIENT_RESPONSE_MESSAGES.CLIENT_LISTED)
-  async findAll(@Body() params: ListDto) {
+  async findAll(@Body() params: ListClientDto) {
     return await this.clientService.findAll(params);
   }
 

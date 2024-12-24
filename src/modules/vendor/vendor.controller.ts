@@ -9,14 +9,14 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { EmployeeRole } from "src/common/constants/enum.constant";
+import { VENDOR_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { ResponseMessage } from "src/common/decorators/response.decorator";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
-import { VendorService } from "./vendor.service";
-import { ResponseMessage } from "src/common/decorators/response.decorator";
-import { VENDOR_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { CreateVendorDto } from "./dto/create-vendor.dto";
-import { ListDto } from "src/common/dto/common.dto";
+import { ListVendorDto } from "./dto/list-payment.dto";
 import { UpdateVendorDto } from "./dto/update-vendor.dto";
+import { VendorService } from "./vendor.service";
 
 @Controller("vendor")
 @ApiTags("Vendor")
@@ -38,7 +38,7 @@ export class VendorController {
 
   @Post("list")
   @ResponseMessage(VENDOR_RESPONSE_MESSAGES.VENDOR_LISTED)
-  async findAll(@Body() listDto: ListDto) {
+  async findAll(@Body() listDto: ListVendorDto) {
     return await this.vendorService.findAll(listDto);
   }
 

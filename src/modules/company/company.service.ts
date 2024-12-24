@@ -1,13 +1,14 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Companies } from "./entity/company.entity";
-import { Repository } from "typeorm";
-import { CreateCompanyDto } from "./dto/create-company.dto";
-import { CustomError } from "src/common/helpers/exceptions";
+import { COMPANY } from "src/common/constants/enum.constant";
 import { COMPANY_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
-import { ListDto } from "src/common/dto/common.dto";
-import { UpdateCompanyDto } from "./dto/update-company.dto";
+import { CustomError } from "src/common/helpers/exceptions";
+import { Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { CreateCompanyDto } from "./dto/create-company.dto";
+import { ListCompanyDto } from "./dto/list-company.dto";
+import { UpdateCompanyDto } from "./dto/update-company.dto";
+import { Companies } from "./entity/company.entity";
 
 @Injectable()
 export class CompanyService {
@@ -16,6 +17,28 @@ export class CompanyService {
     private readonly companyRepository: Repository<Companies>,
     private readonly countryStateCityService: CountryStateCityService,
   ) {}
+
+  async createInitialCompany() {
+    try {
+      const isCompanyExists = await this.companyRepository.findOneBy({
+        email: COMPANY.EMAIL,
+      });
+      if (isCompanyExists) {
+        return;
+      }
+      const company = this.companyRepository.create({
+        name: COMPANY.NAME,
+        email: COMPANY.EMAIL,
+        address: COMPANY.ADDRESS,
+        countryCode: COMPANY.COUNTRY_CODE,
+        stateCode: COMPANY.STATE_CODE,
+        cityName: COMPANY.CITY_NAME,
+      });
+      await this.companyRepository.save(company);
+    } catch (error) {
+      throw CustomError;
+    }
+  }
 
   async create(createCompanyDto: CreateCompanyDto) {
     try {
@@ -34,7 +57,7 @@ export class CompanyService {
     }
   }
 
-  async findAll(params: ListDto) {
+  async findAll(params: ListCompanyDto) {
     try {
       const queryBuilder = this.companyRepository.createQueryBuilder("company");
 
@@ -65,10 +88,14 @@ export class CompanyService {
         queryBuilder.orderBy("company.createdAt", "DESC");
       }
 
-      queryBuilder.leftJoinAndSelect(
-        "company.assignedToProjects",
-        "assignedToProjects",
-      );
+      queryBuilder
+        .leftJoinAndSelect("company.assignedToProjects", "assignedToProjects")
+        .where("company.deletedAt IS NULL");
+
+      if (params.deletedCompany) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("company.deletedAt IS NOT NULL");
+      }
 
       const companies = await queryBuilder.getMany();
 
@@ -111,10 +138,9 @@ export class CompanyService {
         );
       }
       const queryBuilder = this.companyRepository.createQueryBuilder("company");
-      queryBuilder.leftJoinAndSelect(
-        "company.assignedToProjects",
-        "assignedToProjects",
-      );
+      queryBuilder
+        .leftJoinAndSelect("company.assignedToProjects", "assignedToProjects")
+        .where("company.deletedAt IS NULL");
       const companyData = await queryBuilder.where({ id }).getOne();
       const countryName = await this.countryStateCityService.getCountryByCode(
         company.countryCode,
@@ -156,7 +182,7 @@ export class CompanyService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.companyRepository.delete(id);
+      return await this.companyRepository.softDelete(id);
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

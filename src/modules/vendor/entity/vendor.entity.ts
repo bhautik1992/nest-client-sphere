@@ -2,6 +2,7 @@ import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Companies } from "src/modules/company/entity/company.entity";
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -65,4 +66,7 @@ export class Vendor {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 }

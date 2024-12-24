@@ -4,10 +4,10 @@ import { Repository } from "typeorm";
 
 import { EMPLOYEE_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { CustomError, TypeExceptions } from "src/common/helpers/exceptions";
-import { ListDto } from "src/common/dto/common.dto";
-import { Employee } from "./entity/employee.entity";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
+import { ListEmployeeDto } from "./dto/list-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
+import { Employee } from "./entity/employee.entity";
 const bcrypt = require("bcryptjs");
 
 @Injectable()
@@ -31,7 +31,7 @@ export class EmployeeService {
     return createdEmployee;
   }
 
-  async findAll(params: ListDto) {
+  async findAll(params: ListEmployeeDto) {
     try {
       const queryBuilder =
         this.employeeRepository.createQueryBuilder("employee");
@@ -67,6 +67,11 @@ export class EmployeeService {
         "reportingPerson",
       );
 
+      if (params.deletedEmployee) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("employee.deletedAt IS NOT NULL");
+      }
+
       const employees = await queryBuilder.getMany();
       const recordsTotal = await totalQuery.getCount();
       return {
@@ -93,6 +98,7 @@ export class EmployeeService {
         .createQueryBuilder("employee")
         .leftJoinAndSelect("employee.reportingPerson", "reportingPerson")
         .where({ id: employeeId })
+        .andWhere("employee.deletedAt IS NULL")
         .getOne();
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
@@ -130,7 +136,7 @@ export class EmployeeService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.employeeRepository.delete({ id: employeeId });
+      return await this.employeeRepository.softDelete({ id: employeeId });
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

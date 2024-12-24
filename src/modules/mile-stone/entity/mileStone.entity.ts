@@ -2,6 +2,7 @@ import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -46,4 +47,7 @@ export class MileStones {
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 }

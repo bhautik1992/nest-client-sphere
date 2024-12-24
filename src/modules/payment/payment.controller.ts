@@ -9,13 +9,13 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { EmployeeRole } from "src/common/constants/enum.constant";
+import { PAYMENT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { ResponseMessage } from "src/common/decorators/response.decorator";
 import { Roles } from "src/common/decorators/role.decorator";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
-import { PaymentService } from "./payment.service";
-import { ResponseMessage } from "src/common/decorators/response.decorator";
-import { PAYMENT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { CreatePaymentDto } from "./dto/create-payment.dto";
-import { ListDto } from "src/common/dto/common.dto";
+import { ListPaymentDto } from "./dto/list-payment.dto";
+import { PaymentService } from "./payment.service";
 
 @Controller("payment")
 @ApiTags("Payment")
@@ -32,7 +32,7 @@ export class PaymentController {
 
   @Post("list")
   @ResponseMessage(PAYMENT_RESPONSE_MESSAGES.PAYMENT_LISTED)
-  async findAll(@Body() listDto: ListDto) {
+  async findAll(@Body() listDto: ListPaymentDto) {
     return await this.paymentService.findAll(listDto);
   }
 
