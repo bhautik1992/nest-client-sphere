@@ -119,4 +119,14 @@ export class CreateProjectDto {
   @ApiProperty({ type: [CreateMileStoneDto] })
   @IsOptional()
   milestones: CreateMileStoneDto[];
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  createdBy: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  updatedBy: number;
 }

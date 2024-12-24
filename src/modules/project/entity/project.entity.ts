@@ -17,6 +17,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 
@@ -129,6 +130,24 @@ export class Projects {
 
   @OneToMany(() => MileStones, (milestone) => milestone.projectId)
   milestones: MileStones[];
+
+  @Column({ type: "int", nullable: false })
+  createdBy: number;
+
+  @OneToOne(() => Employee, (emp) => emp.projectCreated, {
+    nullable: false,
+  })
+  @JoinColumn({ name: "createdBy" })
+  createdByEmployee: Employee;
+
+  @Column({ type: "int", nullable: false })
+  updatedBy: number;
+
+  @OneToOne(() => Employee, (emp) => emp.projectUpdated, {
+    nullable: false,
+  })
+  @JoinColumn({ name: "updatedBy" })
+  updatedByEmployee: Employee;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

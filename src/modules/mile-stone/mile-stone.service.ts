@@ -69,4 +69,12 @@ export class MileStoneService {
       throw CustomError(error.message, error.status);
     }
   }
+
+  async removeByProjectId(projectId: number) {
+    try {
+      return await this.mileStoneRepository.delete({ projectId });
+    } catch (error) {
+      throw CustomError(error.message, error.status);
+    }
+  }
 }

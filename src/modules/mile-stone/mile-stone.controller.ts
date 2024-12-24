@@ -11,7 +11,8 @@ import { MILESTONE_RESPONSE_MESSAGES } from "src/common/constants/response.const
 @Roles(
   EmployeeRole.ADMIN,
   EmployeeRole.PROJECT_MANAGER,
-  EmployeeRole.TEAM_LEADER,
+  EmployeeRole.SALES_EXECUTIVE,
+  EmployeeRole.SALES_MANAGER,
 )
 export class MileStoneController {
   constructor(private readonly mileStoneService: MileStoneService) {}

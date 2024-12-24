@@ -9,6 +9,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 
@@ -88,4 +89,10 @@ export class Employee extends BaseEntity {
 
   @OneToMany(() => Projects, (project) => project.teamLeader)
   teamLeader: Projects[];
+
+  @OneToOne(() => Projects, (project) => project.createdByEmployee)
+  projectCreated: Projects;
+
+  @OneToOne(() => Projects, (project) => project.updatedByEmployee)
+  projectUpdated: Projects;
 }
