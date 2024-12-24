@@ -58,12 +58,6 @@ export class CrService {
         );
       }
 
-      if (params.isInternalCr) {
-        queryBuilder.andWhere("cr.isInternalCr = :isInternalCr", {
-          isInternalCr: params.isInternalCr,
-        });
-      }
-
       const totalQuery = queryBuilder.clone();
 
       // Apply sorting if sort and sortBy are provided
@@ -85,7 +79,19 @@ export class CrService {
         .leftJoinAndSelect("cr.client", "client")
         .leftJoinAndSelect("client.company", "company")
         .leftJoinAndSelect("cr.project", "project")
-        .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany");
+        .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany")
+        .where("cr.deletedAt IS NULL");
+
+      if (params.isInternalCr) {
+        queryBuilder.andWhere("cr.isInternalCr = :isInternalCr", {
+          isInternalCr: params.isInternalCr,
+        });
+      }
+
+      if (params.deletedCr) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("cr.deletedAt IS NOT NULL");
+      }
 
       const crs = await queryBuilder.getMany();
 
@@ -141,7 +147,8 @@ export class CrService {
         .leftJoinAndSelect("client.company", "company")
         .leftJoinAndSelect("cr.project", "project")
         .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany")
-        .where("cr.id = :id", { id });
+        .where("cr.id = :id", { id })
+        .andWhere("cr.deletedAt IS NULL");
 
       const crData = await queryBuilder.getOne();
 
@@ -197,7 +204,7 @@ export class CrService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.crRepository.remove(cr);
+      return await this.crRepository.softDelete(cr.id);
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -235,7 +242,8 @@ export class CrService {
         .leftJoinAndSelect("client.company", "company")
         .leftJoinAndSelect("cr.project", "project")
         .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany")
-        .where("cr.projectId = :projectId", { projectId });
+        .where("cr.projectId = :projectId", { projectId })
+        .andWhere("cr.deletedAt IS NULL");
 
       const crData = await queryBuilder.getMany();
 
@@ -269,7 +277,8 @@ export class CrService {
         .leftJoinAndSelect("cr.client", "client")
         .leftJoinAndSelect("client.company", "company")
         .leftJoinAndSelect("cr.project", "project")
-        .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany");
+        .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany")
+        .where("cr.deletedAt IS NULL");
 
       const crs = await queryBuilder.getMany();
 

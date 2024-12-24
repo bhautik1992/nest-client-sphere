@@ -13,6 +13,7 @@ import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { MileStones } from "src/modules/mile-stone/entity/mileStone.entity";
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -154,4 +155,7 @@ export class Projects {
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 }

@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, OnModuleInit } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CompanyController } from "./company.controller";
 import { CompanyService } from "./company.service";
@@ -14,4 +14,10 @@ import { Clients } from "../client/entity/client.entity";
   controllers: [CompanyController],
   providers: [CompanyService],
 })
-export class CompanyModule {}
+export class CompanyModule implements OnModuleInit {
+  constructor(private readonly companyService: CompanyService) {}
+
+  async onModuleInit() {
+    await this.companyService.createInitialCompany();
+  }
+}

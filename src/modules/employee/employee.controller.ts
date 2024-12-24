@@ -14,13 +14,13 @@ import {
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { EmployeeRole } from "src/common/constants/enum.constant";
 import { EMPLOYEE_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { ResponseMessage } from "src/common/decorators/response.decorator";
 import { Roles } from "src/common/decorators/role.decorator";
-import { ListDto } from "src/common/dto/common.dto";
 import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
+import { ListEmployeeDto } from "./dto/list-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
 import { EmployeeService } from "./employee.service";
-import { ResponseMessage } from "src/common/decorators/response.decorator";
 
 @Controller("employee")
 @ApiTags("Employee")
@@ -44,7 +44,7 @@ export class EmployeeController {
   @Post("list")
   @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_LISTED)
   @HttpCode(HttpStatus.OK)
-  async findAll(@Body() params: ListDto) {
+  async findAll(@Body() params: ListEmployeeDto) {
     return await this.employeeService.findAll(params);
   }
 

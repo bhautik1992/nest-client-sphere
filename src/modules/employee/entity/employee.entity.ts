@@ -5,6 +5,7 @@ import {
   BaseEntity,
   BeforeInsert,
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -83,6 +84,9 @@ export class Employee extends BaseEntity {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 
   @OneToMany(() => Projects, (project) => project.projectManager)
   projectManager: Projects[];

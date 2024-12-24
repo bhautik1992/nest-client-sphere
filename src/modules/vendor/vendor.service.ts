@@ -1,13 +1,13 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Vendor } from "./entity/vendor.entity";
-import { Repository } from "typeorm";
-import { CreateVendorDto } from "./dto/create-vendor.dto";
-import { CustomError } from "src/common/helpers/exceptions";
 import { VENDOR_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
-import { ListDto } from "src/common/dto/common.dto";
+import { CustomError } from "src/common/helpers/exceptions";
+import { Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { CreateVendorDto } from "./dto/create-vendor.dto";
+import { ListVendorDto } from "./dto/list-payment.dto";
 import { UpdateVendorDto } from "./dto/update-vendor.dto";
+import { Vendor } from "./entity/vendor.entity";
 
 @Injectable()
 export class VendorService {
@@ -32,7 +32,7 @@ export class VendorService {
     }
   }
 
-  async findAll(params: ListDto) {
+  async findAll(params: ListVendorDto) {
     try {
       const queryBuilder = this.vendorRepository.createQueryBuilder("vendor");
 
@@ -63,6 +63,11 @@ export class VendorService {
       }
 
       queryBuilder.leftJoinAndSelect("vendor.company", "company");
+
+      if (params.deletedVendor) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("vendor.deletedAt IS NOT NULL");
+      }
 
       const vendors = await queryBuilder.getMany();
       const vendorList = await Promise.all(
@@ -107,7 +112,8 @@ export class VendorService {
       const queryBuilder = this.vendorRepository
         .createQueryBuilder("vendor")
         .leftJoinAndSelect("vendor.company", "company")
-        .where({ id });
+        .where({ id })
+        .where("vendor.deletedAt IS NULL");
       const vendor = await queryBuilder.getOne();
       const countryName = await this.countryStateCityService.getCountryByCode(
         vendor.countryCode,
@@ -151,7 +157,7 @@ export class VendorService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.vendorRepository.delete({ id });
+      return await this.vendorRepository.softDelete({ id });
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }

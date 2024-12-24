@@ -4,17 +4,17 @@ import {
   CR_RESPONSE_MESSAGES,
   INVOICE_RESPONSE_MESSAGES,
 } from "src/common/constants/response.constant";
-import { ListDto } from "src/common/dto/common.dto";
 import { CustomError } from "src/common/helpers/exceptions";
-import { In, Repository } from "typeorm";
-import { CountryStateCityService } from "../country-state-city/country-state-city.service";
-import { Crs } from "../cr/entity/cr.entity";
-import { CreateInvoiceDto } from "./dto/create-invoice.dto";
-import { Invoices } from "./entity/invoice.entity";
 import {
   ExtendedClient,
   ExtendedCompany,
 } from "src/common/interfaces/jwt.interface";
+import { In, Repository } from "typeorm";
+import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { Crs } from "../cr/entity/cr.entity";
+import { CreateInvoiceDto } from "./dto/create-invoice.dto";
+import { ListInvoiceDto } from "./dto/list-invoice.dto";
+import { Invoices } from "./entity/invoice.entity";
 
 @Injectable()
 export class InvoiceService {
@@ -71,7 +71,7 @@ export class InvoiceService {
     }
   }
 
-  async findAll(params: ListDto) {
+  async findAll(params: ListInvoiceDto) {
     try {
       const queryBuilder = this.invoiceRepository.createQueryBuilder("invoice");
 
@@ -108,6 +108,11 @@ export class InvoiceService {
         .leftJoinAndSelect("invoice.company", "company")
         .leftJoinAndSelect("invoice.crs", "crs")
         .leftJoinAndSelect("project.milestones", "milestones");
+
+      if (params.deletedInvoice) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("invoice.deletedAt IS NOT NULL");
+      }
 
       const invoices = await queryBuilder.getMany();
 
@@ -185,6 +190,7 @@ export class InvoiceService {
         .leftJoinAndSelect("invoice.crs", "crs")
         .leftJoinAndSelect("project.milestones", "milestones")
         .where("invoice.id = :id", { id })
+        .andWhere("invoice.deletedAt IS NULL")
         .getOne();
 
       const clientCountryName =
@@ -238,7 +244,7 @@ export class InvoiceService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.invoiceRepository.delete({ id });
+      return await this.invoiceRepository.softDelete({ id });
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -251,6 +257,7 @@ export class InvoiceService {
         .leftJoinAndSelect("invoice.client", "client")
         .leftJoinAndSelect("invoice.project", "project")
         .where("invoice.projectId = :projectId", { projectId })
+        .andWhere("invoice.deletedAt IS NULL")
         .getMany();
     } catch (error) {
       throw CustomError(error.message, error.statusCode);

@@ -7,4 +7,9 @@ export class ListCrDto extends ListDto {
   @IsOptional()
   @IsBoolean()
   isInternalCr: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  deletedCr: boolean;
 }

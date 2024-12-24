@@ -72,3 +72,12 @@ export enum PaymentMethod {
   WISE = "wise",
   PAYPAL = "paypal",
 }
+
+export enum COMPANY {
+  NAME = "Infiazure Technology",
+  EMAIL = "infiazure@gamil.com",
+  ADDRESS = "A 502 Styamev Elite",
+  COUNTRY_CODE = "IN",
+  STATE_CODE = "GJ",
+  CITY_NAME = "Ahmedabad",
+}

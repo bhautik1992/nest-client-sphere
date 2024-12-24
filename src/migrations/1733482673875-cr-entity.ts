@@ -114,6 +114,11 @@ const columns = [
     isNullable: true,
   },
   {
+    name: "deletedAt",
+    type: "timestamp",
+    isNullable: true,
+  },
+  {
     name: "createdAt",
     type: "timestamp",
     default: "CURRENT_TIMESTAMP",

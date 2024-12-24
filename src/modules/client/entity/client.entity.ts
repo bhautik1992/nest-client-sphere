@@ -5,6 +5,7 @@ import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -78,6 +79,9 @@ export class Clients {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 
   @OneToMany(() => Projects, (project) => project.client)
   projects: Projects[];

@@ -64,19 +64,10 @@ export class ProjectService {
 
       // Apply search filter if the search term is provided
       if (params.search) {
-        queryBuilder.where(
+        queryBuilder.andWhere(
           "project.name ILIKE :search OR project.status ILIKE :search OR project.description ILIKE :search OR project.startDate ILIKE :search OR project.endDate ILIKE :search",
           {
             search: `%${params.search}%`,
-          },
-        );
-      }
-
-      if (params.isInternalProject) {
-        queryBuilder.andWhere(
-          "project.isInternalProject = :isInternalProject",
-          {
-            isInternalProject: params.isInternalProject,
           },
         );
       }
@@ -106,6 +97,20 @@ export class ProjectService {
         .leftJoinAndSelect("project.projectManager", "projectManager")
         .leftJoinAndSelect("project.teamLeader", "teamLeader")
         .leftJoinAndSelect("project.milestones", "milestones");
+
+      if (params.isInternalProject) {
+        queryBuilder.andWhere(
+          "project.isInternalProject = :isInternalProject",
+          {
+            isInternalProject: params.isInternalProject,
+          },
+        );
+      }
+
+      if (params.deletedProject) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("project.deletedAt IS NOT NULL");
+      }
 
       const projects = await queryBuilder.getMany();
 
@@ -278,7 +283,7 @@ export class ProjectService {
         );
       }
       await this.mileStoneService.removeByProjectId(id);
-      await this.projectRepository.delete({ id });
+      await this.projectRepository.softDelete({ id });
     } catch (error) {
       throw CustomError(error.message, error.statusCode);
     }
@@ -323,7 +328,8 @@ export class ProjectService {
       .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
       .leftJoinAndSelect("project.projectManager", "projectManager")
       .leftJoinAndSelect("project.teamLeader", "teamLeader")
-      .leftJoinAndSelect("project.milestones", "milestones");
+      .leftJoinAndSelect("project.milestones", "milestones")
+      .where("project.deletedAt IS NULL");
   }
 
   async exportProjects(params: ListProjectDto, response: Response) {
@@ -354,7 +360,8 @@ export class ProjectService {
         .leftJoinAndSelect("project.assignToCompany", "assignToCompany")
         .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
         .leftJoinAndSelect("project.projectManager", "projectManager")
-        .leftJoinAndSelect("project.teamLeader", "teamLeader");
+        .leftJoinAndSelect("project.teamLeader", "teamLeader")
+        .where("project.deletedAt IS NULL");
 
       const projects = await queryBuilder.getMany();
 

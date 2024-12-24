@@ -1,14 +1,14 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Clients } from "./entity/client.entity";
-import { Repository } from "typeorm";
-import { CreateClientDto } from "./dto/create-client.dto";
-import { CustomError } from "src/common/helpers/exceptions";
-import { CLIENT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
-import { ListDto } from "src/common/dto/common.dto";
-import { UpdateClientDto } from "./dto/update-client.dto";
-import { CountryStateCityService } from "../country-state-city/country-state-city.service";
 import { ClientStatus } from "src/common/constants/enum.constant";
+import { CLIENT_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
+import { CustomError } from "src/common/helpers/exceptions";
+import { Repository } from "typeorm";
+import { CountryStateCityService } from "../country-state-city/country-state-city.service";
+import { CreateClientDto } from "./dto/create-client.dto";
+import { ListClientDto } from "./dto/list-client.dto";
+import { UpdateClientDto } from "./dto/update-client.dto";
+import { Clients } from "./entity/client.entity";
 
 @Injectable()
 export class ClientService {
@@ -30,7 +30,7 @@ export class ClientService {
     return createdClient;
   }
 
-  async findAll(params: ListDto) {
+  async findAll(params: ListClientDto) {
     try {
       const queryBuilder = this.clientRepository.createQueryBuilder("client");
 
@@ -63,6 +63,11 @@ export class ClientService {
       queryBuilder
         .leftJoinAndSelect("client.projects", "project") // Join with the Project entity
         .leftJoinAndSelect("client.company", "company");
+
+      if (params.deletedClient) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("client.deletedAt IS NOT NULL");
+      }
 
       // Fetch the results (clients and associated projects)
       const clients = await queryBuilder.getMany();
@@ -110,7 +115,8 @@ export class ClientService {
         .createQueryBuilder("client")
         .where({ id })
         .leftJoinAndSelect("client.projects", "project")
-        .leftJoinAndSelect("client.company", "company");
+        .leftJoinAndSelect("client.company", "company")
+        .where("project.deletedAt IS NULL");
 
       // Fetch the results (clients and associated projects)
       const client = await queryBuilder.getOne();
@@ -156,7 +162,7 @@ export class ClientService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return await this.clientRepository.delete({ id });
+      return await this.clientRepository.softDelete({ id });
     } catch (error) {
       CustomError(error.message, error.statusCode);
     }
