@@ -9,6 +9,9 @@ import { ListEmployeeDto } from "./dto/list-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
 import { Employee } from "./entity/employee.entity";
 const bcrypt = require("bcryptjs");
+import ExcelJS from "exceljs";
+import { Response } from "express";
+import { EmployeeStatus } from "src/common/constants/enum.constant";
 
 @Injectable()
 export class EmployeeService {
@@ -18,7 +21,12 @@ export class EmployeeService {
   ) {}
 
   async create(createEmployeeDto: CreateEmployeeDto) {
-    if (await this.getEmployeeByEmail(createEmployeeDto.companyEmail)) {
+    if (
+      await this.getEmployeeByEmail(
+        createEmployeeDto.companyEmail,
+        createEmployeeDto.personalEmail,
+      )
+    ) {
       throw TypeExceptions.EmployeeAlreadyExists();
     }
     createEmployeeDto.password = await bcrypt.hash(
@@ -142,9 +150,145 @@ export class EmployeeService {
     }
   }
 
-  async getEmployeeByEmail(email: string) {
+  async getEmployeeByEmail(companyEmail: string, personalEmail: string) {
     return await this.employeeRepository.findOne({
-      where: { companyEmail: email },
+      where: [{ companyEmail }, { personalEmail }],
     });
+  }
+
+  async changeEmployeeStatus(employeeId: number, status: EmployeeStatus) {
+    try {
+      const employeeExits = await this.employeeRepository.findOneBy({
+        id: employeeId,
+      });
+      if (!employeeExits) {
+        throw CustomError(
+          EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      employeeExits.status = status;
+      const updatedEmployee = await this.employeeRepository.save(employeeExits);
+      return updatedEmployee;
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
+    }
+  }
+
+  async exportEmployees(params: ListEmployeeDto, response: Response) {
+    try {
+      const queryBuilder =
+        this.employeeRepository.createQueryBuilder("employee");
+
+      if (params.search) {
+        queryBuilder.where(
+          "(employee.firstName ILIKE :search OR employee.lastName ILIKE :search OR employee.personalEmail ILIKE :search OR employee.companyEmail ILIKE :search)",
+          { search: `%${params.search}%` },
+        );
+      }
+
+      queryBuilder.leftJoinAndSelect(
+        "employee.reportingPerson",
+        "reportingPerson",
+      );
+
+      if (params.deletedEmployee) {
+        queryBuilder.withDeleted();
+        queryBuilder.andWhere("employee.deletedAt IS NOT NULL");
+      }
+
+      const employees = await queryBuilder.getMany();
+
+      // Generate Excel
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Employees");
+
+      // Add Headers
+      const headers = [
+        "First Name",
+        "Middle Name",
+        "Last Name",
+        "Personal Email",
+        "Company Email",
+        "Reporting Person",
+        "Role",
+        "Status",
+        "phone",
+        "Date of Birth",
+        "Joining Date",
+        "Address",
+        "Department",
+        "PAN Number",
+        "Aadhar Number",
+        "Bank Name",
+        "Bank Account Number",
+        "IFSC Code",
+        "Emergency Contact Name",
+        "Emergency Contact Number",
+      ];
+      sheet.addRow(headers);
+
+      // Add Data Rows
+      employees.forEach((employee) => {
+        const joiningDate = employee.joiningDate
+          ? new Date(employee.joiningDate)
+          : null;
+        const dateOfBirth = employee.dateOfBirth
+          ? new Date(employee.dateOfBirth)
+          : null;
+        sheet.addRow([
+          employee.firstName,
+          employee.middleName,
+          employee.lastName,
+          employee.personalEmail,
+          employee.companyEmail,
+          employee.reportingPerson
+            ? employee.reportingPerson.firstName +
+              " " +
+              employee.reportingPerson.lastName
+            : "",
+          employee.role,
+          employee.status,
+          employee.phone,
+          dateOfBirth,
+          joiningDate,
+          employee.address,
+          employee.department,
+          employee.PAN,
+          employee.aadhar,
+          employee.bankName,
+          employee.accountNumber,
+          employee.IFSC,
+          employee.emergencyContactName,
+          employee.emergencyContactNumber,
+        ]);
+        if (joiningDate) {
+          const cell = sheet.getCell(`K${sheet.rowCount}`);
+          cell.value = joiningDate;
+          cell.numFmt = "yyyy-mm-dd";
+        }
+        if (dateOfBirth) {
+          const dateOfBirthCell = sheet.getCell(`J${sheet.rowCount}`);
+          dateOfBirthCell.value = dateOfBirth;
+          dateOfBirthCell.numFmt = "yyyy-mm-dd";
+        }
+      });
+
+      // Write Excel to Buffer
+      const buffer = await workbook.xlsx.writeBuffer();
+      response.setHeader(
+        "Content-Disposition",
+        `attachment; filename="Employees_${Date.now()}.xlsx"`,
+      );
+      response.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+
+      // Send File as Response
+      response.send(buffer);
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 }

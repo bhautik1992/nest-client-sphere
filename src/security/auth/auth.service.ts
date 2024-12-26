@@ -91,6 +91,9 @@ export class AuthService {
     } else {
       const params: CreateEmployeeDto = {
         firstName: this.configService.get("database.initialEmployee.firstName"),
+        middleName: this.configService.get(
+          "database.initialEmployee.middleName",
+        ),
         lastName: this.configService.get("database.initialEmployee.lastName"),
         role: this.configService.get("database.initialEmployee.role"),
         personalEmail: this.configService.get(
@@ -110,6 +113,21 @@ export class AuthService {
           "database.initialEmployee.joiningDate",
         ),
         reportingPersonId: 0,
+        PAN: this.configService.get("database.initialEmployee.PAN"),
+        aadhar: this.configService.get("database.initialEmployee.aadhar"),
+        address: this.configService.get("database.initialEmployee.address"),
+        bankName: this.configService.get("database.initialEmployee.bankName"),
+        accountNumber: this.configService.get(
+          "database.initialEmployee.accountNumber",
+        ),
+        IFSC: this.configService.get("database.initialEmployee.IFSC"),
+        status: this.configService.get("database.initialEmployee.status"),
+        emergencyContactName: this.configService.get(
+          "database.initialEmployee.emergencyContactName",
+        ),
+        emergencyContactNumber: this.configService.get(
+          "database.initialEmployee.emergencyContactNumber",
+        ),
         password: "",
       };
       params.password = await bcrypt.hash(

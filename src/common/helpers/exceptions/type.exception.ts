@@ -15,7 +15,7 @@ export const TypeExceptions = {
   EmployeeAlreadyExists(): HttpException {
     return new HttpException(
       {
-        message: "Employee already exists",
+        message: "Employee email already exists",
         error: "EmployeeAlreadyExists",
         statusCode: HttpStatus.CONFLICT,
       },

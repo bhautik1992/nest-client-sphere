@@ -1,4 +1,7 @@
-import { EmployeeRole } from "src/common/constants/enum.constant";
+import {
+  EmployeeRole,
+  EmployeeStatus,
+} from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
@@ -19,8 +22,26 @@ export class Employee extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: false, unique: true })
+  employeeCode: string;
+
+  @BeforeInsert()
+  async generateEmployeeCode() {
+    const lastEmployee = await Employee.find({
+      order: { id: "DESC" },
+      take: 1,
+      withDeleted: true,
+    });
+    const lastId = lastEmployee.length > 0 ? lastEmployee[0].id : 0;
+    const nextId = lastId + 1;
+    this.employeeCode = `EMP${String(nextId).padStart(2, "0")}`;
+  }
+
   @Column({ nullable: false })
   firstName: string;
+
+  @Column({ nullable: false })
+  middleName: string;
 
   @Column({ nullable: false })
   lastName: string;
@@ -61,19 +82,36 @@ export class Employee extends BaseEntity {
   @OneToMany(() => Employee, (employee) => employee.reportingPerson)
   reportees: Employee[];
 
-  @Column({ nullable: false, unique: true })
-  employeeCode: string;
+  @Column({ nullable: false })
+  PAN: string;
 
-  @BeforeInsert()
-  async generateEmployeeCode() {
-    const lastEmployee = await Employee.find({
-      order: { id: "DESC" },
-      take: 1,
-    });
-    const lastId = lastEmployee.length > 0 ? lastEmployee[0].id : 0;
-    const nextId = lastId + 1;
-    this.employeeCode = `EMP${String(nextId).padStart(2, "0")}`;
-  }
+  @Column({ nullable: false })
+  aadhar: string;
+
+  @Column({ nullable: false })
+  address: string;
+
+  @Column({
+    type: "enum",
+    enum: Object.values(EmployeeStatus),
+    nullable: false,
+  })
+  status: EmployeeStatus;
+
+  @Column({ nullable: false })
+  bankName: string;
+
+  @Column({ nullable: false })
+  accountNumber: string;
+
+  @Column({ nullable: false })
+  IFSC: string;
+
+  @Column({ nullable: false })
+  emergencyContactName: string;
+
+  @Column({ nullable: false })
+  emergencyContactNumber: string;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
