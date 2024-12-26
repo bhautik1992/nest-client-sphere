@@ -4,7 +4,7 @@ import { CrStatus } from "src/common/constants/enum.constant";
 import { CR_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { CustomError } from "src/common/helpers/exceptions";
 import { Repository } from "typeorm";
-import { Companies } from "../company/entity/company.entity";
+import { Vendors } from "../vendor/entity/vendor.entity";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
 import { CreateCrDto } from "./dto/create-cr.dto";
 import { ListCrDto } from "./dto/list-cr.dto";
@@ -13,7 +13,7 @@ import { Crs } from "./entity/cr.entity";
 import ExcelJS from "exceljs";
 import { Response } from "express";
 
-interface ExtendedCompany extends Companies {
+interface ExtendedCompany extends Vendors {
   countryName?: string;
   stateName?: string;
 }

@@ -7,7 +7,7 @@ import { Repository } from "typeorm";
 import { Employee } from "../employee/entity/employee.entity";
 import { Clients } from "../client/entity/client.entity";
 import { Projects } from "../project/entity/project.entity";
-import { Companies } from "../company/entity/company.entity";
+import { Vendors } from "../vendor/entity/vendor.entity";
 
 @Injectable()
 export class DashboardService {
@@ -18,8 +18,8 @@ export class DashboardService {
     private readonly clientRepository: Repository<Clients>,
     @InjectRepository(Projects)
     private readonly projectRepository: Repository<Projects>,
-    @InjectRepository(Companies)
-    private readonly companyRepository: Repository<Companies>,
+    @InjectRepository(Vendors)
+    private readonly companyRepository: Repository<Vendors>,
   ) {}
 
   async getDashboardCount() {

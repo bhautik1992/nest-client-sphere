@@ -1,5 +1,5 @@
 {
-  "name": "boilerplate-type-orm-migration-nest-js",
+  "name": "infiazure-pms",
   "version": "0.0.1",
   "description": "This Nest JS app is a boilerplate integrating Typeorm Postgres Migration, featuring complete user authentication and full CRUD operations for user management.",
   "private": true,

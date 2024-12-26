@@ -5,12 +5,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Crs } from "./entity/cr.entity";
 import { Projects } from "../project/entity/project.entity";
 import { Clients } from "../client/entity/client.entity";
-import { Companies } from "../company/entity/company.entity";
+import { Vendors } from "../vendor/entity/vendor.entity";
 import { CountryStateCityModule } from "../country-state-city/country-state-city.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Crs, Projects, Clients, Companies]),
+    TypeOrmModule.forFeature([Crs, Projects, Clients, Vendors]),
     CountryStateCityModule,
   ],
   controllers: [CrController],

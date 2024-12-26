@@ -1,61 +1,46 @@
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
-import { Companies } from "src/modules/company/entity/company.entity";
+import { Clients } from "src/modules/client/entity/client.entity";
+import { Invoices } from "src/modules/invoice/entity/invoice.entity";
+import { Projects } from "src/modules/project/entity/project.entity";
 import {
   Column,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.VENDOR })
-export class Vendor {
+export class Vendors {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
-  firstName: string;
+  @Column({ type: "varchar", nullable: false })
+  name: string;
 
-  @Column({ nullable: false })
-  lastName: string;
-
-  @Column({ nullable: false, unique: true })
+  @Column({ type: "varchar", nullable: false, unique: true })
   email: string;
 
-  @Column({ nullable: true })
-  phone: string;
-
-  @Column({ type: "int", nullable: false })
-  companyId: number;
-
-  @ManyToOne(() => Companies, (company) => company.clients, { nullable: false })
-  @JoinColumn({ name: "companyId" })
-  company: Companies;
-
-  @Column({ nullable: false })
-  vendorCompanyName: string;
-
-  @Column({ nullable: false })
-  accountManager: string;
-
-  @Column({ nullable: true })
-  website: string;
-
-  @Column({ nullable: true })
-  skypeId: string;
-
-  @Column({ nullable: false })
+  @Column({ type: "text", nullable: true })
   address: string;
 
   @Column({ nullable: false })
   countryCode: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   stateCode: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   cityName: string;
+
+  @Column({ nullable: true })
+  comment: string;
+
+  @Column({ nullable: false })
+  createdBy: number;
+
+  @OneToMany(() => Clients, (client) => client.company)
+  clients: Clients[];
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
@@ -69,4 +54,13 @@ export class Vendor {
 
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @OneToMany(() => Projects, (project) => project.assignFromCompany)
+  assignedFromProjects: Projects[];
+
+  @OneToMany(() => Projects, (project) => project.assignToCompany)
+  assignedToProjects: Projects[];
+
+  @OneToMany(() => Invoices, (invoice) => invoice.company)
+  Invoices: Invoices[];
 }

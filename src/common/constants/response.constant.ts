@@ -49,16 +49,6 @@ export const PROJECT_RESPONSE_MESSAGES = {
   PROJECT_EXPORTED: "Project exported successfully",
 };
 
-export const COMPANY_RESPONSE_MESSAGES = {
-  COMPANY_LISTED: "Companies listed",
-  COMPANY_INSERTED: "Company added successfully",
-  COMPANY_UPDATED: "Company details updated successfully",
-  COMPANY_DELETED: "Company deleted successfully",
-  COMPANY_FETCHED: "Company details fetched successfully",
-  COMPANY_NOT_FOUND: "Company not found",
-  COMPANY_ALREADY_EXISTS: "Company already exists",
-};
-
 export const DASHBOARD_RESPONSE_MESSAGES = {
   DASHBOARD_COUNT_FETCHED: "Dashboard count fetched successfully",
   DASHBOARD_EMPLOYEE_PROFILE_FETCHED:

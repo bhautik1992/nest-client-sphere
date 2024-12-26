@@ -5,11 +5,11 @@ import { Projects } from "../project/entity/project.entity";
 import { ClientController } from "./client.controller";
 import { ClientService } from "./client.service";
 import { Clients } from "./entity/client.entity";
-import { Companies } from "../company/entity/company.entity";
+import { Vendors } from "../vendor/entity/vendor.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Clients, Projects, Companies]),
+    TypeOrmModule.forFeature([Clients, Projects, Vendors]),
     CountryStateCityModule,
   ],
   controllers: [ClientController],

@@ -1,5 +1,5 @@
-import { TABLE_NAMES } from "../common/constants/table-name.constant";
 import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
+import { TABLE_NAMES } from "../common/constants/table-name.constant";
 
 const columns = [
   {
@@ -10,12 +10,7 @@ const columns = [
     generationStrategy: "increment",
   },
   {
-    name: "firstName",
-    type: "varchar",
-    isNullable: false,
-  },
-  {
-    name: "lastName",
+    name: "name",
     type: "varchar",
     isNullable: false,
   },
@@ -23,40 +18,11 @@ const columns = [
     name: "email",
     type: "varchar",
     isNullable: false,
-  },
-  {
-    name: "phone",
-    type: "varchar",
-    isNullable: true,
-  },
-  {
-    name: "companyId",
-    type: "int",
-    isNullable: false,
-  },
-  {
-    name: "vendorCompanyName",
-    type: "varchar",
-    isNullable: false,
-  },
-  {
-    name: "accountManager",
-    type: "varchar",
-    isNullable: false,
-  },
-  {
-    name: "website",
-    type: "varchar",
-    isNullable: true,
-  },
-  {
-    name: "skypeId",
-    type: "varchar",
-    isNullable: true,
+    unique: true,
   },
   {
     name: "address",
-    type: "varchar",
+    type: "text",
     isNullable: true,
   },
   {
@@ -67,12 +33,22 @@ const columns = [
   {
     name: "stateCode",
     type: "varchar",
-    isNullable: true,
+    isNullable: false,
   },
   {
     name: "cityName",
     type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "comment",
+    type: "text",
     isNullable: true,
+  },
+  {
+    name: "createdBy",
+    type: "int",
+    isNullable: false,
   },
   {
     name: "deletedAt",
@@ -97,14 +73,13 @@ const columnsObjects = columns.map((column) => {
   if (generationStrategy) {
     return new TableColumn({
       ...rest,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       generationStrategy: generationStrategy as any, // Cast to any to bypass the type check
     });
   }
   return new TableColumn(rest);
 });
 
-export class VendorEntity1733307540882 implements MigrationInterface {
+export class VendorEntity1732195088611 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
