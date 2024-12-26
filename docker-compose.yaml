@@ -1,12 +1,12 @@
 version: "3.3"
 services:
   postgres:
-    container_name: postgres-client-sphere-container
+    container_name: postgres-infiazure-pms-container
     image: postgres
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: postgres
-      POSTGRES_DB: client_sphere
+      POSTGRES_DB: infiazure_pms
     # ports:
     #   - 5432:5432
     networks:
@@ -18,7 +18,7 @@ services:
     #   - postgres:/data/db
 
   backend:
-    container_name: client-sphere-backend
+    container_name: infiazure-pms-backend
     build:
       context: ./
       dockerfile: Dockerfile
@@ -26,9 +26,9 @@ services:
       - 3000:3000
     environment:
       APP_PORT: 3000
-      DATABASE_HOST: postgres-client-sphere-container
+      DATABASE_HOST: postgres-infiazure-pms-container
       DATABASE_PORT: 5432
-      DATABASE_NAME: client_sphere
+      DATABASE_NAME: infiazure_pms
       DATABASE_USER: postgres
       DATABASE_PASSWORD: root
     networks:

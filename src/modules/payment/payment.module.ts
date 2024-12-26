@@ -3,7 +3,7 @@ import { PaymentController } from "./payment.controller";
 import { PaymentService } from "./payment.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Payments } from "./entity/payment.entity";
-import { Companies } from "../company/entity/company.entity";
+import { Vendors } from "../vendor/entity/vendor.entity";
 import { Clients } from "../client/entity/client.entity";
 import { Projects } from "../project/entity/project.entity";
 import { Invoices } from "../invoice/entity/invoice.entity";
@@ -11,13 +11,7 @@ import { CountryStateCityModule } from "../country-state-city/country-state-city
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Payments,
-      Companies,
-      Clients,
-      Projects,
-      Invoices,
-    ]),
+    TypeOrmModule.forFeature([Payments, Vendors, Clients, Projects, Invoices]),
     CountryStateCityModule,
   ],
   controllers: [PaymentController],

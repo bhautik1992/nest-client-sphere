@@ -6,7 +6,7 @@ import {
 } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
-import { Companies } from "src/modules/company/entity/company.entity";
+import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
@@ -42,11 +42,11 @@ export class Crs {
   @Column({ type: "int", nullable: false })
   assignFromCompanyId: number;
 
-  @ManyToOne(() => Companies, (company) => company.assignedFromProjects, {
+  @ManyToOne(() => Vendors, (company) => company.assignedFromProjects, {
     nullable: false,
   })
   @JoinColumn({ name: "assignFromCompanyId" })
-  assignFromCompany: Companies;
+  assignFromCompany: Vendors;
 
   @Column({ type: "int", nullable: false })
   clientId: number;

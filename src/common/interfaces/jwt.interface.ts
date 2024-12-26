@@ -1,5 +1,5 @@
 import { Clients } from "src/modules/client/entity/client.entity";
-import { Companies } from "src/modules/company/entity/company.entity";
+import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 
 export interface JwtPayload {
   id: number;
@@ -8,7 +8,7 @@ export interface JwtPayload {
   email: string;
 }
 
-export interface ExtendedCompany extends Companies {
+export interface ExtendedCompany extends Vendors {
   countryName?: string;
   stateName?: string;
 }

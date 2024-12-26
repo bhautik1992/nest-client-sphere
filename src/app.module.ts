@@ -14,9 +14,8 @@ import { EmployeeModule } from "./modules/employee/employee.module";
 import { DashboardModule } from "./modules/dashboard/dashboard.module";
 import { ClientModule } from "./modules/client/client.module";
 import { ProjectModule } from "./modules/project/project.module";
-import { CompanyModule } from "./modules/company/company.module";
-import { CountryStateCityModule } from "./modules/country-state-city/country-state-city.module";
 import { VendorModule } from "./modules/vendor/vendor.module";
+import { CountryStateCityModule } from "./modules/country-state-city/country-state-city.module";
 import { CrModule } from "./modules/cr/cr.module";
 import { InvoiceModule } from "./modules/invoice/invoice.module";
 import { PaymentModule } from "./modules/payment/payment.module";
@@ -36,9 +35,8 @@ import { MileStoneModule } from "./modules/mile-stone/mile-stone.module";
     ThrottleModule,
     ClientModule,
     ProjectModule,
-    CompanyModule,
-    CountryStateCityModule,
     VendorModule,
+    CountryStateCityModule,
     CrModule,
     InvoiceModule,
     PaymentModule,

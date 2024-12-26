@@ -10,37 +10,12 @@ export class CreateVendorDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  firstName: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  lastName: string;
+  name: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsEmail()
   email: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  phone: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  companyId: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  vendorCompanyName: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  accountManager: string;
 
   @ApiProperty()
   @IsOptional()
@@ -53,22 +28,22 @@ export class CreateVendorDto {
   countryCode: string;
 
   @ApiProperty()
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   stateCode: string;
 
   @ApiProperty()
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   cityName: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  skypeId: string;
+  comment: string;
 
   @ApiProperty()
   @IsOptional()
-  @IsString()
-  website: string;
+  @IsNumber()
+  createdBy: number;
 }

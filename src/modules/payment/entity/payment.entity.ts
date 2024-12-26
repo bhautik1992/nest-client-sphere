@@ -1,7 +1,7 @@
 import { PaymentMethod } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
-import { Companies } from "src/modules/company/entity/company.entity";
+import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
@@ -48,11 +48,11 @@ export class Payments extends BaseEntity {
   @Column({ type: "int", nullable: false })
   companyId: number;
 
-  @ManyToOne(() => Companies, (company) => company.Invoices, {
+  @ManyToOne(() => Vendors, (company) => company.Invoices, {
     nullable: false,
   })
   @JoinColumn({ name: "companyId" })
-  company: Companies;
+  company: Vendors;
 
   @Column({ type: "int", nullable: false })
   clientId: number;

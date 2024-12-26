@@ -6,7 +6,7 @@ import {
 } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
-import { Companies } from "src/modules/company/entity/company.entity";
+import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 import { Crs } from "src/modules/cr/entity/cr.entity";
 import { Employee } from "src/modules/employee/entity/employee.entity";
 import { Invoices } from "src/modules/invoice/entity/invoice.entity";
@@ -45,11 +45,11 @@ export class Projects {
   @Column({ type: "int", nullable: false })
   assignFromCompanyId: number;
 
-  @ManyToOne(() => Companies, (company) => company.assignedFromProjects, {
+  @ManyToOne(() => Vendors, (company) => company.assignedFromProjects, {
     nullable: false,
   })
   @JoinColumn({ name: "assignFromCompanyId" })
-  assignFromCompany: Companies;
+  assignFromCompany: Vendors;
 
   @Column({ type: "int", nullable: false })
   clientId: number;
@@ -61,11 +61,11 @@ export class Projects {
   @Column({ type: "int", nullable: false })
   assignToCompanyId: number;
 
-  @ManyToOne(() => Companies, (company) => company.assignedToProjects, {
+  @ManyToOne(() => Vendors, (company) => company.assignedToProjects, {
     nullable: false,
   })
   @JoinColumn({ name: "assignToCompanyId" })
-  assignToCompany: Companies;
+  assignToCompany: Vendors;
 
   @Column({ type: "int", nullable: false })
   projectManagerId: number;

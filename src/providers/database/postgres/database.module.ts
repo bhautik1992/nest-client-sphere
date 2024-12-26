@@ -3,13 +3,12 @@ import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Employee } from "src/modules/employee/entity/employee.entity";
 import { Clients } from "src/modules/client/entity/client.entity";
-import { Companies } from "src/modules/company/entity/company.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
-import { Vendor } from "src/modules/vendor/entity/vendor.entity";
 import { Crs } from "src/modules/cr/entity/cr.entity";
 import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { Payments } from "src/modules/payment/entity/payment.entity";
 import { MileStones } from "src/modules/mile-stone/entity/mileStone.entity";
+import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 
 @Module({
   imports: [
@@ -28,9 +27,8 @@ import { MileStones } from "src/modules/mile-stone/entity/mileStone.entity";
           entities: [
             Employee,
             Clients,
-            Companies,
             Projects,
-            Vendor,
+            Vendors,
             Crs,
             Invoices,
             Payments,
