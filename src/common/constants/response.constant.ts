@@ -12,6 +12,8 @@ export const EMPLOYEE_RESPONSE_MESSAGES = {
   EMPLOYEE_FETCHED: "Employee details fetched successfully",
   EMPLOYEE_NOT_FOUND: "Employee not found",
   EMPLOYEE_ALREADY_EXISTS: "Employee already exists",
+  EMPLOYEE_EXPORTED: "Employee exported successfully",
+  EMPLOYEE_STATUS_CHANGED: "Employee status changed successfully",
 };
 
 export const CLIENT_RESPONSE_MESSAGES = {

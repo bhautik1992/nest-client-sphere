@@ -7,12 +7,16 @@ import {
   HttpStatus,
   Param,
   Post,
+  Res,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { EmployeeRole } from "src/common/constants/enum.constant";
+import {
+  EmployeeRole,
+  EmployeeStatus,
+} from "src/common/constants/enum.constant";
 import { EMPLOYEE_RESPONSE_MESSAGES } from "src/common/constants/response.constant";
 import { ResponseMessage } from "src/common/decorators/response.decorator";
 import { Roles } from "src/common/decorators/role.decorator";
@@ -21,6 +25,7 @@ import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { ListEmployeeDto } from "./dto/list-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
 import { EmployeeService } from "./employee.service";
+import { Response } from "express";
 
 @Controller("employee")
 @ApiTags("Employee")
@@ -68,5 +73,22 @@ export class EmployeeController {
   @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_DELETED)
   remove(@Param("id") id: number) {
     return this.employeeService.remove(id);
+  }
+
+  @Post("export")
+  @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_EXPORTED)
+  async export(@Body() params: ListEmployeeDto, @Res() res: Response) {
+    return await this.employeeService.exportEmployees(params, res);
+  }
+
+  @Post("status")
+  @ResponseMessage(EMPLOYEE_RESPONSE_MESSAGES.EMPLOYEE_STATUS_CHANGED)
+  async changeStatus(
+    @Body() changeStatusDto: { id: number; status: EmployeeStatus },
+  ) {
+    return await this.employeeService.changeEmployeeStatus(
+      changeStatusDto.id,
+      changeStatusDto.status,
+    );
   }
 }

@@ -3,6 +3,14 @@ export enum AppEnvironment {
   PRODUCTION = "production",
 }
 
+export enum EmployeeStatus {
+  ACTIVE = "active",
+  EX_EMPLOYEE = "ex-employee",
+  RESIGNED = "resigned",
+  TERMINATED = "terminated",
+  PENDING = "pending",
+}
+
 export enum EmployeeRole {
   ADMIN = "admin",
   SALES_MANAGER = "sales_manager",

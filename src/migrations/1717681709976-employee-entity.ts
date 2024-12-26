@@ -1,6 +1,9 @@
 import { MigrationInterface, QueryRunner, Table, TableColumn } from "typeorm";
 import { TABLE_NAMES } from "../common/constants/table-name.constant";
-import { EmployeeRole } from "../common/constants/enum.constant";
+import {
+  EmployeeRole,
+  EmployeeStatus,
+} from "../common/constants/enum.constant";
 
 const columns = [
   {
@@ -11,7 +14,18 @@ const columns = [
     generationStrategy: "increment",
   },
   {
+    name: "employeeCode",
+    type: "varchar",
+    isNullable: false,
+    unique: true,
+  },
+  {
     name: "firstName",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "middleName",
     type: "varchar",
     isNullable: false,
   },
@@ -67,10 +81,50 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "employeeCode",
+    name: "PAN",
     type: "varchar",
     isNullable: false,
-    unique: true,
+  },
+  {
+    name: "aadhar",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "address",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "status",
+    type: "enum",
+    enum: Object.values(EmployeeStatus),
+    isNullable: false,
+  },
+  {
+    name: "bankName",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "accountNumber",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "IFSC",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "emergencyContactName",
+    type: "varchar",
+    isNullable: false,
+  },
+  {
+    name: "emergencyContactNumber",
+    type: "varchar",
+    isNullable: false,
   },
   {
     name: "deletedAt",
