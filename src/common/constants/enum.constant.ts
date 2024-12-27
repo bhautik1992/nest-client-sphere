@@ -25,6 +25,7 @@ export enum EmployeeRole {
 export enum ClientStatus {
   ACTIVE = "active",
   INACTIVE = "inactive",
+  HOLD = "hold",
 }
 
 export enum ProjectStatus {

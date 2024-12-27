@@ -7,32 +7,34 @@ export class UpdateClientDto
       CreateClientDto,
       | "firstName"
       | "lastName"
+      | "nickName"
       | "phone"
       | "address"
       | "gender"
       | "clientCompanyName"
-      | "accountManager"
+      | "accountManagerId"
       | "countryCode"
       | "stateCode"
       | "cityName"
       | "status"
       | "zipCode"
-      | "skypeId"
+      | "comment"
       | "website"
     >
 {
   firstName: string;
   lastName: string;
+  nickName: string;
   phone: string;
   address: string;
   gender: string;
   clientCompanyName: string;
-  accountManager: string;
+  accountManagerId: number;
   countryCode: string;
   stateCode: string;
   cityName: string;
   status: ClientStatus;
   zipCode: string;
-  skypeId: string;
+  comment: string;
   website: string;
 }

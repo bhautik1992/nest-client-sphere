@@ -12,6 +12,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Employee } from "src/modules/employee/entity/employee.entity";
 
 @Entity({ name: TABLE_NAMES.CLIENT })
 export class Clients {
@@ -23,6 +24,9 @@ export class Clients {
 
   @Column({ nullable: false })
   lastName: string;
+
+  @Column({ nullable: true })
+  nickName: string;
 
   @Column({ nullable: false, unique: true })
   email: string;
@@ -37,17 +41,21 @@ export class Clients {
   @JoinColumn({ name: "companyId" })
   company: Vendors;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   clientCompanyName: string;
 
   @Column({ nullable: false })
-  accountManager: string;
+  accountManagerId: number;
+
+  @ManyToOne(() => Employee, (emp) => emp.clients, { nullable: false })
+  @JoinColumn({ name: "accountManagerId" })
+  accountManager: Employee;
 
   @Column({ nullable: true })
   website: string;
 
   @Column({ nullable: true })
-  skypeId: string;
+  comment: string;
 
   @Column({ nullable: false })
   address: string;

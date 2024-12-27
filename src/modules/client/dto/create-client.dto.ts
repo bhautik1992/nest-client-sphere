@@ -21,6 +21,11 @@ export class CreateClientDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  @IsString()
+  nickName: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 
@@ -35,14 +40,14 @@ export class CreateClientDto {
   companyId: number;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   clientCompanyName: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  accountManager: string;
+  @IsNumber()
+  accountManagerId: number;
 
   @ApiProperty()
   @IsOptional()
@@ -87,5 +92,5 @@ export class CreateClientDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  skypeId: string;
+  comment: string;
 }

@@ -21,6 +21,11 @@ const columns = [
     isNullable: false,
   },
   {
+    name: "nickName",
+    type: "varchar",
+    isNullable: true,
+  },
+  {
     name: "email",
     type: "varchar",
     isNullable: false,
@@ -38,11 +43,11 @@ const columns = [
   {
     name: "clientCompanyName",
     type: "varchar",
-    isNullable: false,
+    isNullable: true,
   },
   {
-    name: "accountManager",
-    type: "varchar",
+    name: "accountManagerId",
+    type: "int",
     isNullable: false,
   },
   {
@@ -81,7 +86,7 @@ const columns = [
     isNullable: true,
   },
   {
-    name: "skypeId",
+    name: "comment",
     type: "varchar",
     isNullable: true,
   },

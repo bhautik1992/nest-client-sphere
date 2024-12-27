@@ -3,6 +3,7 @@ import {
   EmployeeStatus,
 } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
+import { Clients } from "src/modules/client/entity/client.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
   BaseEntity,
@@ -112,6 +113,9 @@ export class Employee extends BaseEntity {
 
   @Column({ nullable: false })
   emergencyContactNumber: string;
+
+  @OneToMany(() => Clients, (client) => client.accountManager)
+  clients: Clients[];
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
