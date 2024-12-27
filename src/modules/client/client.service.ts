@@ -62,7 +62,8 @@ export class ClientService {
 
       queryBuilder
         .leftJoinAndSelect("client.projects", "project") // Join with the Project entity
-        .leftJoinAndSelect("client.company", "company");
+        .leftJoinAndSelect("client.company", "company")
+        .leftJoinAndSelect("client.accountManager", "accountManager");
 
       if (params.deletedClient) {
         queryBuilder.withDeleted();
@@ -116,6 +117,7 @@ export class ClientService {
         .where({ id })
         .leftJoinAndSelect("client.projects", "project")
         .leftJoinAndSelect("client.company", "company")
+        .leftJoinAndSelect("client.accountManager", "accountManager")
         .where("project.deletedAt IS NULL");
 
       // Fetch the results (clients and associated projects)
@@ -174,6 +176,7 @@ export class ClientService {
       const isClientExists = await queryBuilder
         .where({ id })
         .leftJoinAndSelect("client.projects", "project")
+        .leftJoinAndSelect("client.accountManager", "accountManager")
         .getOne();
       if (!isClientExists) {
         throw CustomError(
