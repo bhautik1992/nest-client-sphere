@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  IsArray,
   IsBoolean,
   IsDateString,
   IsEnum,
@@ -113,12 +114,17 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsOptional()
-  @IsDateString()
-  invoiceDate: string;
+  @IsArray()
+  developerId: number[];
 
   @ApiProperty({ type: [CreateMileStoneDto] })
   @IsOptional()
   milestones: CreateMileStoneDto[];
+
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  technologies: string[];
 
   @ApiProperty()
   @IsOptional()

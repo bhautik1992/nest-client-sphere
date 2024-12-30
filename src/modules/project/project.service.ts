@@ -10,7 +10,7 @@ import {
   ExtendedCompany,
   JwtPayload,
 } from "src/common/interfaces/jwt.interface";
-import { Repository } from "typeorm";
+import { Like, Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
 import { MileStoneService } from "../mile-stone/mile-stone.service";
 import { CreateProjectDto } from "./dto/create-project.dto";
@@ -29,7 +29,10 @@ export class ProjectService {
 
   async create(createProjectDto: CreateProjectDto, currentUser: JwtPayload) {
     try {
-      if (await this.getProjectByName(createProjectDto.name)) {
+      const isProjectExists = await this.getProjectByName(
+        createProjectDto.name,
+      );
+      if (isProjectExists.length > 0) {
         throw CustomError(
           PROJECT_RESPONSE_MESSAGES.PROJECT_ALREADY_EXISTS,
           HttpStatus.BAD_REQUEST,
@@ -58,6 +61,16 @@ export class ProjectService {
     }
   }
 
+  applyFilter(queryBuilder, fieldName, filterValue, operator = "=") {
+    if (filterValue !== undefined && filterValue !== null) {
+      const formattedValue =
+        operator === "ILIKE" ? `%${filterValue}%` : filterValue;
+      queryBuilder.andWhere(`${fieldName} ${operator} :filterValue`, {
+        filterValue: formattedValue,
+      });
+    }
+  }
+
   async findAll(params: ListProjectDto) {
     try {
       const queryBuilder = this.projectRepository.createQueryBuilder("project");
@@ -65,12 +78,22 @@ export class ProjectService {
       // Apply search filter if the search term is provided
       if (params.search) {
         queryBuilder.andWhere(
-          "project.name ILIKE :search OR project.status ILIKE :search OR project.description ILIKE :search OR project.startDate ILIKE :search OR project.endDate ILIKE :search",
+          "project.name ILIKE :search OR project.description ILIKE :search",
           {
             search: `%${params.search}%`,
           },
         );
       }
+
+      this.applyFilter(queryBuilder, "project.status", params.status);
+      this.applyFilter(
+        queryBuilder,
+        "project.projectManagerId",
+        params.projectManagerId,
+      );
+      this.applyFilter(queryBuilder, "project.clientId", params.clientId);
+      this.applyFilter(queryBuilder, "project.startDate", params.startDate);
+      this.applyFilter(queryBuilder, "project.name", params.name);
 
       const totalQuery = queryBuilder.clone();
 
@@ -96,7 +119,9 @@ export class ProjectService {
         .leftJoinAndSelect("project.assignFromCompany", "assignFromCompany")
         .leftJoinAndSelect("project.projectManager", "projectManager")
         .leftJoinAndSelect("project.teamLeader", "teamLeader")
-        .leftJoinAndSelect("project.milestones", "milestones");
+        .leftJoinAndSelect("project.milestones", "milestones")
+        .leftJoinAndSelect("project.crs", "crs")
+        .leftJoinAndSelect("project.developers", "developers");
 
       if (params.isInternalProject) {
         queryBuilder.andWhere(
@@ -315,7 +340,11 @@ export class ProjectService {
   }
 
   async getProjectByName(name: string) {
-    return await this.projectRepository.findOneBy({ name });
+    return await this.projectRepository.find({
+      where: {
+        name: Like(`%${name}%`),
+      },
+    });
   }
 
   private async getProjectWithJoins(id: number) {
@@ -329,7 +358,8 @@ export class ProjectService {
       .leftJoinAndSelect("project.projectManager", "projectManager")
       .leftJoinAndSelect("project.teamLeader", "teamLeader")
       .leftJoinAndSelect("project.milestones", "milestones")
-      .where("project.deletedAt IS NULL");
+      .leftJoinAndSelect("project.crs", "crs")
+      .leftJoinAndSelect("project.developers", "developers");
   }
 
   async exportProjects(params: ListProjectDto, response: Response) {

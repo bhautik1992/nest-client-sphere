@@ -117,6 +117,11 @@ export class Employee extends BaseEntity {
   @OneToMany(() => Clients, (client) => client.accountManager)
   clients: Clients[];
 
+  @OneToMany(() => Projects, (project) => project.developers, {
+    nullable: true,
+  })
+  projects: Projects[];
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 

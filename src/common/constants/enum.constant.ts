@@ -31,7 +31,7 @@ export enum ClientStatus {
 export enum ProjectStatus {
   NOT_STARTED = "not_started",
   STARTED = "started",
-  PENDING = "pending",
+  ON_HOLD = "on_hold",
   COMPLETED = "completed",
 }
 

@@ -16,6 +16,8 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -120,9 +122,6 @@ export class Projects {
   @Column({ nullable: true })
   invoiceDay: string;
 
-  @Column({ nullable: true })
-  invoiceDate: Date;
-
   @OneToMany(() => Crs, (cr) => cr.project)
   crs: Crs[];
 
@@ -131,6 +130,25 @@ export class Projects {
 
   @OneToMany(() => MileStones, (milestone) => milestone.projectId)
   milestones: MileStones[];
+
+  @ManyToMany(() => Employee, (emp) => emp.projects, {
+    nullable: true,
+  })
+  @JoinTable({
+    name: TABLE_NAMES.PROJECT_DEVELOPERS,
+    joinColumn: {
+      name: "projectId",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "developerId",
+      referencedColumnName: "id",
+    },
+  })
+  developers: Employee[];
+
+  @Column({ type: "json", nullable: true })
+  technologies: string[];
 
   @Column({ type: "int", nullable: false })
   createdBy: number;
