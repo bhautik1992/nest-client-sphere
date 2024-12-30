@@ -124,6 +124,16 @@ const columns = [
     isNullable: true,
   },
   {
+    name: "invoiceDay",
+    type: "varchar",
+    isNullable: true,
+  },
+  {
+    name: "technologies",
+    type: "json",
+    isNullable: true,
+  },
+  {
     name: "createdBy",
     type: "int",
     isNullable: false,
@@ -168,6 +178,21 @@ export class ProjectEntity1732195177614 implements MigrationInterface {
       new Table({
         name: TABLE_NAMES.PROJECT,
         columns: columnsObjects,
+      }),
+    );
+    await queryRunner.createTable(
+      new Table({
+        name: TABLE_NAMES.PROJECT_DEVELOPERS,
+        columns: [
+          {
+            name: "projectId",
+            type: "int",
+          },
+          {
+            name: "developerId",
+            type: "int",
+          },
+        ],
       }),
     );
     await queryRunner.createForeignKey(
