@@ -69,7 +69,7 @@ export enum PaymentStatus {
 export enum CrStatus {
   NOT_STARTED = "not_started",
   STARTED = "started",
-  PENDING = "pending",
+  ON_HOLD = "on_hold",
   COMPLETED = "completed",
   CANCELLED = "cancelled",
 }

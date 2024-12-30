@@ -16,8 +16,10 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Employee } from "src/modules/employee/entity/employee.entity";
 
 @Entity({ name: TABLE_NAMES.CR })
 export class Crs {
@@ -101,8 +103,14 @@ export class Crs {
   @Column({ nullable: true })
   invoiceDay: string;
 
-  @Column({ nullable: true })
-  invoiceDate: Date;
+  @Column({ type: "int", nullable: false })
+  createdBy: number;
+
+  @OneToOne(() => Employee, (emp) => emp.crCreated, {
+    nullable: false,
+  })
+  @JoinColumn({ name: "createdBy" })
+  createdByEmployee: Employee;
 
   @OneToMany(() => Invoices, (invoice) => invoice.crs, { nullable: true })
   invoices: Invoices[];

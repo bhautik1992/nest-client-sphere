@@ -114,6 +114,22 @@ const columns = [
     isNullable: true,
   },
   {
+    name: "invoiceDay",
+    type: "varchar",
+    isNullable: true,
+  },
+  {
+    name: "isInvoiced",
+    type: "boolean",
+    default: false,
+    isNullable: false,
+  },
+  {
+    name: "createdBy",
+    type: "int",
+    isNullable: false,
+  },
+  {
     name: "deletedAt",
     type: "timestamp",
     isNullable: true,

@@ -12,6 +12,8 @@ import { UpdateCrDto } from "./dto/update-cr.dto";
 import { Crs } from "./entity/cr.entity";
 import ExcelJS from "exceljs";
 import { Response } from "express";
+import { JwtPayload } from "src/common/interfaces/jwt.interface";
+import dayjs from "dayjs";
 
 interface ExtendedCompany extends Vendors {
   countryName?: string;
@@ -26,7 +28,7 @@ export class CrService {
     private readonly countryStateCityService: CountryStateCityService,
   ) {}
 
-  async create(createCrDto: CreateCrDto) {
+  async create(createCrDto: CreateCrDto, currentUser: JwtPayload) {
     try {
       const isCrExist = await this.crRepository.findOneBy({
         name: createCrDto.name,
@@ -37,6 +39,7 @@ export class CrService {
           HttpStatus.BAD_REQUEST,
         );
       }
+      createCrDto.createdBy = currentUser.id;
       const cr = this.crRepository.create(createCrDto);
       return await this.crRepository.save(cr);
     } catch (error) {
@@ -57,6 +60,27 @@ export class CrService {
           },
         );
       }
+
+      if (params.clientId)
+        queryBuilder.andWhere("cr.clientId = :clientId", {
+          clientId: params.clientId,
+        });
+      if (params.startDate) {
+        const startDate = dayjs(params.startDate).startOf("day").toDate();
+        queryBuilder.andWhere("DATE(cr.startDate) = :startDate", {
+          startDate: startDate,
+        });
+      }
+      if (params.name)
+        queryBuilder.andWhere("cr.name ILIKE :name", {
+          name: `%${params.name}%`,
+        });
+      if (params.projectId)
+        queryBuilder.andWhere("cr.projectId = :projectId", {
+          projectId: params.projectId,
+        });
+      if (params.status)
+        queryBuilder.andWhere("cr.status = :status", { status: params.status });
 
       const totalQuery = queryBuilder.clone();
 
@@ -79,8 +103,7 @@ export class CrService {
         .leftJoinAndSelect("cr.client", "client")
         .leftJoinAndSelect("client.company", "company")
         .leftJoinAndSelect("cr.project", "project")
-        .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany")
-        .where("cr.deletedAt IS NULL");
+        .leftJoinAndSelect("cr.assignFromCompany", "assignFromCompany");
 
       if (params.isInternalCr) {
         queryBuilder.andWhere("cr.isInternalCr = :isInternalCr", {
