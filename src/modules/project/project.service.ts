@@ -17,6 +17,7 @@ import { CreateProjectDto } from "./dto/create-project.dto";
 import { ListProjectDto } from "./dto/list-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { Projects } from "./entity/project.entity";
+import dayjs from "dayjs";
 
 @Injectable()
 export class ProjectService {
@@ -61,16 +62,6 @@ export class ProjectService {
     }
   }
 
-  applyFilter(queryBuilder, fieldName, filterValue, operator = "=") {
-    if (filterValue !== undefined && filterValue !== null) {
-      const formattedValue =
-        operator === "ILIKE" ? `%${filterValue}%` : filterValue;
-      queryBuilder.andWhere(`${fieldName} ${operator} :filterValue`, {
-        filterValue: formattedValue,
-      });
-    }
-  }
-
   async findAll(params: ListProjectDto) {
     try {
       const queryBuilder = this.projectRepository.createQueryBuilder("project");
@@ -85,15 +76,31 @@ export class ProjectService {
         );
       }
 
-      this.applyFilter(queryBuilder, "project.status", params.status);
-      this.applyFilter(
-        queryBuilder,
-        "project.projectManagerId",
-        params.projectManagerId,
-      );
-      this.applyFilter(queryBuilder, "project.clientId", params.clientId);
-      this.applyFilter(queryBuilder, "project.startDate", params.startDate);
-      this.applyFilter(queryBuilder, "project.name", params.name);
+      if (params.status)
+        queryBuilder.andWhere("project.status = :status", {
+          status: params.status,
+        });
+
+      if (params.projectManagerId)
+        queryBuilder.andWhere("project.projectManagerId = :projectManagerId", {
+          projectManagerId: params.projectManagerId,
+        });
+
+      if (params.clientId)
+        queryBuilder.andWhere("project.clientId = :clientId", {
+          clientId: params.clientId,
+        });
+
+      if (params.startDate) {
+        const startDate = dayjs(params.startDate).startOf("day").toDate();
+        queryBuilder.andWhere("DATE(project.startDate) = :startDate", {
+          startDate: startDate,
+        });
+      }
+      if (params.name)
+        queryBuilder.andWhere("project.name ILIKE :name", {
+          name: `%${params.name}%`,
+        });
 
       const totalQuery = queryBuilder.clone();
 

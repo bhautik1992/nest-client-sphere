@@ -104,4 +104,9 @@ export class CreateCrDto {
   @IsOptional()
   @IsDateString()
   invoiceDate: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  createdBy: number;
 }

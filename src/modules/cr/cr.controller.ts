@@ -17,6 +17,8 @@ import { CrService } from "./cr.service";
 import { CreateCrDto } from "./dto/create-cr.dto";
 import { ListCrDto } from "./dto/list-cr.dto";
 import { Response } from "express";
+import { CurrentEmployee } from "src/common/decorators/current-employee.decorator";
+import { JwtPayload } from "src/common/interfaces/jwt.interface";
 
 @Controller("cr")
 @ApiTags("CR")
@@ -33,8 +35,11 @@ export class CrController {
 
   @Post("create")
   @ResponseMessage(CR_RESPONSE_MESSAGES.CR_INSERTED)
-  async create(@Body() createCrDto: CreateCrDto) {
-    return await this.crService.create(createCrDto);
+  async create(
+    @Body() createCrDto: CreateCrDto,
+    @CurrentEmployee() employee: JwtPayload,
+  ) {
+    return await this.crService.create(createCrDto, employee);
   }
 
   @Post("list")

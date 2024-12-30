@@ -4,6 +4,7 @@ import {
 } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
+import { Crs } from "src/modules/cr/entity/cr.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
 import {
   BaseEntity,
@@ -146,4 +147,7 @@ export class Employee extends BaseEntity {
 
   @OneToOne(() => Projects, (project) => project.updatedByEmployee)
   projectUpdated: Projects;
+
+  @OneToOne(() => Crs, (cr) => cr.createdByEmployee)
+  crCreated: Crs;
 }

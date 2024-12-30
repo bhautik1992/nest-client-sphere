@@ -109,6 +109,7 @@ export class DashboardService {
       return await queryBuilder
         .select([
           "project.id",
+          "project.startDate",
           "project.name",
           "project.status",
           "project.billingType",
@@ -116,7 +117,6 @@ export class DashboardService {
           "project.invoicePaymentCycle",
           "project.paymentTermDays",
           "project.invoiceDay",
-          "project.invoiceDate",
           "client.id",
           "client.clientCompanyName",
         ])
