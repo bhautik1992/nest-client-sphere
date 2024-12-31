@@ -320,4 +320,20 @@ export class InvoiceService {
       throw CustomError(error.message, error.statusCode);
     }
   }
+
+  async markAsPaidInvoice(id: number) {
+    try {
+      const invoice = await this.invoiceRepository.findOneBy({ id });
+      if (!invoice) {
+        throw CustomError(
+          INVOICE_RESPONSE_MESSAGES.INVOICE_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      invoice.markAsPaid = !invoice.markAsPaid;
+      return await this.invoiceRepository.save(invoice);
+    } catch (error) {
+      throw CustomError(error.message, error.statusCode);
+    }
+  }
 }

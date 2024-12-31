@@ -68,4 +68,9 @@ export class InvoiceController {
   async generateInvoiceNumber() {
     return await this.invoiceService.generateInvoiceNumber();
   }
+
+  @Post("markAsPaid/:id")
+  async markAsPaidInvoice(@Param("id") id: number) {
+    return await this.invoiceService.markAsPaidInvoice(id);
+  }
 }

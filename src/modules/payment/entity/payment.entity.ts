@@ -1,12 +1,9 @@
 import { PaymentMethod } from "src/common/constants/enum.constant";
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
-import { Clients } from "src/modules/client/entity/client.entity";
-import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 import { Invoices } from "src/modules/invoice/entity/invoice.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
+import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 import {
-  BaseEntity,
-  BeforeInsert,
   Column,
   DeleteDateColumn,
   Entity,
@@ -18,32 +15,12 @@ import {
 } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.PAYMENT })
-export class Payments extends BaseEntity {
+export class Payments {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: "varchar", length: 255, unique: true, nullable: false })
   paymentNumber: string;
-
-  @BeforeInsert()
-  async generateInvoiceNumber() {
-    const prefix = "INFIAZURE";
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = currentDate.getDate().toString().padStart(2, "0");
-    const today = `${year}${month}${day}`;
-    const lastInvoice = await Payments.find({
-      order: { paymentNumber: "DESC" },
-      take: 1,
-    });
-    const lastId = lastInvoice.length > 0 ? lastInvoice[0].id : 0;
-    const increment = lastId + 1;
-    this.paymentNumber = `${prefix}-${today}-${increment.toString().padStart(2, "0")}`;
-  }
-
-  @Column({ type: "varchar", length: 255, unique: true, nullable: true })
-  uniquePaymentId: string;
 
   @Column({ type: "int", nullable: false })
   companyId: number;
@@ -53,13 +30,6 @@ export class Payments extends BaseEntity {
   })
   @JoinColumn({ name: "companyId" })
   company: Vendors;
-
-  @Column({ type: "int", nullable: false })
-  clientId: number;
-
-  @ManyToOne(() => Clients, (client) => client.invoices, { nullable: false })
-  @JoinColumn({ name: "clientId" })
-  client: Clients;
 
   @Column({ type: "int", nullable: false })
   projectId: number;

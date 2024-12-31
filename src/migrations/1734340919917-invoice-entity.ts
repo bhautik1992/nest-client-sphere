@@ -79,6 +79,20 @@ const columns = [
     isNullable: false,
   },
   {
+    name: "paidAmount",
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    isNullable: false,
+    default: 0,
+  },
+  {
+    name: "markAsPaid",
+    type: "boolean",
+    default: false,
+    isNullable: false,
+  },
+  {
     name: "createdBy",
     type: "int",
     isNullable: false,
