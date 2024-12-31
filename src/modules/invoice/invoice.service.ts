@@ -55,12 +55,13 @@ export class InvoiceService {
         crs = await this.crRepository.find({
           where: { id: In(createInvoiceDto.crIds) },
         });
-        if (crs.length !== createInvoiceDto.crIds.length) {
-          throw CustomError(
-            CR_RESPONSE_MESSAGES.CR_NOT_FOUND,
-            HttpStatus.NOT_FOUND,
-          );
-        }
+        // if (crs.length !== createInvoiceDto.crIds.length) {
+        //   console.log("crs.length: ", crs.length);
+        //   throw CustomError(
+        //     CR_RESPONSE_MESSAGES.CR_NOT_FOUND,
+        //     HttpStatus.NOT_FOUND
+        //   );
+        // }
       }
 
       if (
