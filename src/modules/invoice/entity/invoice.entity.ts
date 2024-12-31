@@ -1,12 +1,10 @@
 import { TABLE_NAMES } from "src/common/constants/table-name.constant";
 import { Clients } from "src/modules/client/entity/client.entity";
-import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 import { Crs } from "src/modules/cr/entity/cr.entity";
 import { Payments } from "src/modules/payment/entity/payment.entity";
 import { Projects } from "src/modules/project/entity/project.entity";
+import { Vendors } from "src/modules/vendor/entity/vendor.entity";
 import {
-  BaseEntity,
-  BeforeInsert,
   Column,
   DeleteDateColumn,
   Entity,
@@ -19,32 +17,12 @@ import {
 } from "typeorm";
 
 @Entity({ name: TABLE_NAMES.INVOICE })
-export class Invoices extends BaseEntity {
+export class Invoices {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: "varchar", length: 255, unique: true, nullable: false })
   invoiceNumber: string;
-
-  @BeforeInsert()
-  async generateInvoiceNumber() {
-    const prefix = "INFIAZURE";
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = currentDate.getDate().toString().padStart(2, "0");
-    const today = `${year}${month}${day}`;
-    const lastInvoice = await Invoices.find({
-      order: { invoiceNumber: "DESC" },
-      take: 1,
-    });
-    const lastId = lastInvoice.length > 0 ? lastInvoice[0].id : 0;
-    const increment = lastId + 1;
-    this.invoiceNumber = `${prefix}-${today}-${increment.toString().padStart(2, "0")}`;
-  }
-
-  @Column({ nullable: true, type: "varchar", length: 255 })
-  customInvoiceNumber: string;
 
   @Column({ type: "int", nullable: false })
   companyId: number;
@@ -86,6 +64,9 @@ export class Invoices extends BaseEntity {
   @Column({ type: "varchar", nullable: true })
   additionalChargeDesc: string;
 
+  @Column({ type: "int", default: 0, nullable: true })
+  additionalDiscountAmount: number;
+
   @Column({ type: "boolean", default: false, nullable: false })
   isPaymentReceived: boolean;
 
@@ -107,6 +88,9 @@ export class Invoices extends BaseEntity {
 
   @OneToMany(() => Payments, (payment) => payment.invoices, { nullable: false })
   payments: Payments[];
+
+  @Column({ nullable: false, type: "int" })
+  createdBy: number;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

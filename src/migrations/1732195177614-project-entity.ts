@@ -134,6 +134,19 @@ const columns = [
     isNullable: true,
   },
   {
+    name: "isInvoiced",
+    type: "boolean",
+    default: false,
+    isNullable: false,
+  },
+  {
+    name: "invoicedAmount",
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    default: 0,
+  },
+  {
     name: "createdBy",
     type: "int",
     isNullable: false,

@@ -22,12 +22,6 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "customInvoiceNumber",
-    type: "varchar",
-    length: "255",
-    isNullable: true,
-  },
-  {
     name: "companyId",
     type: "int",
     isNullable: false,
@@ -72,9 +66,21 @@ const columns = [
     isNullable: true,
   },
   {
+    name: "additionalDiscountAmount",
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    isNullable: true,
+  },
+  {
     name: "isPaymentReceived",
     type: "boolean",
     default: false,
+    isNullable: false,
+  },
+  {
+    name: "createdBy",
+    type: "int",
     isNullable: false,
   },
   {

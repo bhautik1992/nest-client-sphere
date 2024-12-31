@@ -8,6 +8,7 @@ import { CustomError } from "src/common/helpers/exceptions";
 import {
   ExtendedClient,
   ExtendedCompany,
+  JwtPayload,
 } from "src/common/interfaces/jwt.interface";
 import { In, Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
@@ -15,6 +16,8 @@ import { Crs } from "../cr/entity/cr.entity";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
 import { ListInvoiceDto } from "./dto/list-invoice.dto";
 import { Invoices } from "./entity/invoice.entity";
+import { Projects } from "../project/entity/project.entity";
+import dayjs from "dayjs";
 
 @Injectable()
 export class InvoiceService {
@@ -23,10 +26,29 @@ export class InvoiceService {
     private readonly invoiceRepository: Repository<Invoices>,
     @InjectRepository(Crs)
     private readonly crRepository: Repository<Crs>,
+    @InjectRepository(Projects)
+    private readonly projectRepository: Repository<Projects>,
     private readonly countryStateCityService: CountryStateCityService,
   ) {}
 
-  async create(createInvoiceDto: CreateInvoiceDto) {
+  async generateInvoiceNumber() {
+    const prefix = "INFIAZURE";
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = currentDate.getDate().toString().padStart(2, "0");
+    const today = `${year}${month}${day}`;
+    const lastInvoice = await this.invoiceRepository.find({
+      order: { invoiceNumber: "DESC" },
+      take: 1,
+    });
+    const lastId = lastInvoice.length > 0 ? lastInvoice[0].id : 0;
+    const increment = lastId + 1;
+    const generatedInvoice = `${prefix}-${today}-${increment.toString().padStart(2, "0")}`;
+    return generatedInvoice;
+  }
+
+  async create(createInvoiceDto: CreateInvoiceDto, currentUser: JwtPayload) {
     try {
       let crs: Crs[] = [];
       if (createInvoiceDto.crIds && createInvoiceDto.crIds.length > 0) {
@@ -46,10 +68,26 @@ export class InvoiceService {
         createInvoiceDto.crInvoiceAmount.length > 0
       ) {
         for (let cr of createInvoiceDto.crInvoiceAmount) {
-          const crData = await this.crRepository.findOneBy({ id: cr.id });
-          if (crData) {
-            crData.isInvoiced = true;
-            await this.crRepository.save(crData);
+          if (cr.isCR) {
+            const crData = await this.crRepository.findOneBy({ id: cr.id });
+            if (crData) {
+              crData.invoicedAmount =
+                Number(crData.invoicedAmount) + Number(cr.crCost);
+              if (crData.invoicedAmount === +crData.crCost)
+                crData.isInvoiced = true;
+              await this.crRepository.save(crData);
+            }
+          } else {
+            const projectData = await this.projectRepository.findOneBy({
+              id: cr.id,
+            });
+            if (projectData) {
+              projectData.invoicedAmount =
+                Number(projectData.invoicedAmount) + Number(cr.crCost);
+              if (projectData.invoicedAmount === +projectData.projectCost)
+                projectData.isInvoiced = true;
+              await this.projectRepository.save(projectData);
+            }
           }
         }
 
@@ -60,7 +98,7 @@ export class InvoiceService {
         );
         createInvoiceDto.amount = totalAmount;
       }
-
+      createInvoiceDto.createdBy = currentUser.id;
       const invoice = this.invoiceRepository.create({
         ...createInvoiceDto,
         crs,
@@ -82,6 +120,25 @@ export class InvoiceService {
           { search: `%${params.search}%` },
         );
       }
+
+      if (params.clientId)
+        queryBuilder.andWhere("invoice.clientId = :clientId", {
+          clientId: params.clientId,
+        });
+      if (params.projectId)
+        queryBuilder.andWhere("invoice.projectId = :projectId", {
+          projectId: params.projectId,
+        });
+      if (params.invoiceDate) {
+        const invoiceDate = dayjs(params.invoiceDate).startOf("day").toDate();
+        queryBuilder.andWhere("DATE(invoice.invoiceDate) = :invoiceDate", {
+          invoiceDate: invoiceDate,
+        });
+      }
+      if (params.invoiceNumber)
+        queryBuilder.andWhere("invoice.invoiceNumber = :invoiceNumber", {
+          invoiceNumber: params.invoiceNumber,
+        });
 
       const totalQuery = queryBuilder.clone();
 

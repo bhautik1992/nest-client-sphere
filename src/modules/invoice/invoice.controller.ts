@@ -16,6 +16,8 @@ import { RoleGuard } from "src/security/auth/guards/role.guard";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
 import { ListInvoiceDto } from "./dto/list-invoice.dto";
 import { InvoiceService } from "./invoice.service";
+import { JwtPayload } from "src/common/interfaces/jwt.interface";
+import { CurrentEmployee } from "src/common/decorators/current-employee.decorator";
 
 @Controller("invoice")
 @ApiTags("Invoice")
@@ -31,8 +33,11 @@ export class InvoiceController {
 
   @Post("create")
   @ResponseMessage(INVOICE_RESPONSE_MESSAGES.INVOICE_INSERTED)
-  async create(@Body() createInvoiceDto: CreateInvoiceDto) {
-    return await this.invoiceService.create(createInvoiceDto);
+  async create(
+    @Body() createInvoiceDto: CreateInvoiceDto,
+    @CurrentEmployee() employee: JwtPayload,
+  ) {
+    return await this.invoiceService.create(createInvoiceDto, employee);
   }
 
   @Post("list")
@@ -57,5 +62,10 @@ export class InvoiceController {
   @ResponseMessage(INVOICE_RESPONSE_MESSAGES.INVOICE_LISTED)
   async getInvoicesByProjectId(@Param("projectId") projectId: number) {
     return await this.invoiceService.getInvoicesByProjectId(projectId);
+  }
+
+  @Get("generateInvoiceNumber")
+  async generateInvoiceNumber() {
+    return await this.invoiceService.generateInvoiceNumber();
   }
 }

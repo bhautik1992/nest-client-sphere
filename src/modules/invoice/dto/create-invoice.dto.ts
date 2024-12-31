@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsArray,
+  IsBoolean,
   IsDateString,
   IsNotEmpty,
   IsNumber,
@@ -18,9 +19,19 @@ class CrInvoiceAmountDto {
   @IsNotEmpty()
   @IsString()
   crCost: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsBoolean()
+  isCR: boolean;
 }
 
 export class CreateInvoiceDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  invoiceNumber: string;
+
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
@@ -68,7 +79,17 @@ export class CreateInvoiceDto {
 
   @ApiProperty()
   @IsOptional()
+  @IsNumber()
+  additionalDiscountAmount: number;
+
+  @ApiProperty()
+  @IsOptional()
   @IsArray()
   @IsObject({ each: true })
   crInvoiceAmount: CrInvoiceAmountDto[];
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  createdBy: number;
 }
