@@ -1,5 +1,3 @@
-import { PaymentMethod } from "../common/constants/enum.constant";
-import { TABLE_NAMES } from "../common/constants/table-name.constant";
 import {
   MigrationInterface,
   QueryRunner,
@@ -7,6 +5,8 @@ import {
   TableColumn,
   TableForeignKey,
 } from "typeorm";
+import { PaymentMethod } from "../common/constants/enum.constant";
+import { TABLE_NAMES } from "../common/constants/table-name.constant";
 
 const columns = [
   {
@@ -23,19 +23,7 @@ const columns = [
     isNullable: false,
   },
   {
-    name: "uniquePaymentId",
-    type: "varchar",
-    length: "255",
-    isNullable: true,
-    unique: true,
-  },
-  {
     name: "companyId",
-    type: "int",
-    isNullable: false,
-  },
-  {
-    name: "clientId",
     type: "int",
     isNullable: false,
   },

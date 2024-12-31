@@ -70,6 +70,12 @@ export class Invoices {
   @Column({ type: "boolean", default: false, nullable: false })
   isPaymentReceived: boolean;
 
+  @Column({ type: "int", default: 0, nullable: false })
+  paidAmount: number;
+
+  @Column({ type: "boolean", default: false })
+  markAsPaid: boolean;
+
   @ManyToMany(() => Crs, (cr) => cr.invoices, {
     nullable: true,
   })

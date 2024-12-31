@@ -1,14 +1,12 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import dayjs from "dayjs";
 import {
   INVOICE_RESPONSE_MESSAGES,
   PAYMENT_RESPONSE_MESSAGES,
 } from "src/common/constants/response.constant";
 import { CustomError } from "src/common/helpers/exceptions";
-import {
-  ExtendedClient,
-  ExtendedCompany,
-} from "src/common/interfaces/jwt.interface";
+import { ExtendedCompany } from "src/common/interfaces/jwt.interface";
 import { In, Repository } from "typeorm";
 import { CountryStateCityService } from "../country-state-city/country-state-city.service";
 import { Invoices } from "../invoice/entity/invoice.entity";
@@ -25,6 +23,22 @@ export class PaymentService {
     private readonly invoiceRepository: Repository<Invoices>,
     private readonly countryStateCityService: CountryStateCityService,
   ) {}
+
+  async generatePaymentNumber() {
+    const prefix = "INFIAZURE";
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = currentDate.getDate().toString().padStart(2, "0");
+    const today = `${year}${month}${day}`;
+    const lastInvoice = await this.paymentRepository.find({
+      order: { paymentNumber: "DESC" },
+      take: 1,
+    });
+    const lastId = lastInvoice.length > 0 ? lastInvoice[0].id : 0;
+    const increment = lastId + 1;
+    return `${prefix}-${today}-${increment.toString().padStart(2, "0")}`;
+  }
 
   async create(createPaymentDto: CreatePaymentDto) {
     try {
@@ -55,7 +69,10 @@ export class PaymentService {
             id: invoice.id,
           });
           if (invoiceData) {
-            invoiceData.isPaymentReceived = true;
+            invoiceData.paidAmount =
+              Number(invoiceData.paidAmount) + Number(invoice.invoicedCost);
+            if (Number(invoiceData.amount) === Number(invoiceData.paidAmount))
+              invoiceData.isPaymentReceived = true;
             await this.invoiceRepository.save(invoiceData);
           }
         }
@@ -85,11 +102,26 @@ export class PaymentService {
       // Apply search filter if the search term is provided
       if (params.search) {
         queryBuilder.where(
-          "payment.paymentDate ILIKE :search OR payment.paymentNumber ILIKE :search OR payment.uniquePaymentId ILIKE :search",
+          "payment.paymentDate ILIKE :search OR payment.paymentNumber ILIKE :search",
           {
             search: `%${params.search}%`,
           },
         );
+      }
+
+      if (params.projectId)
+        queryBuilder.andWhere("payment.projectId = :projectId", {
+          projectId: params.projectId,
+        });
+      if (params.paymentNumber)
+        queryBuilder.andWhere("payment.paymentNumber = :paymentNumber", {
+          paymentNumber: params.paymentNumber,
+        });
+      if (params.paymentDate) {
+        const paymentDate = dayjs(params.paymentDate).startOf("day").toDate();
+        queryBuilder.andWhere("DATE(payment.paymentDate) = :paymentDate", {
+          paymentDate: paymentDate,
+        });
       }
 
       const totalQuery = queryBuilder.clone();
@@ -111,7 +143,6 @@ export class PaymentService {
       }
 
       queryBuilder
-        .leftJoinAndSelect("payment.client", "client")
         .leftJoinAndSelect("payment.project", "project")
         .leftJoinAndSelect("payment.company", "company")
         .leftJoinAndSelect("payment.invoices", "invoices");
@@ -125,22 +156,11 @@ export class PaymentService {
 
       const paymentList = await Promise.all(
         payments.map(async (invoice) => {
-          const clientCountryName =
-            await this.countryStateCityService.getCountryByCode(
-              invoice.client.countryCode,
-            );
           const companyCountryName =
             await this.countryStateCityService.getCountryByCode(
               invoice.company.countryCode,
             );
-          let clientStateName = null;
           let companyStateName = null;
-          if (invoice.client.stateCode) {
-            clientStateName = await this.countryStateCityService.getStateByCode(
-              invoice.client.stateCode,
-              invoice.client.countryCode,
-            );
-          }
           if (invoice.company.stateCode) {
             companyStateName =
               await this.countryStateCityService.getStateByCode(
@@ -153,15 +173,9 @@ export class PaymentService {
             countryName: companyCountryName,
             stateName: companyStateName,
           };
-          const extendedClient: ExtendedClient = {
-            ...invoice.client,
-            countryName: clientCountryName,
-            stateName: clientStateName,
-          };
           return {
             ...invoice,
             company: extendedCompany,
-            client: extendedClient,
           };
         }),
       );
@@ -188,7 +202,6 @@ export class PaymentService {
       }
       const queryBuilder = this.paymentRepository.createQueryBuilder("payment");
       const paymentData = await queryBuilder
-        .leftJoinAndSelect("payment.client", "client")
         .leftJoinAndSelect("payment.project", "project")
         .leftJoinAndSelect("payment.company", "company")
         .leftJoinAndSelect("payment.invoices", "invoices")
@@ -196,22 +209,11 @@ export class PaymentService {
         .andWhere("payment.deletedAt IS NULL")
         .getOne();
 
-      const clientCountryName =
-        await this.countryStateCityService.getCountryByCode(
-          paymentData.client.countryCode,
-        );
       const companyCountryName =
         await this.countryStateCityService.getCountryByCode(
           paymentData.company.countryCode,
         );
-      let clientStateName = null;
       let companyStateName = null;
-      if (paymentData.client.stateCode) {
-        clientStateName = await this.countryStateCityService.getStateByCode(
-          paymentData.client.stateCode,
-          paymentData.client.countryCode,
-        );
-      }
       if (paymentData.company.stateCode) {
         companyStateName = await this.countryStateCityService.getStateByCode(
           paymentData.company.stateCode,
@@ -223,15 +225,9 @@ export class PaymentService {
         countryName: companyCountryName,
         stateName: companyStateName,
       };
-      const extendedClient: ExtendedClient = {
-        ...paymentData.client,
-        countryName: clientCountryName,
-        stateName: clientStateName,
-      };
       return {
         ...paymentData,
         company: extendedCompany,
-        client: extendedClient,
       };
     } catch (error) {
       throw CustomError(error.message, error.statusCode);

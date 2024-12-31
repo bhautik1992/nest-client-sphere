@@ -80,6 +80,7 @@ export enum PaymentMethod {
   BANK_TRANSFER = "bank_transfer",
   WISE = "wise",
   PAYPAL = "paypal",
+  CASH = "cash",
 }
 
 export enum COMPANY {

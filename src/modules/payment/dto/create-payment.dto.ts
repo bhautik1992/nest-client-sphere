@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsArray,
+  IsBoolean,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -32,11 +33,6 @@ export class CreatePaymentDto {
   @IsNotEmpty()
   @IsNumber()
   companyId: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  clientId: number;
 
   @ApiProperty()
   @IsNotEmpty()

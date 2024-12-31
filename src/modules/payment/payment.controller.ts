@@ -24,6 +24,11 @@ import { PaymentService } from "./payment.service";
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
+  @Get("generatePaymentNumber")
+  async generatePaymentNumber() {
+    return await this.paymentService.generatePaymentNumber();
+  }
+
   @Post("create")
   @ResponseMessage(PAYMENT_RESPONSE_MESSAGES.PAYMENT_INSERTED)
   async create(@Body() createPaymentDto: CreatePaymentDto) {
