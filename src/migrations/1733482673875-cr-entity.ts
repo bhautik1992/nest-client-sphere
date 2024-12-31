@@ -125,6 +125,13 @@ const columns = [
     isNullable: false,
   },
   {
+    name: "invoicedAmount",
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    default: 0,
+  },
+  {
     name: "createdBy",
     type: "int",
     isNullable: false,

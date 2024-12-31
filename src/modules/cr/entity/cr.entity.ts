@@ -90,6 +90,15 @@ export class Crs {
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
   crCost: string;
 
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    nullable: true,
+    default: 0,
+  })
+  invoicedAmount: number;
+
   @Column({ type: "int", nullable: false })
   paymentTermDays: number;
 

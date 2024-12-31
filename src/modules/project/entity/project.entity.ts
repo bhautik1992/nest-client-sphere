@@ -150,6 +150,18 @@ export class Projects {
   @Column({ type: "json", nullable: true })
   technologies: string[];
 
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    nullable: true,
+    default: 0,
+  })
+  invoicedAmount: number;
+
+  @Column({ nullable: false, default: false, type: "boolean" })
+  isInvoiced: boolean;
+
   @Column({ type: "int", nullable: false })
   createdBy: number;
 
