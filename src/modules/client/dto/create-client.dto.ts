@@ -20,7 +20,7 @@ export class CreateClientDto {
   lastName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   nickName: string;
 
