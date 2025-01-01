@@ -47,9 +47,13 @@ export class ClientService {
           accountManagerId: params.accountManagerId,
         });
       if (params.email)
-        queryBuilder.andWhere("client.email = :email", { email: params.email });
+        queryBuilder.andWhere("client.email ILIKE :email", {
+          email: params.email,
+        });
       if (params.name)
-        queryBuilder.andWhere("client.name = :name", { name: params.name });
+        queryBuilder.andWhere("client.firstName ILIKE :name", {
+          name: params.name,
+        });
       if (params.status)
         queryBuilder.andWhere("client.status = :status", {
           status: params.status,
