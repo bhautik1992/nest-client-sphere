@@ -52,6 +52,20 @@ export class EmployeeService {
         );
       }
 
+      if (params.employeeCode)
+        queryBuilder.andWhere("employee.employeeCode = :employeeCode", {
+          employeeCode: params.employeeCode,
+        });
+      if (params.name)
+        queryBuilder.andWhere("employee.name = :name", { name: params.name });
+      if (params.email)
+        queryBuilder.andWhere(
+          "employee.personalEmail = :email OR employee.companyEmail = :email",
+          { email: params.email },
+        );
+      if (params.role)
+        queryBuilder.andWhere("employee.role = :role", { role: params.role });
+
       const totalQuery = queryBuilder.clone();
 
       // Apply sorting
