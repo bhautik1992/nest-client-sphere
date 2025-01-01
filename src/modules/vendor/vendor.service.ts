@@ -73,6 +73,15 @@ export class VendorService {
         );
       }
 
+      if (params.name)
+        queryBuilder.andWhere("vendor.name ILIKE :name", {
+          name: params.name,
+        });
+      if (params.email)
+        queryBuilder.andWhere("vendor.email ILIKE :email", {
+          email: params.email,
+        });
+
       const totalQuery = queryBuilder.clone();
 
       // Apply pagination if page and limit are provided
@@ -92,7 +101,7 @@ export class VendorService {
 
       queryBuilder
         .leftJoinAndSelect("vendor.assignedToProjects", "assignedToProjects")
-        .where("vendor.email != :email", { email: COMPANY.EMAIL });
+        .andWhere("vendor.email != :email", { email: COMPANY.EMAIL });
 
       if (params.deletedVendor) {
         queryBuilder.withDeleted();

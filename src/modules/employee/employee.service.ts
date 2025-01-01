@@ -57,10 +57,12 @@ export class EmployeeService {
           employeeCode: params.employeeCode,
         });
       if (params.name)
-        queryBuilder.andWhere("employee.name = :name", { name: params.name });
+        queryBuilder.andWhere("employee.name ILIKE :name", {
+          name: params.name,
+        });
       if (params.email)
         queryBuilder.andWhere(
-          "employee.personalEmail = :email OR employee.companyEmail = :email",
+          "employee.personalEmail ILIKE :email OR employee.companyEmail ILIKE :email",
           { email: params.email },
         );
       if (params.role)
