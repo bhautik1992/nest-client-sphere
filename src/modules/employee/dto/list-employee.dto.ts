@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsOptional } from "class-validator";
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 import { ListDto } from "src/common/dto/common.dto";
 
 export class ListEmployeeDto extends ListDto {
@@ -7,4 +7,24 @@ export class ListEmployeeDto extends ListDto {
   @IsOptional()
   @IsBoolean()
   deletedEmployee: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  employeeCode: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  email: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  role: string;
 }
