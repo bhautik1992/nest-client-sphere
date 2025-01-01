@@ -42,6 +42,19 @@ export class ClientService {
         );
       }
 
+      if (params.accountManagerId)
+        queryBuilder.andWhere("client.accountManagerId = :accountManagerId", {
+          accountManagerId: params.accountManagerId,
+        });
+      if (params.email)
+        queryBuilder.andWhere("client.email = :email", { email: params.email });
+      if (params.name)
+        queryBuilder.andWhere("client.name = :name", { name: params.name });
+      if (params.status)
+        queryBuilder.andWhere("client.status = :status", {
+          status: params.status,
+        });
+
       const totalQuery = queryBuilder.clone();
 
       // Apply pagination

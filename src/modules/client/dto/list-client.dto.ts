@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsOptional } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
 import { ListDto } from "src/common/dto/common.dto";
 
 export class ListClientDto extends ListDto {
@@ -7,4 +7,24 @@ export class ListClientDto extends ListDto {
   @IsOptional()
   @IsBoolean()
   deletedClient: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  email: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  accountManagerId: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  status: string;
 }
