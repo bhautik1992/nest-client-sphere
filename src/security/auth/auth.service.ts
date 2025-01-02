@@ -74,11 +74,6 @@ export class AuthService {
     const employee = await this.employeeRepository.findOne({
       where: [
         {
-          personalEmail: this.configService.get(
-            "database.initialEmployee.personalEmail",
-          ),
-        },
-        {
           companyEmail: this.configService.get(
             "database.initialEmployee.companyEmail",
           ),
