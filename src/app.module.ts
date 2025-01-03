@@ -20,6 +20,7 @@ import { CrModule } from "./modules/cr/cr.module";
 import { InvoiceModule } from "./modules/invoice/invoice.module";
 import { PaymentModule } from "./modules/payment/payment.module";
 import { MileStoneModule } from "./modules/mile-stone/mile-stone.module";
+import { UploadModule } from "./modules/upload/upload.module";
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { MileStoneModule } from "./modules/mile-stone/mile-stone.module";
     InvoiceModule,
     PaymentModule,
     MileStoneModule,
+    UploadModule,
   ],
   providers: [
     {

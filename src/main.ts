@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import { AppEnvironment } from "./common/constants/enum.constant";
 import { HttpExceptionFilter } from "./common/exceptions/http-exception.filter";
+import { join } from "path";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -45,6 +46,11 @@ async function bootstrap() {
   );
   // Apply the HttpExceptionFilter globally
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Serve the uploads folder statically
+  app.useStaticAssets(join(__dirname, "..", "upload"), {
+    prefix: "/upload",
+  });
 
   await app.listen(appConfig.port);
 }

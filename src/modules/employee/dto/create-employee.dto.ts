@@ -117,4 +117,9 @@ export class CreateEmployeeDto {
   @IsOptional()
   @IsString()
   password: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  imageUrl: string;
 }

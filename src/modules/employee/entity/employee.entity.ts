@@ -93,6 +93,9 @@ export class Employee extends BaseEntity {
   @Column({ nullable: false })
   address: string;
 
+  @Column({ nullable: true })
+  imageUrl: string;
+
   @Column({
     type: "enum",
     enum: Object.values(EmployeeStatus),

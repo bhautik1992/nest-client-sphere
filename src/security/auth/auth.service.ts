@@ -124,6 +124,7 @@ export class AuthService {
           "database.initialEmployee.emergencyContactNumber",
         ),
         password: "",
+        imageUrl: "",
       };
       params.password = await bcrypt.hash(
         this.configService.get("database.initialEmployee.password"),

@@ -116,3 +116,7 @@ export const MILESTONE_RESPONSE_MESSAGES = {
   MILESTONE_NOT_FOUND: "Milestone not found",
   MILESTONE_ALREADY_EXISTS: "Milestone already exists",
 };
+
+export const IMAGE = {
+  IMAGE_UPLOAD: "Image uploaded successfully",
+};
